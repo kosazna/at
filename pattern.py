@@ -1,7 +1,7 @@
 import re
 import shutil
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Union
 
 from at.text import replace_all
 
@@ -136,8 +136,8 @@ def pattern_match(pattern: FilePattern, text: str) -> Dict[str, str]:
     return values
 
 
-def pattern_copy(src: str,
-                 dst: str,
+def pattern_copy(src: Union[str, Path],
+                 dst: Union[str, Path],
                  file_filter: str,
                  pattern_read: FilePattern,
                  pattern_out: str,

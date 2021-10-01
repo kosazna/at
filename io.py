@@ -103,3 +103,20 @@ def get_files(src: Union[str, Path],
             _d = _dst.joinpath(subdirs)
 
             shutil.copytree(p, _d)
+
+def organize_files(src: Union[str, Path],
+                   dst: Union[str, Path],
+                   name: str,
+                   subdirs: Union[str, None] = None,
+                   ota_index: Tuple[str, int] = ('_', 1)):
+    _src = Path(src)
+    _dst = Path(dst)
+
+    _splitter = ota_index[0]
+    _idx = ota_index[1]
+    _subs = '' if subdirs is None else f'{subdirs}/'
+
+    for p in _src.glob('*.shp'):
+        ota = p.stem.split(_splitter)[_idx]
+
+        copy_shp(p, _dst, name=name, subdirs=f'{ota}/{_subs}{name}')
