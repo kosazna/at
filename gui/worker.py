@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import QObject, QRunnable, pyqtSlot, pyqtSignal
-import traceback
 import sys
+import traceback
+
+from PyQt5.QtCore import QObject, QRunnable, pyqtSignal, pyqtSlot
 
 
 class WorkerSignalsStr(QObject):
