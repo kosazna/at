@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
 
 
 class Button(QToolButton):
-    def __init__(self, label='', parent=None, *args, **kwargs):
+    def __init__(self, label='', parent:QWidget=None, *args, **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
         self.setupUi(label)
 

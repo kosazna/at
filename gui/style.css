@@ -1,0 +1,42 @@
+QPushButton {
+  color: #212529;
+  border-radius: 3px;
+  font-family: "Segoe UI";
+  font: 15px;
+  font-weight: bold;
+  max-height: 25px;
+  min-height: 25px;
+  min-width: 80px;
+}
+
+QPushButton#greenButton {
+  background-color: #2ad66b;
+  max-height: 25px;
+  min-height: 25px;
+  min-width: 100px;
+}
+
+QPushButton#redButton {
+  background-color: #ef3e4f;
+}
+
+QPushButton#yellowButton {
+  background-color: #ffc107;
+}
+
+QPushButton#blueButton {
+  background-color: #0d6efd;
+}
+
+QPushButton#greyButton {
+  background-color: #6c757d;
+}
+
+QCheckBox {
+  color: #212529;
+  font-family: "Segoe UI";
+  font: 15px;
+  max-height: 25px;
+  min-height: 25px;
+  min-width: 100px;
+}
