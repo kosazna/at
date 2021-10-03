@@ -37,8 +37,8 @@ def floatify(iterable: Union[list, tuple, set, dict, str],
 
 
 def str2num(string_number: str,
-            thousand_sep: str = ',',
-            decimal_sep: str = '.') -> int:
+            decimal_sep: str = '.',
+            thousand_sep: Union[str, None] = ',') -> int:
     total = 0
 
     split_decimals = string_number.split(decimal_sep)
@@ -53,7 +53,11 @@ def str2num(string_number: str,
         decimal_number = float(decimal) / 10**len(decimal)
         total += decimal_number
 
-    numbers = number.split(thousand_sep)
+    if thousand_sep is not None:
+        numbers = number.split(thousand_sep)
+    else:
+        numbers = [number]
+
     ints = intify(numbers)
 
     for thousand_num, num in enumerate(ints[::-1]):
