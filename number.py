@@ -36,15 +36,30 @@ def floatify(iterable: Union[list, tuple, set, dict, str],
         raise TypeError(f"Not supported type for iterable: {type(iterable)}")
 
 
-def str2int(string_number: str, sep: str = ',') -> int:
-    number = 0
-    numbers = string_number.split(sep)
+def str2num(string_number: str,
+            thousand_sep: str = ',',
+            decimal_sep: str = '.') -> int:
+    total = 0
+
+    split_decimals = string_number.split(decimal_sep)
+    number = split_decimals[0]
+
+    if len(split_decimals) == 1:
+        decimal = ''
+        ndecimals = 0
+    else:
+        decimal = split_decimals[1]
+        ndecimals = len(decimal)
+        decimal_number = float(decimal) / 10**len(decimal)
+        total += decimal_number
+
+    numbers = number.split(thousand_sep)
     ints = intify(numbers)
 
     for thousand_num, num in enumerate(ints[::-1]):
         if thousand_num == 0:
-            number += num
+            total += num
         else:
-            number += 1000**thousand_num * num
+            total += 1000**thousand_num * num
 
-    return number
+    return round(total, ndecimals) if ndecimals else total
