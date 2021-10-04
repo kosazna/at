@@ -1,9 +1,5 @@
 import re
-import shutil
-from pathlib import Path
-from typing import Dict, Union
-
-from at.text import replace_all
+from typing import Dict
 
 
 class FilePattern(object):
@@ -104,93 +100,32 @@ class FilePattern(object):
                 raise ValueError(
                     f"Pattern contains {nparts} variables but {atcount} placeholders '@'")
 
+    def match(self, text: str) -> Dict[str, str]:
+        values = {}
 
-def pattern_match(pattern: FilePattern, text: str) -> Dict[str, str]:
-    values = {}
-
-    if pattern.kind == "MixedPattern":
-        splitted = text.split('_')
-        for var in pattern.variables:
-            if pattern.variables[var]['index'] is not None:
-                values[var] = splitted[pattern.variables[var]['index']]
-            else:
-                s = pattern.variables[var]['start']
-                e = pattern.variables[var]['end']
+        if self.kind == "MixedPattern":
+            splitted = text.split('_')
+            for var in self.variables:
+                if self.variables[var]['index'] is not None:
+                    values[var] = splitted[self.variables[var]['index']]
+                else:
+                    s = self.variables[var]['start']
+                    e = self.variables[var]['end']
+                    if e is None:
+                        values[var] = text[s:]
+                    else:
+                        values[var] = text[s:e]
+        elif self.kind == "UnderscorePattern":
+            splitted = text.split('_')
+            for var in self.variables:
+                values[var] = splitted[self.variables[var]['index']]
+        elif self.kind == "PlaceholderPattern":
+            for var in self.variables:
+                s = self.variables[var]['start']
+                e = self.variables[var]['end']
                 if e is None:
                     values[var] = text[s:]
                 else:
                     values[var] = text[s:e]
-    elif pattern.kind == "UnderscorePattern":
-        splitted = text.split('_')
-        for var in pattern.variables:
-            values[var] = splitted[pattern.variables[var]['index']]
-    elif pattern.kind == "PlaceholderPattern":
-        for var in pattern.variables:
-            s = pattern.variables[var]['start']
-            e = pattern.variables[var]['end']
-            if e is None:
-                values[var] = text[s:]
-            else:
-                values[var] = text[s:e]
 
-    return values
-
-
-def pattern_copy(src: Union[str, Path],
-                 dst: Union[str, Path],
-                 file_filter: str,
-                 pattern_read: FilePattern,
-                 pattern_out: str,
-                 recursive: bool = False,
-                 save_name: str = None,
-                 shapefile: bool = False):
-
-    src = Path(src)
-    dst = Path(dst)
-
-    shp_exts = ('.shp', '.shx', '.dbf')
-
-    if recursive:
-        file_filter = f"**/{file_filter}"
-
-    for p in src.glob(file_filter):
-        parts = pattern_match(pattern_read, p.stem)
-        sub_dst = replace_all(pattern_out, parts)
-
-        if save_name is None:
-            _dst = dst.joinpath(sub_dst)
-            _dst.mkdir(parents=True, exist_ok=True)
-        else:
-            suffix = p.suffix
-            sub_dst = f"{sub_dst}/{save_name}{suffix}"
-            _dst = dst.joinpath(sub_dst)
-            _dst.parent.mkdir(parents=True, exist_ok=True)
-
-        if shapefile:
-            for ext in shp_exts:
-                _src = p.with_suffix(ext)
-
-                if save_name is not None:
-                    _dst = _dst.with_suffix(ext)
-
-                shutil.copy(_src, _dst)
-        else:
-            shutil.copy(p, _dst)
-
-
-if __name__ == "__main__":
-    src = "D:/Google Drive/Azna/Docs/Κτηματολόγιο Κιλκίς"
-    dst = "D:/.temp/copy_tests"
-
-    name_pattern = "<ota@3:7><tomeas@8:9><enotita@10:11><gt@12:14>"
-    folder_pattern = "<ota>/<tomeas>"
-
-    fp = FilePattern(name_pattern)
-    pattern_copy(src=src,
-                 dst=dst,
-                 file_filter='K*.pdf',
-                 pattern_read=fp,
-                 pattern_out=folder_pattern,
-                 recursive=True,
-                 save_name=None,
-                 shapefile=False)
+        return values

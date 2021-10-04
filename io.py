@@ -9,6 +9,11 @@ from typing import List, Tuple, Union
 
 import requests
 
+from .pattern import FilePattern
+from .text import replace_all
+
+SHP_EXTS = ('.shp', '.shx', '.dbf')
+
 
 def open_excel(filepath: Union[str, Path]) -> None:
     os.startfile(filepath)
@@ -64,59 +69,122 @@ def download_image(url: str,
     else:
         print(f"Request failed -> {url}")
 
-def copy_shp(src: Union[str, Path],
-             dst: Union[str, Path],
-             name: Union[str, None] = None,
-             subdirs: Union[str, None] = None):
-    _s = Path(src)
-    _d = Path(dst)
 
-    _name = _s.stem if name is None else name
-    _subs = '' if subdirs is None else f'{subdirs}/'
+def copy(src: Union[str, Path],
+         dst: Union[str, Path],
+         save_name: Union[str, None] = None):
+    src_path = Path(src)
+    dst_path = Path(dst)
 
-    exts = ['.shp', '.shx', '.dbf']
+    if not src_path.exists():
+        print(f"File '{str(src)}' does not exist.")
+        return
 
-    for ext in exts:
-        _src = _s.with_suffix(ext)
-        _dst = _d.joinpath(f'{_subs}{_name}{ext}')
+    src_is_dir = src_path.is_dir()
+    dst_is_dir = not bool(dst_path.suffix)
 
-        if not _dst.parent.exists():
-            _dst.parent.mkdir(parents=True, exist_ok=True)
+    if dst_is_dir:
+        if not dst_path.exists():
+            dst_path.mkdir(parents=True, exist_ok=True)
+    else:
+        if not dst.parent.exists():
+            dst_path.parent.mkdir(parents=True, exist_ok=True)
 
-        shutil.copy(_src, _dst)
+    if src_is_dir:
+        if save_name is None:
+            shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
+        else:
+            shutil.copytree(src_path, dst_path.joinpath(save_name),
+                            dirs_exist_ok=True)
+    else:
+        src_suffix = src_path.suffix
 
-def get_files(src: Union[str, Path],
-              dst: Union[str, Path],
-              folders: Union[List[str], Tuple[str]]):
-    _src = Path(src)
-    _dst = Path(dst)
+        if src_suffix not in SHP_EXTS:
+            if save_name is None:
+                shutil.copy2(src_path, dst_path)
+            else:
+                if dst_is_dir:
+                    d = dst_path.joinpath(f"{save_name}{src_suffix}")
+                else:
+                    d = dst_path.with_name(save_name).with_suffix(src_suffix)
 
-    _src_len = len(_src.parts)
+                shutil.copy2(src_path, d)
+        else:
+            all_exist = all([src_path.with_suffix(ext).exists()
+                            for ext in SHP_EXTS])
+
+            if all_exist:
+                for ext in SHP_EXTS:
+                    if save_name is None:
+                        shutil.copy2(src_path.with_suffix(ext), dst_path)
+                    else:
+                        if dst_is_dir:
+                            d = dst_path.joinpath(f"{save_name}{ext}")
+                        else:
+                            d = dst_path.with_name(save_name).with_suffix(ext)
+
+                        shutil.copy2(src_path.with_suffix(ext), d)
+            else:
+                print(f"'{str(src)}' missing auxiliary shapefile files.")
+
+
+def copy_structure(src: Union[str, Path],
+                   dst: Union[str, Path],
+                   folders: Union[str, List[str], Tuple[str]]):
+    src_path = Path(src)
+    dst_path = Path(dst)
+
+    if isinstance(folders, str):
+        folders = [folders]
+
+    src_len = len(src_path.parts)
 
     for folder in folders:
-        for p in _src.rglob(folder):
+        for p in src_path.rglob(folder):
             parts = p.parts
             parts_len = len(parts)
-            keep = _src_len - parts_len
+            keep = src_len - parts_len
 
             subdirs = '/'.join(p.parts[keep:])
-            _d = _dst.joinpath(subdirs)
+            d = dst_path.joinpath(subdirs)
 
-            shutil.copytree(p, _d)
+            copy(src=p, dst=d)
 
-def organize_files(src: Union[str, Path],
-                   dst: Union[str, Path],
-                   name: str,
-                   subdirs: Union[str, None] = None,
-                   ota_index: Tuple[str, int] = ('_', 1)):
-    _src = Path(src)
-    _dst = Path(dst)
 
-    _splitter = ota_index[0]
-    _idx = ota_index[1]
-    _subs = '' if subdirs is None else f'{subdirs}/'
+def copy_pattern(src_path: Union[str, Path],
+                 dst_path: Union[str, Path],
+                 file_filter: str,
+                 pattern_read: str,
+                 pattern_out: str,
+                 recursive: bool = False,
+                 save_name: str = None):
 
-    for p in _src.glob('*.shp'):
-        ota = p.stem.split(_splitter)[_idx]
+    src_path = Path(src)
+    dst_path = Path(dst)
 
-        copy_shp(p, _dst, name=name, subdirs=f'{ota}/{_subs}{name}')
+    pattern = FilePattern(pattern_read)
+
+    if recursive:
+        file_filter = f"**/{file_filter}"
+
+    for p in src_path.glob(file_filter):
+        parts = pattern.match(p.stem)
+        sub_dst = replace_all(pattern_out, parts)
+
+        copy(src=p, dst=dst_path.joinpath(sub_dst), save_name=save_name)
+
+
+if __name__ == "__main__":
+    src = "D:/.temp/KT5-16_ΠΑΡΑΔΟΣΗ_30-09-2021/ΣΥΝΗΜΜΕΝΑ ΑΡΧΕΙΑ/GEITONES"
+    dst = "D:/.temp/copy_tests"
+
+    name_pattern = "<ota>_<shapefile>"
+    folder_pattern = "<ota>/<shapefile>"
+
+    copy_pattern(src_path=src,
+                 dst_path=dst,
+                 file_filter='*.mdb',
+                 pattern_read=name_pattern,
+                 pattern_out=folder_pattern,
+                 recursive=True,
+                 save_name='GEITONES')
