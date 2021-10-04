@@ -2,11 +2,11 @@
 import json
 import os
 import random
-import shutil
 import string
-from pathlib import Path
-from typing import List, Tuple, Union
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+from shutil import copy2, copyfileobj, copytree
+from typing import List, Tuple, Union
 
 import requests
 
@@ -65,7 +65,7 @@ def download_image(url: str,
     if r.status_code == 200:
         r.raw.decode_content = True
         with open(dst, 'wb') as f:
-            shutil.copyfileobj(r.raw, f)
+            copyfileobj(r.raw, f)
             print(f"Saved -> {filename}")
     else:
         print(f"Request failed -> {url}")
@@ -93,23 +93,23 @@ def file_copy(src: Union[str, Path],
 
     if src_is_dir:
         if save_name is None:
-            shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
+            copytree(src_path, dst_path, dirs_exist_ok=True)
         else:
-            shutil.copytree(src_path, dst_path.joinpath(save_name),
-                            dirs_exist_ok=True)
+            copytree(src_path, dst_path.joinpath(save_name),
+                     dirs_exist_ok=True)
     else:
         src_suffix = src_path.suffix
 
         if src_suffix not in SHP_EXTS:
             if save_name is None:
-                shutil.copy2(src_path, dst_path)
+                copy2(src_path, dst_path)
             else:
                 if dst_is_dir:
                     d = dst_path.joinpath(f"{save_name}{src_suffix}")
                 else:
                     d = dst_path.with_name(save_name).with_suffix(src_suffix)
 
-                shutil.copy2(src_path, d)
+                copy2(src_path, d)
         else:
             all_exist = all([src_path.with_suffix(ext).exists()
                             for ext in SHP_EXTS])
@@ -117,14 +117,14 @@ def file_copy(src: Union[str, Path],
             if all_exist:
                 for ext in SHP_EXTS:
                     if save_name is None:
-                        shutil.copy2(src_path.with_suffix(ext), dst_path)
+                        copy2(src_path.with_suffix(ext), dst_path)
                     else:
                         if dst_is_dir:
                             d = dst_path.joinpath(f"{save_name}{ext}")
                         else:
                             d = dst_path.with_name(save_name).with_suffix(ext)
 
-                        shutil.copy2(src_path.with_suffix(ext), d)
+                        copy2(src_path.with_suffix(ext), d)
             else:
                 print(f"'{str(src)}' missing auxiliary shapefile files.")
 
