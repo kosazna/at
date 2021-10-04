@@ -70,9 +70,9 @@ def download_image(url: str,
         print(f"Request failed -> {url}")
 
 
-def copy(src: Union[str, Path],
-         dst: Union[str, Path],
-         save_name: Union[str, None] = None):
+def file_copy(src: Union[str, Path],
+              dst: Union[str, Path],
+              save_name: Union[str, None] = None):
     src_path = Path(src)
     dst_path = Path(dst)
 
@@ -128,7 +128,7 @@ def copy(src: Union[str, Path],
                 print(f"'{str(src)}' missing auxiliary shapefile files.")
 
 
-def copy_structure(src: Union[str, Path],
+def structure_copy(src: Union[str, Path],
                    dst: Union[str, Path],
                    folders: Union[str, List[str], Tuple[str]]):
     src_path = Path(src)
@@ -148,10 +148,10 @@ def copy_structure(src: Union[str, Path],
             subdirs = '/'.join(p.parts[keep:])
             d = dst_path.joinpath(subdirs)
 
-            copy(src=p, dst=d)
+            file_copy(src=p, dst=d)
 
 
-def copy_pattern(src_path: Union[str, Path],
+def pattern_copy(src_path: Union[str, Path],
                  dst_path: Union[str, Path],
                  file_filter: str,
                  pattern_read: str,
@@ -185,7 +185,7 @@ def copy_pattern(src_path: Union[str, Path],
             sub_dst = replace_all(pattern_out, parts)
             d = dst_path.joinpath(sub_dst)
 
-        copy(src=p, dst=d, save_name=name)
+        file_copy(src=p, dst=d, save_name=name)
 
 
 if __name__ == "__main__":
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     pattern_out = "KT5-16/<shapefile>"
     save_name = "<%filename%>_<ota>"
 
-    copy_pattern(src_path=src,
+    pattern_copy(src_path=src,
                  dst_path=dst,
                  file_filter='ASTENOT.shp',
                  pattern_read=pattern_read,
