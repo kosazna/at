@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 import re
 from typing import Dict
+from pathlib import Path
 
 
 class FilePattern(object):
@@ -31,6 +33,9 @@ class FilePattern(object):
             return pattern, kind
         elif '@' in pattern:
             kind = "PlaceholderPattern"  # "<ota@3:7><tomeas@8:9><enotita@10:11><gt@12:14>"
+            return pattern, kind
+        elif '$' in pattern:
+            kind = "FolderPattern"  # "<ota$2><shapefile$1>"
             return pattern, kind
         else:
             raise ValueError("At least one of '@' or '_' should be in pattern")
@@ -99,6 +104,12 @@ class FilePattern(object):
             else:
                 raise ValueError(
                     f"Pattern contains {nparts} variables but {atcount} placeholders '@'")
+        elif self.kind == "FolderPattern":
+            for part in parts:
+                var_name, idx = part.split('$')
+                self.variables[var_name] = {'start': None,
+                                            'end': None,
+                                            'index': -(int(idx) + 1)}
 
     def match(self, text: str) -> Dict[str, str]:
         values = {}
@@ -127,5 +138,14 @@ class FilePattern(object):
                     values[var] = text[s:]
                 else:
                     values[var] = text[s:e]
+
+        return values
+
+    def match_from_path(self, path: Path) -> Dict[str, str]:
+        values = {}
+        path_parts = path.parts
+
+        for var in self.variables:
+            values[var] = path_parts[self.variables[var]['index']]
 
         return values

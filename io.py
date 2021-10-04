@@ -9,8 +9,8 @@ from typing import List, Tuple, Union
 
 import requests
 
-from .pattern import FilePattern
-from .text import replace_all
+from pattern import FilePattern
+from text import replace_all
 
 SHP_EXTS = ('.shp', '.shx', '.dbf')
 
@@ -155,10 +155,9 @@ def copy_pattern(src_path: Union[str, Path],
                  dst_path: Union[str, Path],
                  file_filter: str,
                  pattern_read: str,
-                 pattern_out: str,
+                 pattern_out: Union[str, None] = None,
                  recursive: bool = False,
-                 save_name: str = None):
-
+                 save_name: Union[str, None] = None):
     src_path = Path(src)
     dst_path = Path(dst)
 
@@ -168,23 +167,39 @@ def copy_pattern(src_path: Union[str, Path],
         file_filter = f"**/{file_filter}"
 
     for p in src_path.glob(file_filter):
-        parts = pattern.match(p.stem)
-        sub_dst = replace_all(pattern_out, parts)
+        if pattern.kind == 'FolderPattern':
+            parts = pattern.match_from_path(p)
+        else:
+            parts = pattern.match(p.stem)
 
-        copy(src=p, dst=dst_path.joinpath(sub_dst), save_name=save_name)
+        parts['%filename%'] = p.stem
+
+        if save_name is None:
+            name = save_name
+        else:
+            name = replace_all(save_name, parts)
+
+        if pattern_out is None:
+            d = dst_path
+        else:
+            sub_dst = replace_all(pattern_out, parts)
+            d = dst_path.joinpath(sub_dst)
+
+        copy(src=p, dst=d, save_name=name)
 
 
 if __name__ == "__main__":
-    src = "D:/.temp/KT5-16_ΠΑΡΑΔΟΣΗ_30-09-2021/ΣΥΝΗΜΜΕΝΑ ΑΡΧΕΙΑ/GEITONES"
+    src = "D:/.temp/KT5-16_ΠΑΡΑΔΟΣΗ_30-09-2021/ΕΝΔΙΑΜΕΣΗ ΥΠΟΒΟΛΗ ΚΤΗΜΑΤΟΛΟΓΙΚΗΣ ΒΑΣΗΣ ΧΩΡΙΚΩΝ ΣΤΟΙΧΕΙΩΝ/SHAPE"
     dst = "D:/.temp/copy_tests"
 
-    name_pattern = "<ota>_<shapefile>"
-    folder_pattern = "<ota>/<shapefile>"
+    pattern_read = "<ota$2><shapefile$1>"
+    pattern_out = "KT5-16/<shapefile>"
+    save_name = "<%filename%>_<ota>"
 
     copy_pattern(src_path=src,
                  dst_path=dst,
-                 file_filter='*.mdb',
-                 pattern_read=name_pattern,
-                 pattern_out=folder_pattern,
+                 file_filter='ASTENOT.shp',
+                 pattern_read=pattern_read,
+                 pattern_out=pattern_out,
                  recursive=True,
-                 save_name='GEITONES')
+                 save_name=save_name)
