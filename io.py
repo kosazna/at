@@ -153,8 +153,8 @@ def structure_copy(src: Union[str, Path],
                 executor.submit(file_copy, p, d)
 
 
-def pattern_copy(src_path: Union[str, Path],
-                 dst_path: Union[str, Path],
+def pattern_copy(src: Union[str, Path],
+                 dst: Union[str, Path],
                  filters: Union[str, List[str], Tuple[str]],
                  pattern_read: str,
                  pattern_out: Union[str, None] = None,
@@ -209,8 +209,8 @@ if __name__ == "__main__":
     # save_name = "<%filename%>_<ota>"
     save_name = None
 
-    pattern_copy(src_path=src,
-                 dst_path=dst,
+    pattern_copy(src=src,
+                 dst=dst,
                  filters=['ASTENOT', 'ASTOTA', 'PST'],
                  pattern_read=pattern_read,
                  pattern_out=pattern_out,
