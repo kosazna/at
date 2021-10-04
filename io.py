@@ -6,6 +6,7 @@ import shutil
 import string
 from pathlib import Path
 from typing import List, Tuple, Union
+from concurrent.futures import ThreadPoolExecutor
 
 import requests
 
@@ -139,16 +140,17 @@ def structure_copy(src: Union[str, Path],
 
     src_len = len(src_path.parts)
 
-    for folder in folders:
-        for p in src_path.rglob(folder):
-            parts = p.parts
-            parts_len = len(parts)
-            keep = src_len - parts_len
+    with ThreadPoolExecutor() as executor:
+        for folder in folders:
+            for p in src_path.rglob(folder):
+                parts = p.parts
+                parts_len = len(parts)
+                keep = src_len - parts_len
 
-            subdirs = '/'.join(p.parts[keep:])
-            d = dst_path.joinpath(subdirs)
+                subdirs = '/'.join(p.parts[keep:])
+                d = dst_path.joinpath(subdirs)
 
-            file_copy(src=p, dst=d)
+                executor.submit(file_copy, p, d)
 
 
 def pattern_copy(src_path: Union[str, Path],
@@ -166,26 +168,27 @@ def pattern_copy(src_path: Union[str, Path],
     if recursive:
         file_filter = f"**/{file_filter}"
 
-    for p in src_path.glob(file_filter):
-        if pattern.kind == 'FolderPattern':
-            parts = pattern.match_from_path(p)
-        else:
-            parts = pattern.match(p.stem)
+    with ThreadPoolExecutor() as executor:
+        for p in src_path.glob(file_filter):
+            if pattern.kind == 'FolderPattern':
+                parts = pattern.match_from_path(p)
+            else:
+                parts = pattern.match(p.stem)
 
-        parts['%filename%'] = p.stem
+            parts['%filename%'] = p.stem
 
-        if save_name is None:
-            name = save_name
-        else:
-            name = replace_all(save_name, parts)
+            if save_name is None:
+                name = save_name
+            else:
+                name = replace_all(save_name, parts)
 
-        if pattern_out is None:
-            d = dst_path
-        else:
-            sub_dst = replace_all(pattern_out, parts)
-            d = dst_path.joinpath(sub_dst)
+            if pattern_out is None:
+                d = dst_path
+            else:
+                sub_dst = replace_all(pattern_out, parts)
+                d = dst_path.joinpath(sub_dst)
 
-        file_copy(src=p, dst=d, save_name=name)
+            executor.submit(file_copy, p, d, name)
 
 
 if __name__ == "__main__":
@@ -198,8 +201,10 @@ if __name__ == "__main__":
 
     pattern_copy(src_path=src,
                  dst_path=dst,
-                 file_filter='ASTENOT.shp',
+                 file_filter='*.shp',
                  pattern_read=pattern_read,
                  pattern_out=pattern_out,
                  recursive=True,
                  save_name=save_name)
+
+    # structure_copy(src, dst, ['ASTENOT', 'ASTOTA', 'PST'])
