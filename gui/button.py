@@ -10,9 +10,8 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
 
 
 class Button(QToolButton):
-    def __init__(self, label='', parent: QWidget = None, css: str = None, *args, **kwargs):
+    def __init__(self, label='', parent: QWidget = None, *args, **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.css = css
         self.setupUi(label)
 
     def setupUi(self, label):
@@ -27,7 +26,7 @@ class Button(QToolButton):
 
     def enable(self, color):
         self.setEnabled(True)
-        self.setStyle(f"{color.name.capitalize()}Button")
+        self.setStyle(f"{color.capitalize()}Button")
         self.setCursor(QCursor(Qt.PointingHandCursor))
 
     def subscribe(self, func):
@@ -35,5 +34,4 @@ class Button(QToolButton):
 
     def setStyle(self, object_name):
         self.setObjectName(object_name)
-        if self.css is not None:
-            self.setStyleSheet(self.css)
+        self.setStyleSheet(self.styleSheet())

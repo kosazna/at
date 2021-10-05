@@ -10,17 +10,14 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
 
 
 class CheckInput(QCheckBox):
-    def __init__(self, label='', checked=True, parent=None, css: str = None, *args, **kwargs):
+    def __init__(self, label='', checked=True, parent=None, *args, **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.css = css
         self.setupUi(label, checked)
 
     def setupUi(self, label, checked):
         self.setText(label)
         self.setObjectName("Check")
         self.setChecked(checked)
-        if self.css is not None:
-            self.setStyleSheet(self.css)
 
     def enable(self, text=''):
         self.setEnabled(True)

@@ -85,10 +85,9 @@ class Dummy(QWidget):
             self.i += 10
             self.progress.setValueMaximum(self.i, 100)
 
-        if self.i == self.progress.maximum():
-            self.progress.setValue(self.progress.maximum())
-            self.progress.setObjectName("ProgressBarFinished")
-            self.progress.setStyleSheet(cssGuide)
+        else:
+            self.button2.enable('red')
+            self.statusSmall.enable('Online')
 
 
 if __name__ == '__main__':

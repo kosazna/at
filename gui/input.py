@@ -17,11 +17,9 @@ class StrInput(QWidget):
                  completer=None,
                  hidden=False,
                  size=(70, 200),
-                 css:str=None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.css = css
         self.setupUi(label, orientation, hidden, size)
         self.setCompleter(completer)
 
@@ -35,9 +33,6 @@ class StrInput(QWidget):
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         if hidden:
             self.lineEdit.setEchoMode(QLineEdit.EchoMode.Password)
-
-        if self.css is not None:
-            self.setStyleSheet(self.css)
 
         if orientation == VERTICAL:
             layout = QVBoxLayout()
@@ -92,7 +87,7 @@ class StrInput(QWidget):
             _completer.setModelSorting(QCompleter.CaseInsensitivelySortedModel)
             _completer.setFilterMode(Qt.MatchContains)
             _completer.popup().setObjectName("CompleterPopup")
-            _completer.popup().setStyleSheet(self.css)
+            _completer.popup().setStyleSheet(self.styleSheet())
             self.lineEdit.setCompleter(_completer)
 
 
@@ -103,11 +98,9 @@ class IntInput(QWidget):
                  value_range=None,
                  parent=None,
                  size=(70, 200),
-                 css:str=None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.css = css
         self.setupUi(label, orientation, value_range, size)
 
     def setupUi(self, label, orientation, value_range, size):
@@ -122,9 +115,6 @@ class IntInput(QWidget):
         self.lineEdit.setValidator(self.validator)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-
-        if self.css is not None:
-            self.setStyleSheet(self.css)
 
         if orientation == VERTICAL:
             layout = QVBoxLayout()

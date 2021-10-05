@@ -15,11 +15,9 @@ class StatusIndicator(QWidget):
                  status='',
                  parent=None,
                  size=70,
-                 css=None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.css = css
         self.setupUi(label, status, size)
 
     def setupUi(self, label, status, size):
@@ -40,9 +38,6 @@ class StatusIndicator(QWidget):
             self.button.setObjectName("StatusBigDisabled")
             layout.addWidget(self.button)
             self.has_label = False
-
-        if self.css is not None:
-            self.setStyleSheet(self.css)
 
         layout.setContentsMargins(0, 4, 0, 4)
         layout.setSpacing(4)
@@ -74,8 +69,7 @@ class StatusIndicator(QWidget):
 
     def setStyle(self, object_name):
         self.button.setObjectName(object_name)
-        if self.css is not None:
-            self.button.setStyleSheet(self.css)
+        self.setStyleSheet(self.styleSheet())
 
     def subscribe(self, func):
         self.button.clicked.connect(func)

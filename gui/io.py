@@ -22,11 +22,9 @@ class IOWidget(QWidget):
                  parent=None,
                  orientation=HORIZONTAL,
                  size=70,
-                 css=None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.css = css
         self.setupUi(label, placeholder, orientation, size)
         self.button.clicked.connect(self.browse)
         self.lineEdit.textChanged.connect(lambda x: self.pathExists(x))
@@ -45,8 +43,6 @@ class IOWidget(QWidget):
         self.button.setCursor(QCursor(Qt.PointingHandCursor))
         self.button.setText("2")
         self.button.setObjectName("Browse")
-        if self.css is not None:
-            self.setStyleSheet(self.css)
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()
             layout.addWidget(self.label)
@@ -97,7 +93,7 @@ class IOWidget(QWidget):
 
     def updateStyle(self, status):
         self.lineEdit.setObjectName(status)
-        self.lineEdit.setStyleSheet(self.css)
+        self.lineEdit.setStyleSheet(self.styleSheet())
         if status == self.ok[0]:
             self.lineEdit.setToolTip(self.ok[1])
         elif status == self.warning[0]:
