@@ -129,41 +129,17 @@ def file_copy(src: Union[str, Path],
                 print(f"'{str(src)}' missing auxiliary shapefile files.")
 
 
-def structure_copy(src: Union[str, Path],
-                   dst: Union[str, Path],
-                   folders: Union[str, List[str], Tuple[str]]):
-    src_path = Path(src)
-    dst_path = Path(dst)
-
-    if isinstance(folders, str):
-        folders = [folders]
-
-    src_len = len(src_path.parts)
-
-    with ThreadPoolExecutor() as executor:
-        for folder in folders:
-            for p in src_path.rglob(folder):
-                parts = p.parts
-                parts_len = len(parts)
-                keep = src_len - parts_len
-
-                subdirs = '/'.join(p.parts[keep:])
-                d = dst_path.joinpath(subdirs)
-
-                executor.submit(file_copy, p, d)
-
-
 def pattern_copy(src: Union[str, Path],
                  dst: Union[str, Path],
                  filters: Union[str, List[str], Tuple[str]],
-                 pattern_read: str,
-                 pattern_out: Union[str, None] = None,
-                 recursive: bool = False,
-                 save_name: Union[str, None] = None):
+                 read_pattern: str,
+                 save_pattern: Union[str, None] = None,
+                 save_name: Union[str, None] = None,
+                 recursive: bool = False):
     src_path = Path(src)
     dst_path = Path(dst)
 
-    pattern = FilePattern(pattern_read)
+    pattern = FilePattern(read_pattern)
     file_filters = []
 
     if isinstance(filters, str):
@@ -184,17 +160,18 @@ def pattern_copy(src: Union[str, Path],
                 else:
                     parts = pattern.match(p.stem)
 
-                parts['%filename%'] = p.stem
+                parts['%name%'] = p.stem
+                parts['%parent%'] = p.parent
 
                 if save_name is None:
                     name = save_name
                 else:
                     name = replace_all(save_name, parts)
 
-                if pattern_out is None:
+                if save_pattern is None:
                     d = dst_path
                 else:
-                    sub_dst = replace_all(pattern_out, parts)
+                    sub_dst = replace_all(save_pattern, parts)
                     d = dst_path.joinpath(sub_dst)
 
                 executor.submit(file_copy, p, d, name)
@@ -212,8 +189,8 @@ if __name__ == "__main__":
     pattern_copy(src=src,
                  dst=dst,
                  filters=['ASTENOT', 'ASTOTA', 'PST'],
-                 pattern_read=pattern_read,
-                 pattern_out=pattern_out,
+                 read_pattern=pattern_read,
+                 save_pattern=pattern_out,
                  recursive=True,
                  save_name=save_name)
 
