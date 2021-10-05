@@ -9,6 +9,7 @@ from at.gui.input import StrInput, IntInput
 from at.gui.io import FileInput, FileOutput, FolderInput
 from at.gui.progress import ProgressBar
 from at.gui.status import StatusIndicator
+from at.gui.list import ListWidget
 
 from pathlib import Path
 
@@ -55,6 +56,11 @@ class Dummy(QWidget):
 
         self.progress = ProgressBar()
 
+        self.listWidget = ListWidget('Select Shapefiles', ['ASTENOT', 'ASTOTA',
+                                                           'ASTTOM', 'PST',
+                                                           'ROADS', 'VST',
+                                                           'FBOUND'])
+
         self.layoutGeneral.addWidget(self.folderInput)
         self.layoutGeneral.addWidget(self.fileInput)
         self.layoutGeneral.addWidget(self.fileOutput)
@@ -66,6 +72,7 @@ class Dummy(QWidget):
         self.layoutComboCheck.addWidget(self.check, 1)
         self.layoutGeneral.addLayout(self.layoutComboCheck)
         self.layoutGeneral.addWidget(self.statusSmall)
+        self.layoutGeneral.addWidget(self.listWidget)
 
         self.layoutButtons.addWidget(self.button1)
         self.layoutButtons.addWidget(self.button2)

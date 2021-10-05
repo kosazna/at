@@ -159,7 +159,7 @@
 }
 
 #StatusSmallOffline {
-  background-color: #f5e1e3;
+  background-color: #ef3e4f;
   color: #212529;
   border-radius: 3px;
   font-family: "Segoe UI";
@@ -385,4 +385,14 @@
 
 #ProgressBarFinished::chunk {
   background-color: #2ad66b;
+}
+
+#ListWidget {
+  border: 1px solid #6c757d;
+  color: #212529;
+  border-radius: 3px;
+  font-family: "Segoe UI";
+  font: 12px;
+  min-width: 150px;
+  max-width: 150px;
 }
