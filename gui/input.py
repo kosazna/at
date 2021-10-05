@@ -22,6 +22,7 @@ class StrInput(QWidget):
         super().__init__(parent=parent, *args, **kwargs)
         self.setupUi(label, orientation, hidden, size)
         self.setCompleter(completer)
+        self.lineEditOriginalSize = size[1]
 
     def setupUi(self, label, orientation, hidden, size):
         self.label = QLabel()
@@ -46,11 +47,15 @@ class StrInput(QWidget):
 
     def disable(self):
         self.lineEdit.setEnabled(False)
-        self.lineEdit.setStyleSheet(make_stylesheet(dark))
+        self.setStyle('LineEditOff')
 
     def enable(self):
         self.lineEdit.setEnabled(True)
-        self.lineEdit.setStyleSheet(make_stylesheet(white))
+        self.setStyle(f'LineEdit{self.lineEditOriginalSize}')
+
+    def setStyle(self, object_name):
+        self.lineEdit.setObjectName(object_name)
+        self.lineEdit.setStyleSheet(self.styleSheet())
 
     def setText(self, text):
         self.lineEdit.setText(text)
@@ -102,6 +107,7 @@ class IntInput(QWidget):
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
         self.setupUi(label, orientation, value_range, size)
+        self.lineEditOriginalSize = size[1]
 
     def setupUi(self, label, orientation, value_range, size):
         self.label = QLabel()
@@ -128,11 +134,15 @@ class IntInput(QWidget):
 
     def disable(self):
         self.lineEdit.setEnabled(False)
-        self.lineEdit.setStyleSheet(make_stylesheet(dark))
+        self.setStyle('LineEditOff')
 
     def enable(self):
         self.lineEdit.setEnabled(True)
-        self.lineEdit.setStyleSheet(make_stylesheet(white))
+        self.setStyle(f'LineEdit{self.lineEditOriginalSize}')
+
+    def setStyle(self, object_name):
+        self.lineEdit.setObjectName(object_name)
+        self.lineEdit.setStyleSheet(self.styleSheet())
 
     def setText(self, text):
         self.lineEdit.setText(text)

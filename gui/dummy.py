@@ -88,6 +88,7 @@ class Dummy(QWidget):
         else:
             self.button2.enable('red')
             self.statusSmall.enable('Online')
+            self.input.disable()
 
 
 if __name__ == '__main__':
