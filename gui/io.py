@@ -212,15 +212,14 @@ class FileOutput(IOWidget):
 
     def browse(self):
         filename = QFileDialog.getSaveFileName(directory=self.lastVisit,
-                                               caption="Save file as",
-                                               initialFilter='*.xlsx')
+                                               caption="Save file as")
 
-        file_path = None
+        file_path = filename[0]
 
-        if filename[0].endswith('.xlsx'):
-            file_path = filename[0]
-        else:
-            file_path = filename[0] + '.xlsx'
+        # if filename[0].endswith('.xlsx'):
+        #     file_path = filename[0]
+        # else:
+        #     file_path = filename[0] + '.xlsx'
 
         if file_path:
             self.lineEdit.setText(file_path)
