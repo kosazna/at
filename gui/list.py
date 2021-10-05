@@ -2,7 +2,7 @@
 from at.gui.check import CheckInput
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QAbstractItemView, QLabel, QListWidget,
-                             QListWidgetItem, QVBoxLayout, QWidget)
+                             QListWidgetItem, QVBoxLayout, QWidget, QHBoxLayout)
 
 from helper import *
 
@@ -15,9 +15,12 @@ class ListWidget(QWidget):
         self.checkBox.subscribe(self.selectAll)
 
     def setupUi(self, label, items):
-        self.layout = QVBoxLayout(self)
+        self.layout = QVBoxLayout()
         self.layout.setSpacing(1)
         self.layout.setContentsMargins(0, 4, 0, 4)
+
+        self.layoutTop = QHBoxLayout()
+        self.layoutTop.setSpacing(1)
 
         self.label = QLabel()
         self.label.setText(label)
@@ -30,6 +33,7 @@ class ListWidget(QWidget):
         self.listWidget.setAlternatingRowColors(True)
         self.listWidget.setSpacing(1)
         self.listWidget.setSelectionMode(QAbstractItemView.NoSelection)
+
         for item in items:
             qlistwidgetitem = QListWidgetItem(self.listWidget)
             qlistwidgetitem.setCheckState(Qt.Unchecked)
@@ -39,9 +43,11 @@ class ListWidget(QWidget):
 
         self.checkBox = CheckInput('Select All', checked=False, parent=self)
 
-        self.layout.addWidget(self.label,)
+        self.layoutTop.addWidget(self.label)
+        self.layoutTop.addWidget(self.checkBox, 0, Qt.AlignRight)
+        self.layout.addLayout(self.layoutTop)
         self.layout.addWidget(self.listWidget)
-        self.layout.addWidget(self.checkBox, 0, Qt.AlignHCenter)
+        self.setLayout(self.layout)
 
     def getCheckState(self, rtype='list'):
         if rtype == 'list':
