@@ -49,7 +49,9 @@ class ListWidget(QWidget):
         self.layout.addWidget(self.listWidget)
         self.layout.addWidget(self.checkBox, 0, Qt.AlignHCenter)
 
-    def getCheckState(self):
+    def getCheckState(self, rtype='list'):
+        if rtype == 'list':
+            return [name for name in self.items if bool(self.items[name]['widget'].checkState())]
         return {name: bool(self.items[name]['widget'].checkState()) for name in self.items}
 
     def selectAll(self):

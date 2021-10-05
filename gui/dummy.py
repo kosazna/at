@@ -91,7 +91,7 @@ class Dummy(QWidget):
         if self.i < self.progress.maximum():
             self.i += 10
             self.progress.setValueMaximum(self.i, 100)
-
+            print(self.listWidget.getCheckState())
         else:
             self.button2.enable('red')
             self.statusSmall.enable('Online')
