@@ -15,11 +15,11 @@ class FileNameInput(QWidget):
                  placeholder='',
                  parent=None,
                  size=(70, 200),
-                 styleguide='',
+                 css:str=None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.styleguide = styleguide
+        self.css = css
         self.setupUi(label, placeholder, size)
 
     def setupUi(self, label, placeholder, size):
@@ -34,9 +34,13 @@ class FileNameInput(QWidget):
         validator = QRegExpValidator(regexp, self.lineEdit)
         self.lineEdit.setValidator(validator)
         self.setPlaceholder(placeholder)
+        if self.css is not None:
+            self.setStyleSheet(self.css)
         layout = QHBoxLayout()
         layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)
+        layout.setContentsMargins(0, 4, 0, 4)
+        layout.setSpacing(4)
         self.setLayout(layout)
 
     def getText(self, suffix=None):

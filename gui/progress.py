@@ -10,8 +10,9 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
 
 
 class ProgressBar(QProgressBar):
-    def __init__(self, parent=None, *args, **kwargs):
+    def __init__(self, parent=None, css=None, *args, **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
+        self.css = css
         self.setupUi()
 
     def setupUi(self):
@@ -23,7 +24,8 @@ class ProgressBar(QProgressBar):
 
     def setStyle(self, object_name):
         self.setObjectName(object_name)
-        self.setStyleSheet(cssGuide)
+        if self.css is not None:
+            self.setStyleSheet(self)
 
     def setValueMaximum(self, current_value, maximum):
         self.setMaximum(maximum)

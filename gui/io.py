@@ -22,11 +22,11 @@ class IOWidget(QWidget):
                  parent=None,
                  orientation=HORIZONTAL,
                  size=70,
-                 styleguide='',
+                 css=None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.styleguide = styleguide
+        self.css = css
         self.setupUi(label, placeholder, orientation, size)
         self.button.clicked.connect(self.browse)
         self.lineEdit.textChanged.connect(lambda x: self.pathExists(x))
@@ -45,6 +45,8 @@ class IOWidget(QWidget):
         self.button.setCursor(QCursor(Qt.PointingHandCursor))
         self.button.setText("2")
         self.button.setObjectName("Browse")
+        if self.css is not None:
+            self.setStyleSheet(self.css)
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()
             layout.addWidget(self.label)
@@ -57,6 +59,8 @@ class IOWidget(QWidget):
             inner.addWidget(self.lineEdit)
             inner.addWidget(self.button)
             layout.addLayout(inner)
+        layout.setContentsMargins(0, 4, 0, 4)
+        layout.setSpacing(4)
         self.setLayout(layout)
 
     @classmethod
@@ -93,7 +97,7 @@ class IOWidget(QWidget):
 
     def updateStyle(self, status):
         self.lineEdit.setObjectName(status)
-        self.lineEdit.setStyleSheet(self.styleguide)
+        self.lineEdit.setStyleSheet(self.css)
         if status == self.ok[0]:
             self.lineEdit.setToolTip(self.ok[1])
         elif status == self.warning[0]:
@@ -211,7 +215,9 @@ class FileOutput(IOWidget):
                          **kwargs)
 
     def browse(self):
-        filename = QFileDialog.getSaveFileName(directory=self.lastVisit)
+        filename = QFileDialog.getSaveFileName(directory=self.lastVisit,
+                                               caption="Save file as",
+                                               initialFilter='*.xlsx')
 
         file_path = None
 

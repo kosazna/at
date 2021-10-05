@@ -15,9 +15,11 @@ class ComboInput(QWidget):
                  items=None,
                  parent=None,
                  size=(70, 200),
+                 css: str = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
+        self.css = css
         self.setupUi(label, items, size)
 
     def setupUi(self, label, items, size):
@@ -28,9 +30,13 @@ class ComboInput(QWidget):
         self.comboEdit.setObjectName(f"Combo{size[1]}")
         self.comboEdit.setSizeAdjustPolicy(
             QComboBox.SizeAdjustPolicy.AdjustToContents)
+        if self.css is not None:
+            self.setStyleSheet(self.css)
         layout = QHBoxLayout()
         layout.addWidget(self.label)
         layout.addWidget(self.comboEdit, 1, alignment=Qt.AlignLeft)
+        layout.setContentsMargins(0, 4, 0, 4)
+        layout.setSpacing(4)
         self.setLayout(layout)
         if items is not None:
             self.comboEdit.addItems(items)
