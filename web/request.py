@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import random
+import string
+from os.path import join, splitext
+from shutil import copyfileobj
+from typing import Union
+
 import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
@@ -46,3 +52,39 @@ def request_soup(url, browser='firefox'):
     soup = BeautifulSoup(r.text, 'lxml')
 
     return soup
+
+
+def download_image(url: str,
+                   destination: str,
+                   save_name: Union[str, None] = None) -> None:
+    r = requests.get(url, stream=True)
+    url_file = url.split("/")[-1]
+    ext = splitext(url_file)[1]
+
+    if ext:
+        _ext = ext
+    else:
+        _ext = '.jpg'
+
+    if save_name is None:
+        basename = ''.join(random.choices(string.ascii_letters + string.digits,
+                                          k=32))
+        filename = f"{basename}{_ext}"
+    elif save_name == 'original':
+        if ext:
+            filename = url_file
+        else:
+            filename = f"{url_file}{_ext}"
+    else:
+        basename = save_name
+        filename = f"{basename}{_ext}"
+
+    dst = join(destination, filename)
+
+    if r.status_code == 200:
+        r.raw.decode_content = True
+        with open(dst, 'wb') as f:
+            copyfileobj(r.raw, f)
+            print(f"Saved -> {filename}")
+    else:
+        print(f"Request failed -> {url}")

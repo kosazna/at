@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 import json
-import os
-import random
-import string
+from os import startfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from shutil import copy2, copyfileobj, copytree
+from shutil import copy2, copytree
 from typing import List, Tuple, Union
-
-import requests
 
 from pattern import FilePattern
 from text import replace_all
@@ -17,58 +13,23 @@ SHP_EXTS = ('.shp', '.shx', '.dbf')
 
 
 def open_excel(filepath: Union[str, Path]) -> None:
-    os.startfile(filepath)
+    startfile(filepath)
 
 
-def load_json(filepath: Union[str, Path]) -> None:
+def load_json(filepath: Union[str, Path]) -> dict:
     try:
         with open(filepath, "r", encoding="utf-8") as f:
             data = json.load(f)
         return data
     except FileNotFoundError:
         print(f"File does not exist -> {filepath}")
+        return {}
 
 
 def write_json(filepath: Union[str, Path],
                data: dict) -> None:
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
-
-
-def download_image(url: str,
-                   destination: str,
-                   save_name: Union[str, None] = None) -> None:
-    r = requests.get(url, stream=True)
-    url_file = url.split("/")[-1]
-    ext = os.path.splitext(url_file)[1]
-
-    if ext:
-        _ext = ext
-    else:
-        _ext = '.jpg'
-
-    if save_name is None:
-        basename = ''.join(random.choices(string.ascii_letters + string.digits,
-                                          k=32))
-        filename = f"{basename}{_ext}"
-    elif save_name == 'original':
-        if ext:
-            filename = url_file
-        else:
-            filename = f"{url_file}{_ext}"
-    else:
-        basename = save_name
-        filename = f"{basename}{_ext}"
-
-    dst = os.path.join(destination, filename)
-
-    if r.status_code == 200:
-        r.raw.decode_content = True
-        with open(dst, 'wb') as f:
-            copyfileobj(r.raw, f)
-            print(f"Saved -> {filename}")
-    else:
-        print(f"Request failed -> {url}")
 
 
 def file_copy(src: Union[str, Path],
@@ -175,23 +136,3 @@ def pattern_copy(src: Union[str, Path],
                     d = dst_path.joinpath(sub_dst)
 
                 executor.submit(file_copy, p, d, name)
-
-
-if __name__ == "__main__":
-    src = "D:/.temp/KT5-16_ΠΑΡΑΔΟΣΗ_30-09-2021/ΕΝΔΙΑΜΕΣΗ ΥΠΟΒΟΛΗ ΚΤΗΜΑΤΟΛΟΓΙΚΗΣ ΒΑΣΗΣ ΧΩΡΙΚΩΝ ΣΤΟΙΧΕΙΩΝ/SHAPE"
-    dst = "D:/.temp/copy_tests"
-
-    pattern_read = "<ota$1><folder$0>"
-    pattern_out = "<ota>/<folder>"
-    # save_name = "<%filename%>_<ota>"
-    save_name = None
-
-    pattern_copy(src=src,
-                 dst=dst,
-                 filters=['ASTENOT', 'ASTOTA', 'PST'],
-                 read_pattern=pattern_read,
-                 save_pattern=pattern_out,
-                 recursive=True,
-                 save_name=save_name)
-
-    # structure_copy(src, dst, ['ASTENOT', 'ASTOTA', 'PST'])
