@@ -3,7 +3,7 @@
 import pandas as pd
 from typing import List, Union
 
-from at.container.collection import ItemCollection
+from at.data.collection import ItemCollection
 
 
 def collection2dataframe(collection: ItemCollection,
