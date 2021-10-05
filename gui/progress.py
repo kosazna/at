@@ -29,5 +29,5 @@ class ProgressBar(QProgressBar):
         self.setMaximum(maximum)
         self.setValue(current_value)
 
-        if current_value == maximum:
-            self.setStyle("ProgressBarFinished")
+        # if current_value == maximum:
+        #     self.setStyle("ProgressBarFinished")
