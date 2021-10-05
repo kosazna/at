@@ -1,17 +1,10 @@
 # -*- coding: utf-8 -*-
-import os
+from at.gui.check import CheckInput
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (QAbstractItemView, QLabel, QListWidget,
+                             QListWidgetItem, QVBoxLayout, QWidget)
 
 from helper import *
-from PyQt5.QtCore import QRegExp, Qt
-from PyQt5.QtGui import QCursor, QFont, QIntValidator, QRegExpValidator, QIcon
-from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
-                             QFileDialog, QHBoxLayout, QLabel, QLineEdit,
-                             QMessageBox, QSizePolicy, QStackedLayout, QStyle,
-                             QToolButton, QVBoxLayout, QWidget, QProgressBar,
-                             QListWidget, QListWidgetItem, QAbstractItemView,
-                             QGroupBox)
-
-from at.gui.check import CheckInput
 
 
 class ListWidget(QWidget):
@@ -32,6 +25,7 @@ class ListWidget(QWidget):
 
         self.setObjectName("ListWidget")
         self.listWidget = QListWidget(self)
+        self.listWidget.setObjectName("ListWidget")
         self.listWidget.setSortingEnabled(True)
         self.listWidget.setAlternatingRowColors(True)
         self.listWidget.setSpacing(1)
@@ -63,3 +57,16 @@ class ListWidget(QWidget):
             for item in self.items:
                 self.items[item]['widget'].setCheckState(Qt.Unchecked)
                 self.items[item]['checked'] = self.items[item]['widget'].checkState()
+
+    def addItems(self, items):
+        if isinstance(items, str):
+            items2add = [items]
+        else:
+            items2add = items
+
+        for item in items2add:
+            qlistwidgetitem = QListWidgetItem(self.listWidget)
+            qlistwidgetitem.setCheckState(Qt.Unchecked)
+            qlistwidgetitem.setText(item)
+            self.items[item] = {'widget': qlistwidgetitem,
+                                'checked': qlistwidgetitem.checkState()}

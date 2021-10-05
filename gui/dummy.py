@@ -26,7 +26,8 @@ class Dummy(QWidget):
         super().__init__(parent=parent, *args, **kwargs)
         self.setupUi()
         self.i = 0
-        self.button1.clicked.connect(self.changeProgress)
+        self.button1.clicked.connect(self.button1action)
+        self.button2.clicked.connect(self.button2action)
 
     def setupUi(self):
         self.setObjectName("MainWidget")
@@ -87,15 +88,19 @@ class Dummy(QWidget):
 
         self.setLayout(self.layout)
 
-    def changeProgress(self):
+    def button1action(self):
         if self.i < self.progress.maximum():
             self.i += 10
             self.progress.setValueMaximum(self.i, 100)
-            print(self.listWidget.getCheckState())
+            
+            print(self.listWidget.getCheckState('dict'))
         else:
             self.button2.enable('red')
             self.statusSmall.enable('Online')
             self.input.disable()
+
+    def button2action(self):
+        self.listWidget.addItems('MRT')
 
 
 if __name__ == '__main__':
