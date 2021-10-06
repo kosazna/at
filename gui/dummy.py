@@ -17,7 +17,7 @@ from pathlib import Path
 
 from at.gui.helper import *
 
-cssGuide = Path("D:/.temp/.dev/.aztool/at/gui/style.css").read_text()
+cssGuide = Path("D:/.temp/.dev/.aztool/at/gui/_style.css").read_text()
 
 
 class Dummy(QWidget):

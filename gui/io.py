@@ -7,7 +7,7 @@ from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import (QFileDialog, QHBoxLayout, QLabel, QLineEdit,
                              QToolButton, QVBoxLayout, QWidget)
 
-from helper import *
+from at.gui.helper import *
 
 
 class IOWidget(QWidget):

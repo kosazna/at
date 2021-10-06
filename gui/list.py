@@ -8,8 +8,6 @@ from PyQt5.QtWidgets import (QAbstractItemView, QAbstractScrollArea,
                              QHBoxLayout, QLabel, QListView, QListWidget,
                              QListWidgetItem, QVBoxLayout, QWidget)
 
-from helper import *
-
 
 class ListWidget(QWidget):
     def __init__(self,

@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from helper import *
-
 from PyQt5.QtWidgets import QCheckBox, QWidget
 
 

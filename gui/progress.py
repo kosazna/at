@@ -2,8 +2,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QProgressBar
 
-from helper import *
-
 
 class ProgressBar(QProgressBar):
     def __init__(self, parent=None, *args, **kwargs):

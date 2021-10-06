@@ -4,8 +4,6 @@ from typing import Union
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QComboBox, QHBoxLayout, QLabel, QWidget
 
-from helper import *
-
 
 class ComboInput(QWidget):
     def __init__(self,

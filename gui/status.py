@@ -5,8 +5,6 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QSizePolicy, QToolButton,
                              QWidget)
 
-from helper import *
-
 
 class StatusButton(QWidget):
     def __init__(self,

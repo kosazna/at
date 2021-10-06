@@ -5,8 +5,6 @@ from PyQt5.QtCore import QRegExp, Qt
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QWidget
 
-from helper import *
-
 
 class FileNameInput(QWidget):
     def __init__(self,
