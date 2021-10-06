@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-from helper import *
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QProgressBar
 
-from PyQt5.QtCore import QRegExp, Qt
-from PyQt5.QtGui import QCursor, QFont, QIntValidator, QRegExpValidator, QIcon
-from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
-                             QFileDialog, QHBoxLayout, QLabel, QLineEdit,
-                             QMessageBox, QSizePolicy, QStackedLayout, QStyle,
-                             QToolButton, QVBoxLayout, QWidget, QProgressBar)
+from helper import *
 
 
 class ProgressBar(QProgressBar):
@@ -19,7 +15,6 @@ class ProgressBar(QProgressBar):
         self.setMaximum(100)
         self.setValue(0)
         self.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
-        self.setStyle("ProgressBar")
 
     def setStyle(self, object_name):
         self.setObjectName(object_name)

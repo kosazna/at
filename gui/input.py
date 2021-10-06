@@ -1,21 +1,20 @@
 # -*- coding: utf-8 -*-
 from typing import Tuple, Union
-from helper import *
 
-from PyQt5.QtCore import QRegExp, Qt
-from PyQt5.QtGui import QCursor, QFont, QIntValidator, QRegExpValidator, QIcon
-from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
-                             QFileDialog, QHBoxLayout, QLabel, QLineEdit,
-                             QMessageBox, QSizePolicy, QStackedLayout, QStyle,
-                             QToolButton, QVBoxLayout, QWidget, QProgressBar)
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QIntValidator
+from PyQt5.QtWidgets import (QCompleter, QHBoxLayout, QLabel, QLineEdit,
+                             QVBoxLayout, QWidget)
+
+from helper import *
 
 
 class StrInput(QWidget):
     def __init__(self,
                  label: str = '',
                  orientation: str = HORIZONTAL,
-                 completer:Union[list, tuple, None]=None,
-                 hidden:bool=False,
+                 completer: Union[list, tuple, None] = None,
+                 hidden: bool = False,
                  labelsize: Tuple[int] = (70, 22),
                  editsize: Tuple[Union[int, None]] = (None, 22),
                  parent: Union[QWidget, None] = None,
@@ -97,8 +96,6 @@ class StrInput(QWidget):
             _completer.setCaseSensitivity(Qt.CaseInsensitive)
             _completer.setModelSorting(QCompleter.CaseInsensitivelySortedModel)
             _completer.setFilterMode(Qt.MatchContains)
-            _completer.popup().setObjectName("CompleterPopup")
-            _completer.popup().setStyleSheet(self.styleSheet())
             self.lineEdit.setCompleter(_completer)
 
 
@@ -106,7 +103,7 @@ class IntInput(QWidget):
     def __init__(self,
                  label: str = '',
                  orientation: str = HORIZONTAL,
-                 value_range:Union[list, tuple, None]=None,
+                 value_range: Union[list, tuple, None] = None,
                  labelsize: Tuple[int] = (70, 22),
                  editsize: Tuple[Union[int, None]] = (None, 22),
                  parent: Union[QWidget, None] = None,
@@ -119,7 +116,6 @@ class IntInput(QWidget):
         self.label = QLabel()
         self.label.setText(label)
         self.label.setFixedSize(*labelsize)
-
 
         self.validator = QIntValidator()
         if value_range is not None:

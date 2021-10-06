@@ -1,7 +1,5 @@
 #MainWidget {
   background-color: #bdbdbd;
-  /* font-family: "Segoe UI";
-  font: 12px; */
 }
 
 #Browse {
@@ -42,67 +40,28 @@ QToolButton#greyButton {
   background-color: #6c757d;
 }
 
-#Check {
-  color: #212529;
-  max-height: 22px;
-  min-height: 22px;
-}
-
-#CompleterPopup {
-  border: 1px outset #22b4ee;
-  color: #212529;
-  border-radius: 3px;
-}
-
-#StatusBigDisabled {
-  background-color: #212529;
-  color: #212529;
-  border-radius: 3px;
-  font-weight: bold;
-  max-height: 22px;
-  min-height: 22px;
-  width: 600px;
-}
-
-#StatusBigEnabled {
+QToolButton#statusOn {
   background-color: #212529;
   color: #f8f8f8;
   border-radius: 3px;
   font-weight: bold;
   max-height: 22px;
   min-height: 22px;
-  width: 600px;
 }
 
-#StatusSmallOffline {
-  background-color: #ef3e4f;
+QToolButton#statusOff {
+  background-color: #212529;
   color: #212529;
   border-radius: 3px;
   font-weight: bold;
   max-height: 22px;
   min-height: 22px;
-  width: 70px;
 }
 
-#StatusSmallIdle {
-  background-color: #ffc107;
+QCheckBox {
   color: #212529;
-  border-radius: 3px;
-  font-weight: bold;
-  max-height: 22px;
-  min-height: 22px;
-  width: 70px;
-}
-
-#StatusSmallRunning,
-#StatusSmallOnline {
-  background-color: #2ad66b;
-  color: #212529;
-  border-radius: 3px;
-  font-weight: bold;
-  max-height: 22px;
-  min-height: 22px;
-  width: 70px;
+  max-height: 25px;
+  min-height: 25px;
 }
 
 QComboBox {
@@ -145,20 +104,34 @@ QLabel {
   font-weight: bold;
 }
 
-#ProgressBar {
-  font-weight: bold;
-  max-height: 20px;
-  min-height: 20px;
+QLabel#statusNeutral {
+  background-color: #f8f8f8;
+  border: 1px solid #f8f8f8;
+  border-radius: 3px;
 }
 
-#ProgressBarFinished {
-  font-weight: bold;
-  max-height: 20px;
-  min-height: 20px;
-}
-
-#ProgressBarFinished::chunk {
+QLabel#statusOk {
   background-color: #2ad66b;
+  border: 1px solid #2ad66b;
+  border-radius: 3px;
+}
+
+QLabel#statusWarning {
+  background-color: #ffc107;
+  border: 1px solid #ffc107;
+  border-radius: 3px;
+}
+
+QLabel#statusError {
+  background-color: #ef3e4f;
+  border: 1px solid #ef3e4f;
+  border-radius: 3px;
+}
+
+QProgressBar {
+  font-weight: bold;
+  max-height: 20px;
+  min-height: 20px;
 }
 
 QListWidget {

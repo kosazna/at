@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 from typing import Tuple, Union
-from helper import *
 
 from PyQt5.QtCore import QRegExp, Qt
-from PyQt5.QtGui import QCursor, QFont, QIntValidator, QRegExpValidator, QIcon
-from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
-                             QFileDialog, QHBoxLayout, QLabel, QLineEdit,
-                             QMessageBox, QSizePolicy, QStackedLayout, QStyle,
-                             QToolButton, QVBoxLayout, QWidget, QProgressBar)
+from PyQt5.QtGui import QRegExpValidator
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QWidget
+
+from helper import *
 
 
 class FileNameInput(QWidget):

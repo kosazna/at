@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 from typing import Union
+
+from at.gui.button import Button
 from at.gui.check import CheckInput
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (QAbstractItemView, QLabel, QListWidget,
-                             QListWidgetItem, QVBoxLayout, QWidget, QHBoxLayout,
-                             QAbstractScrollArea, QListView)
-from at.gui.button import Button
+from PyQt5.QtWidgets import (QAbstractItemView, QAbstractScrollArea,
+                             QHBoxLayout, QLabel, QListView, QListWidget,
+                             QListWidgetItem, QVBoxLayout, QWidget)
 
 from helper import *
-from pathlib import Path
 
 
 class ListWidget(QWidget):

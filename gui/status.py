@@ -1,65 +1,53 @@
 # -*- coding: utf-8 -*-
+from typing import Tuple, Union
+
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QSizePolicy, QToolButton,
+                             QWidget)
+
 from helper import *
 
-from PyQt5.QtCore import QRegExp, Qt
-from PyQt5.QtGui import QCursor, QFont, QIntValidator, QRegExpValidator, QIcon
-from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
-                             QFileDialog, QHBoxLayout, QLabel, QLineEdit,
-                             QMessageBox, QSizePolicy, QStackedLayout, QStyle,
-                             QToolButton, QVBoxLayout, QWidget, QProgressBar)
 
-
-class StatusIndicator(QWidget):
+class StatusButton(QWidget):
     def __init__(self,
-                 label='',
-                 status='',
-                 parent=None,
-                 size=70,
+                 status: str = '',
+                 size: Union[int, None] = None,
+                 parent: Union[QWidget, None] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.setupUi(label, status, size)
+        self.setupUi(status, size)
 
-    def setupUi(self, label, status, size):
+    def setupUi(self, status, size):
         layout = QHBoxLayout()
         self.button = QToolButton()
         self.button.setText(status)
         self.button.setEnabled(False)
         self.button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        if label:
-            self.label = QLabel()
-            self.label.setText(label)
-            self.label.setObjectName(f"Label{size}")
-            layout.addWidget(self.label)
-            self.button.setObjectName("StatusSmallOffline")
-            layout.addWidget(self.button, 1, alignment=Qt.AlignLeft)
-            self.has_label = True
+        if status:
+            self.enable()
         else:
-            self.button.setObjectName("StatusBigDisabled")
-            layout.addWidget(self.button)
-            self.has_label = False
+            self.disable()
 
+        if size is not None:
+            self.button.setFixedWidth(size)
+
+        layout.addWidget(self.button)
         layout.setContentsMargins(0, 4, 0, 4)
         layout.setSpacing(4)
 
         self.setLayout(layout)
 
-    def disable(self, text=''):
+    def disable(self):
+        self.setText('')
         self.button.setEnabled(False)
-        self.setText(text)
-        if self.has_label:
-            self.setStyle(f"StatusSmall{text.capitalize()}")
-        else:
-            self.setStyle("StatusBigDisabled")
+        self.setStyle("statusOff")
 
-    def enable(self, text=''):
+    def enable(self, text):
+        if text:
+            self.setText(text)
         self.button.setEnabled(True)
-        self.button.setCursor(QCursor(Qt.PointingHandCursor))
-        self.setText(text)
-        if self.has_label:
-            self.setStyle(f"StatusSmall{text.capitalize()}")
-        else:
-            self.setStyle("StatusBigEnabled")
+        self.setStyle("statusOon")
 
     def setText(self, text):
         self.button.setText(text)
@@ -73,6 +61,60 @@ class StatusIndicator(QWidget):
 
     def subscribe(self, func):
         self.button.clicked.connect(func)
+
+    def setOffset(self, offset):
+        self.label.setFixedWidth(offset)
+
+
+class StatusLabel(QWidget):
+    def __init__(self,
+                 label: str = '',
+                 status: str = '',
+                 labelsize: Tuple[int] = (70, 22),
+                 statussize: Tuple[int] = (100, 22),
+                 parent: Union[QWidget, None] = None,
+                 *args,
+                 **kwargs):
+        super().__init__(parent=parent, *args, **kwargs)
+        self.setupUi(label, status, labelsize, statussize)
+
+    def setupUi(self, label, status, labelsize, statussize):
+        self.label = QLabel()
+        self.label.setText(label)
+        self.label.setFixedSize(*labelsize)
+
+        self.status = QLabel()
+        self.status.setText(status)
+        self.status.setFixedSize(*statussize)
+        self.status.setObjectName('statusNeutral')
+        self.status.setAlignment(Qt.AlignCenter)
+
+        self.button = QToolButton()
+        self.button.setText(status)
+        self.button.setEnabled(False)
+        self.button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        layout = QHBoxLayout()
+        layout.addWidget(self.label)
+        layout.addWidget(self.status, 1, alignment=Qt.AlignLeft)
+        layout.setContentsMargins(0, 4, 0, 4)
+        layout.setSpacing(4)
+
+        self.setLayout(layout)
+
+    def changeStatus(self, status, object_name):
+        self.setText(status)
+        self.setStyle(object_name)
+
+    def setText(self, text):
+        self.status.setText(text)
+
+    def getText(self):
+        return self.status.text()
+
+    def setStyle(self, object_name):
+        self.button.setObjectName(object_name)
+        self.setStyleSheet(self.styleSheet())
 
     def setOffset(self, offset):
         self.label.setFixedWidth(offset)

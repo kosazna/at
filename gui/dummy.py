@@ -10,7 +10,7 @@ from at.gui.filename import FileNameInput
 from at.gui.input import StrInput, IntInput
 from at.gui.io import FileInput, FileOutput, FolderInput
 from at.gui.progress import ProgressBar
-from at.gui.status import StatusIndicator
+from at.gui.status import StatusButton, StatusLabel
 from at.gui.list import ListWidget
 
 from pathlib import Path
@@ -49,9 +49,9 @@ class Dummy(QWidget):
         self.combo = ComboInput(
             "Combo", items=["1", "2", "3"], parent=self)
         self.check = CheckInput("Check", parent=self)
-        self.status = StatusIndicator(parent=self)
-        self.statusSmall = StatusIndicator(
-            label='Status', status='offline', parent=self, size=70)
+        self.status = StatusButton(parent=self, size=600)
+        self.statusSmall = StatusLabel(
+            label='Status', status='offline', parent=self)
         self.button1 = Button("accept", parent=self)
         self.button2 = Button("decline", parent=self)
         self.button3 = Button("process", parent=self)
@@ -82,8 +82,9 @@ class Dummy(QWidget):
         self.layoutTop.addLayout(self.layoutButtons)
 
         self.layout.addLayout(self.layoutTop)
-        self.layout.addWidget(self.status)
         self.layout.addWidget(self.progress)
+        self.layout.addWidget(self.status)
+        
 
         self.setLayout(self.layout)
 
