@@ -84,7 +84,6 @@ class Dummy(QWidget):
         self.layout.addLayout(self.layoutTop)
         self.layout.addWidget(self.progress)
         self.layout.addWidget(self.status)
-        
 
         self.setLayout(self.layout)
 
@@ -100,7 +99,8 @@ class Dummy(QWidget):
             self.input.disable()
 
     def button2action(self):
-        p = Path("D:/.temp/KT5-16_ΠΑΡΑΔΟΣΗ_30-09-2021/ΕΝΔΙΑΜΕΣΗ ΥΠΟΒΟΛΗ ΚΤΗΜΑΤΟΛΟΓΙΚΗΣ ΒΑΣΗΣ ΧΩΡΙΚΩΝ ΣΤΟΙΧΕΙΩΝ/SHAPE")
+        p = Path(
+            "D:/.temp/KT5-16_ΠΑΡΑΔΟΣΗ_30-09-2021/ΕΝΔΙΑΜΕΣΗ ΥΠΟΒΟΛΗ ΚΤΗΜΑΤΟΛΟΓΙΚΗΣ ΒΑΣΗΣ ΧΩΡΙΚΩΝ ΣΤΟΙΧΕΙΩΝ/SHAPE")
 
         return [f.stem for f in p.glob('**/*.mdb')]
 

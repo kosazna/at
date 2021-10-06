@@ -117,3 +117,7 @@ class ListWidget(QWidget):
         self.listWidget.clear()
         self.items = {}
         self.checkBox.setCheckState(Qt.Unchecked)
+
+    def hideButtons(self):
+        self.buttonLoad.hide()
+        self.buttonClear.hide()
