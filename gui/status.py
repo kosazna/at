@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QSizePolicy, QToolButton,
 class StatusButton(QWidget):
     def __init__(self,
                  status: str = '',
-                 size: Union[int, None] = None,
+                 size: Tuple[Union[int, None]] = (None, 22),
                  parent: Union[QWidget, None] = None,
                  *args,
                  **kwargs):
@@ -27,8 +27,11 @@ class StatusButton(QWidget):
         else:
             self.disable()
 
-        if size is not None:
-            self.button.setFixedWidth(size)
+        bew = size[0]
+        beh = size[1]
+        self.button.setFixedHeight(beh)
+        if bew is not None:
+            self.button.setFixedWidth(bew)
 
         layout.addWidget(self.button)
         layout.setContentsMargins(0, 4, 0, 4)

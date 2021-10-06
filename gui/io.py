@@ -20,8 +20,8 @@ class IOWidget(QWidget):
                  label: str = '',
                  placeholder: str = PATH_PLACEHOLDER,
                  orientation: str = HORIZONTAL,
-                 labelsize: Tuple[int] = (70, 22),
-                 editsize: Tuple[Union[int, None]] = (None, 22),
+                 labelsize: Tuple[int] = (70, 25),
+                 editsize: Tuple[Union[int, None]] = (None, 25),
                  parent: Union[QWidget, None] = None,
                  *args,
                  **kwargs):
@@ -50,6 +50,7 @@ class IOWidget(QWidget):
         self.button.setCursor(QCursor(Qt.PointingHandCursor))
         self.button.setText("2")
         self.button.setObjectName("Browse")
+        self.button.setFixedSize(leh, leh)
 
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()

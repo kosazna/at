@@ -36,31 +36,84 @@ class Dummy(QWidget):
     def setupUi(self):
         self.setObjectName("MainWidget")
         self.setStyleSheet(cssGuide)
+        self.resize(700, 600)
         self.layout = QVBoxLayout()
         self.layoutTop = QHBoxLayout()
         self.layoutGeneral = QVBoxLayout()
         self.layoutButtons = QVBoxLayout()
         self.layoutComboCheck = QHBoxLayout()
-        self.folderInput = FolderInput("Folder", parent=self)
-        self.fileInput = FileInput("File In", parent=self)
-        self.fileOutput = FileOutput("File Out", parent=self)
-        self.filename = FileNameInput("Filename", parent=self)
-        self.input = StrInput(
-            "Input", parent=self, completer=['Astota', 'Asttom'])
-        self.inputInt = IntInput("Int", parent=self)
-        self.combo = ComboInput(
-            "Combo", items=["1", "2", "3"], parent=self)
-        self.check = CheckInput("Check", parent=self)
-        self.status = StatusButton(parent=self, size=600)
-        self.statusSmall = StatusLabel(
-            label='Status', status='offline', parent=self)
-        self.button1 = Button("accept", parent=self)
-        self.button2 = Button("decline", parent=self)
-        self.button3 = Button("process", parent=self)
 
-        self.progress = ProgressBar()
-
-        self.listWidget = ListWidget('Select Shapefiles')
+        self.folderInput = FolderInput(label="Folder",
+                                       placeholder=PATH_PLACEHOLDER,
+                                       orientation=HORIZONTAL,
+                                       labelsize=(70, 25),
+                                       editsize=(None, 25),
+                                       parent=self)
+        self.fileInput = FileInput(label="File In",
+                                   placeholder=PATH_PLACEHOLDER,
+                                   orientation=HORIZONTAL,
+                                   labelsize=(70, 25),
+                                   editsize=(None, 25),
+                                   parent=self)
+        self.fileOutput = FileOutput(label="File Out",
+                                     placeholder=PATH_PLACEHOLDER,
+                                     orientation=HORIZONTAL,
+                                     labelsize=(70, 25),
+                                     editsize=(None, 25),
+                                     parent=self)
+        self.filename = FileNameInput(label="Filename",
+                                      placeholder='',
+                                      labelsize=(70, 25),
+                                      editsize=(None, 25),
+                                      parent=self)
+        self.input = StrInput(label="Input",
+                              orientation=HORIZONTAL,
+                              completer=['Astota', 'Asttom'],
+                              hidden=False,
+                              labelsize=(70, 25),
+                              editsize=(None, 25),
+                              parent=self)
+        self.inputInt = IntInput(label="Input",
+                                 orientation=HORIZONTAL,
+                                 value_range=None,
+                                 labelsize=(70, 25),
+                                 editsize=(None, 25),
+                                 parent=self)
+        self.combo = ComboInput(label="Combo",
+                                items=["1", "2", "3"],
+                                labelsize=(70, 25),
+                                combosize=(150, 25),
+                                parent=self)
+        self.check = CheckInput(label="Check",
+                                checked=True,
+                                height=25,
+                                parent=self)
+        self.status = StatusButton(status='',
+                                   size=(None, 25),
+                                   parent=self)
+        self.statusSmall = StatusLabel(label='Status',
+                                       status='offline',
+                                       labelsize=(70, 25),
+                                       statussize=(100, 25),
+                                       parent=self)
+        self.button1 = Button(label="accept",
+                              color=None,
+                              size=(70, 25),
+                              parent=self)
+        self.button2 = Button(label="decline",
+                              color=None,
+                              size=(70, 25),
+                              parent=self)
+        self.button3 = Button(label="process",
+                              color=None,
+                              size=(70, 25),
+                              parent=self)
+        self.progress = ProgressBar(size=(None, 25),
+                                    parent=self)
+        self.listWidget = ListWidget(label='Select Shapefiles',
+                                     labelsize=(200, 25),
+                                     widgetsize=(250, 250),
+                                     parent=self)
         self.listWidget.assignLoadFunc(self.button2action)
 
         self.layoutGeneral.addWidget(self.folderInput)

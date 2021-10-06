@@ -32,6 +32,7 @@ class ListWidget(QWidget):
         self.label = QLabel()
         self.label.setText(label)
         self.label.setFixedSize(*labelsize)
+        self.label.setAlignment(Qt.AlignCenter)
 
         self.listWidget = QListWidget(self)
         self.listWidget.setSortingEnabled(True)

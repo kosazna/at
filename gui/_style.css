@@ -9,10 +9,6 @@
   border-radius: 3px;
   font-family: "Webdings";
   font: 15px;
-  max-width: 22px;
-  min-width: 22px;
-  max-height: 22px;
-  min-height: 22px;
 }
 
 QToolButton {
@@ -45,8 +41,6 @@ QToolButton#statusOn {
   color: #f8f8f8;
   border-radius: 3px;
   font-weight: bold;
-  max-height: 22px;
-  min-height: 22px;
 }
 
 QToolButton#statusOff {
@@ -54,14 +48,10 @@ QToolButton#statusOff {
   color: #212529;
   border-radius: 3px;
   font-weight: bold;
-  max-height: 22px;
-  min-height: 22px;
 }
 
 QCheckBox {
   color: #212529;
-  max-height: 25px;
-  min-height: 25px;
 }
 
 QComboBox {
@@ -130,8 +120,6 @@ QLabel#statusError {
 
 QProgressBar {
   font-weight: bold;
-  max-height: 20px;
-  min-height: 20px;
 }
 
 QListWidget {
