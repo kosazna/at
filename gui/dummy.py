@@ -154,10 +154,9 @@ class Dummy(QWidget):
             self.input.disable()
 
     def button2action(self):
-        p = Path(
-            "D:/.temp/KT5-16_ΠΑΡΑΔΟΣΗ_30-09-2021/ΕΝΔΙΑΜΕΣΗ ΥΠΟΒΟΛΗ ΚΤΗΜΑΤΟΛΟΓΙΚΗΣ ΒΑΣΗΣ ΧΩΡΙΚΩΝ ΣΤΟΙΧΕΙΩΝ/SHAPE")
+        p = Path("D:/.temp/_cplex_examples/cp/jupyter")
 
-        return [f.stem for f in p.glob('**/*.mdb')]
+        return [f.name for f in p.glob('*.ipynb')]
 
 
 if __name__ == '__main__':
