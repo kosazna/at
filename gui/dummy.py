@@ -1,23 +1,25 @@
 # -*- coding: utf-8 -*-
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QApplication
+from pathlib import Path
+
 from at.gui.button import Button
 from at.gui.check import CheckInput
 from at.gui.combo import ComboInput
 from at.gui.filename import FileNameInput
-from at.gui.input import StrInput, IntInput
+from at.gui.helper import *
+from at.gui.input import IntInput, StrInput
 from at.gui.io import FileInput, FileOutput, FolderInput
+from at.gui.list import ListWidget
 from at.gui.progress import ProgressBar
 from at.gui.status import StatusButton, StatusLabel
-from at.gui.list import ListWidget
-
-from pathlib import Path
-
-from at.gui.helper import *
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
 
 cssGuide = Path("D:/.temp/.dev/.aztool/at/gui/_style.css").read_text()
+
+# When setting fixed width to QLineEdit ->
+# -> add alignment=Qt.AlignLeft when adding widget to layout
 
 
 class Dummy(QWidget):
