@@ -16,7 +16,7 @@ class Button(QToolButton):
 
     def setupUi(self, label):
         self.setText(label)
-        self.setObjectName("BlueButton")
+        self.setObjectName("GreyButton")
         self.setCursor(QCursor(Qt.PointingHandCursor))
 
     def disable(self):

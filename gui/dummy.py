@@ -57,10 +57,8 @@ class Dummy(QWidget):
 
         self.progress = ProgressBar()
 
-        self.listWidget = ListWidget('Select Shapefiles', ['ASTENOT', 'ASTOTA',
-                                                           'ASTTOM', 'PST',
-                                                           'ROADS', 'VST',
-                                                           'FBOUND'])
+        self.listWidget = ListWidget('Select Shapefiles')
+        self.listWidget.assignLoadFunc(self.button2action)
 
         self.layoutGeneral.addWidget(self.folderInput)
         self.layoutGeneral.addWidget(self.fileInput)
@@ -92,15 +90,17 @@ class Dummy(QWidget):
         if self.i < self.progress.maximum():
             self.i += 10
             self.progress.setValueMaximum(self.i, 100)
-            
-            print(self.listWidget.getCheckState('dict'))
+
+            print(self.listWidget.getCheckState('list'))
         else:
             self.button2.enable('red')
             self.statusSmall.enable('Online')
             self.input.disable()
 
     def button2action(self):
-        self.listWidget.addItems('MRT')
+        p = Path("D:/.temp/copy_tests")
+
+        return [f.stem for f in p.iterdir()]
 
 
 if __name__ == '__main__':
