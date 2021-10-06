@@ -73,7 +73,7 @@ class Dummy(QWidget):
                               labelsize=(70, 25),
                               editsize=(None, 25),
                               parent=self)
-        self.inputInt = IntInput(label="Input",
+        self.inputInt = IntInput(label="Int",
                                  orientation=HORIZONTAL,
                                  value_range=None,
                                  labelsize=(70, 25),
