@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from typing import Union
 from helper import *
 
 from PyQt5.QtCore import QRegExp, Qt
@@ -11,21 +12,22 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
 
 class ComboInput(QWidget):
     def __init__(self,
-                 label='',
-                 items=None,
-                 parent=None,
-                 size=(70, 200),
+                 label: str = '',
+                 items: Union[list, tuple, None] = None,
+                 labelsize: tuple = (70, 22),
+                 combosize: tuple = (150, 22),
+                 parent: QWidget = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.setupUi(label, items, size)
+        self.setupUi(label, items, labelsize, combosize)
 
-    def setupUi(self, label, items, size):
+    def setupUi(self, label, items, labelsize, combosize):
         self.label = QLabel()
         self.label.setText(label)
-        self.label.setObjectName(f"Label{size[0]}")
+        self.label.setFixedSize(*labelsize)
         self.comboEdit = QComboBox()
-        self.comboEdit.setObjectName(f"Combo{size[1]}")
+        self.comboEdit.setFixedSize(*combosize)
         self.comboEdit.setSizeAdjustPolicy(
             QComboBox.SizeAdjustPolicy.AdjustToContents)
         layout = QHBoxLayout()

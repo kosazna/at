@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QApplication
 from at.gui.button import Button
 from at.gui.check import CheckInput
@@ -37,16 +39,15 @@ class Dummy(QWidget):
         self.layoutGeneral = QVBoxLayout()
         self.layoutButtons = QVBoxLayout()
         self.layoutComboCheck = QHBoxLayout()
-        self.folderInput = FolderInput("Folder", parent=self, size=70)
-        self.fileInput = FileInput("File In", parent=self, size=70)
-        self.fileOutput = FileOutput("File Out", parent=self, size=70)
-        self.filename = FileNameInput(
-            "Filename", parent=self, size=(70, 200))
+        self.folderInput = FolderInput("Folder", parent=self)
+        self.fileInput = FileInput("File In", parent=self)
+        self.fileOutput = FileOutput("File Out", parent=self)
+        self.filename = FileNameInput("Filename", parent=self)
         self.input = StrInput(
-            "Input", parent=self, completer=['Astota', 'Asttom'], size=(70, 200))
-        self.inputInt = IntInput("Int", parent=self, size=(70, 200))
+            "Input", parent=self, completer=['Astota', 'Asttom'])
+        self.inputInt = IntInput("Int", parent=self)
         self.combo = ComboInput(
-            "Combo", items=["1", "2", "3"], parent=self, size=(70, 100))
+            "Combo", items=["1", "2", "3"], parent=self)
         self.check = CheckInput("Check", parent=self)
         self.status = StatusIndicator(parent=self)
         self.statusSmall = StatusIndicator(
@@ -98,15 +99,18 @@ class Dummy(QWidget):
             self.input.disable()
 
     def button2action(self):
-        p = Path("D:/.temp/copy_tests")
+        p = Path("D:/.temp/KT5-16_ΠΑΡΑΔΟΣΗ_30-09-2021/ΕΝΔΙΑΜΕΣΗ ΥΠΟΒΟΛΗ ΚΤΗΜΑΤΟΛΟΓΙΚΗΣ ΒΑΣΗΣ ΧΩΡΙΚΩΝ ΣΤΟΙΧΕΙΩΝ/SHAPE")
 
-        return [f.stem for f in p.iterdir()]
+        return [f.stem for f in p.glob('**/*.mdb')]
 
 
 if __name__ == '__main__':
     import sys
 
     app = QApplication(sys.argv)
+    my_font = QFont("Segoe UI", 9)
+    app.setFont(my_font)
+    # app.setStyleSheet(cssGuide)
     app.setStyle('Fusion')
     ui = Dummy()
     ui.show()

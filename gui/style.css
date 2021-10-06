@@ -1,53 +1,7 @@
 #MainWidget {
   background-color: #bdbdbd;
-}
-
-#InputDefault {
-  background-color: #f8f8f8;
-  border: 1px solid #6c757d;
-  color: #212529;
-  border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
-}
-
-#InputDefault:focus {
-  border: 1px outset #22b4ee;
-}
-
-#InputOk {
-  border: 1px solid #2ad66b;
-  background-color: #f8f8f8;
-  color: #212529;
-  border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
-}
-
-#InputWarn {
-  border: 1px solid #ffc107;
-  background-color: #f8f8f8;
-  color: #212529;
-  border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
-}
-
-#InputError {
-  border: 1px solid #ef3e4f;
-  background-color: #f8f8f8;
-  color: #212529;
-  border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
+  /* font-family: "Segoe UI";
+  font: 12px; */
 }
 
 #Browse {
@@ -63,65 +17,33 @@
   min-height: 22px;
 }
 
-#BlueButton {
+QToolButton {
+  color: #212529;
+  font-weight: bold;
+}
+
+QToolButton#blueButton {
   background-color: #0d6efd;
-  color: #212529;
-  font-family: "Segoe UI";
-  font: 13px;
-  font-weight: bold;
-  max-height: 20px;
-  min-height: 20px;
-  min-width: 70px;
 }
 
-#GreenButton {
+QToolButton#greenButton {
   background-color: #2ad66b;
-  color: #212529;
-  font-family: "Segoe UI";
-  font: 13px;
-  font-weight: bold;
-  max-height: 20px;
-  min-height: 20px;
-  min-width: 70px;
 }
 
-#YellowButton {
+QToolButton#yellowButton {
   background-color: #ffc107;
-  color: #212529;
-  font-family: "Segoe UI";
-  font: 13px;
-  font-weight: bold;
-  max-height: 20px;
-  min-height: 20px;
-  min-width: 70px;
 }
 
-#RedButton {
+QToolButton#redButton {
   background-color: #ef3e4f;
-  color: #212529;
-  font-family: "Segoe UI";
-  font: 13px;
-  font-weight: bold;
-  max-height: 20px;
-  min-height: 20px;
-  min-width: 70px;
 }
 
-#GreyButton {
+QToolButton#greyButton {
   background-color: #6c757d;
-  color: #212529;
-  font-family: "Segoe UI";
-  font: 13px;
-  font-weight: bold;
-  max-height: 20px;
-  min-height: 20px;
-  min-width: 70px;
 }
 
 #Check {
   color: #212529;
-  font-family: "Segoe UI";
-  font: 12px;
   max-height: 22px;
   min-height: 22px;
 }
@@ -130,16 +52,12 @@
   border: 1px outset #22b4ee;
   color: #212529;
   border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 13px;
 }
 
 #StatusBigDisabled {
   background-color: #212529;
   color: #212529;
   border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 13px;
   font-weight: bold;
   max-height: 22px;
   min-height: 22px;
@@ -150,8 +68,6 @@
   background-color: #212529;
   color: #f8f8f8;
   border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 13px;
   font-weight: bold;
   max-height: 22px;
   min-height: 22px;
@@ -162,8 +78,6 @@
   background-color: #ef3e4f;
   color: #212529;
   border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 13px;
   font-weight: bold;
   max-height: 22px;
   min-height: 22px;
@@ -174,8 +88,6 @@
   background-color: #ffc107;
   color: #212529;
   border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 13px;
   font-weight: bold;
   max-height: 22px;
   min-height: 22px;
@@ -187,197 +99,59 @@
   background-color: #2ad66b;
   color: #212529;
   border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 13px;
   font-weight: bold;
   max-height: 22px;
   min-height: 22px;
   width: 70px;
 }
 
-#Combo50 {
+QComboBox {
   background-color: #f8f8f8;
   border: 1px solid #6c757d;
   color: #212529;
   border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
-  width: 50px;
 }
 
-#Combo100 {
+QLineEdit {
   background-color: #f8f8f8;
   border: 1px solid #6c757d;
   color: #212529;
   border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
-  width: 100px;
 }
 
-#Combo150 {
-  background-color: #f8f8f8;
-  border: 1px solid #6c757d;
-  color: #212529;
-  border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
-  width: 150px;
-}
-
-#Combo200 {
-  background-color: #f8f8f8;
-  border: 1px solid #6c757d;
-  color: #212529;
-  border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
-  width: 200px;
-}
-
-#LineEditOff {
-  background-color: #6c757d;
-  border: 1px solid #6c757d;
-  color: #212529;
-  border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
-  width: 50px;
-}
-
-#LineEdit50 {
-  background-color: #f8f8f8;
-  border: 1px solid #6c757d;
-  color: #212529;
-  border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
-  width: 50px;
-}
-
-#LineEdit100 {
-  background-color: #f8f8f8;
-  border: 1px solid #6c757d;
-  color: #212529;
-  border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
-  width: 100px;
-}
-
-#LineEdit150 {
-  background-color: #f8f8f8;
-  border: 1px solid #6c757d;
-  color: #212529;
-  border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
-  width: 150px;
-}
-
-#LineEdit200 {
-  background-color: #f8f8f8;
-  border: 1px solid #6c757d;
-  color: #212529;
-  border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
-  width: 200px;
-}
-
-#LineEdit400 {
-  background-color: #f8f8f8;
-  border: 1px solid #6c757d;
-  color: #212529;
-  border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  max-height: 22px;
-  min-height: 22px;
-  width: 400px;
-}
-
-#LineEdit50:focus,
-#LineEdit100:focus,
-#LineEdit150:focus,
-#LineEdit200:focus,
-#LineEdit400:focus {
+QLineEdit:focus {
   border: 1px outset #25b4ee;
 }
 
-#Label50 {
-  background-color: transparent;
-  color: #212529;
-  font-family: "Segoe UI";
-  font: 12px;
-  font-weight: bold;
-  max-height: 22px;
-  min-height: 22px;
-  min-width: 50px;
+QLineEdit#off {
+  border: 1px solid #6c757d;
 }
 
-#Label70 {
-  background-color: transparent;
-  color: #212529;
-  font-family: "Segoe UI";
-  font: 12px;
-  font-weight: bold;
-  max-height: 22px;
-  min-height: 22px;
-  min-width: 70px;
+QLineEdit#ok {
+  border: 1px solid #2ad66b;
 }
 
-#Label100 {
-  background-color: transparent;
-  color: #212529;
-  font-family: "Segoe UI";
-  font: 12px;
-  font-weight: bold;
-  max-height: 22px;
-  min-height: 22px;
-  min-width: 100px;
+QLineEdit#warning {
+  border: 1px solid #ffc107;
 }
 
-#Label150 {
+QLineEdit#error {
+  border: 1px solid #ef3e4f;
+}
+
+QLabel {
   background-color: transparent;
   color: #212529;
-  font-family: "Segoe UI";
-  font: 12px;
   font-weight: bold;
-  max-height: 22px;
-  min-height: 22px;
-  min-width: 150px;
 }
 
 #ProgressBar {
-  font-family: "Segoe UI";
-  font: 12px;
   font-weight: bold;
   max-height: 20px;
   min-height: 20px;
 }
 
 #ProgressBarFinished {
-  font-family: "Segoe UI";
-  font: 12px;
   font-weight: bold;
   max-height: 20px;
   min-height: 20px;
@@ -387,13 +161,8 @@
   background-color: #2ad66b;
 }
 
-#ListWidget {
+QListWidget {
   border: 1px solid #6c757d;
   color: #212529;
   border-radius: 3px;
-  font-family: "Segoe UI";
-  font: 12px;
-  min-width: 250px;
-  max-width: 250px;
-  min-height: 200px;
 }

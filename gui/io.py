@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+from typing import Tuple, Union
 
 from helper import *
 from PyQt5.QtCore import QRegExp, Qt
@@ -12,37 +13,45 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
 
 class IOWidget(QWidget):
     lastVisit = ''
-    ok = ("InputOk", "Path OK")
-    warning = ("InputWarn", "Path Warning")
-    error = ("InputError", "Path does not exist")
+    ok = ("ok", "Path OK")
+    warning = ("warning", "Path Warning")
+    error = ("error", "Path does not exist")
 
     def __init__(self,
-                 label='',
-                 placeholder=PATH_PLACEHOLDER,
-                 parent=None,
-                 orientation=HORIZONTAL,
-                 size=70,
+                 label: str = '',
+                 placeholder: str = PATH_PLACEHOLDER,
+                 orientation: str = HORIZONTAL,
+                 labelsize: Tuple[int] = (70, 22),
+                 editsize: Tuple[Union[int, None]] = (None, 22),
+                 parent: Union[QWidget, None] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.setupUi(label, placeholder, orientation, size)
+        self.setupUi(label, placeholder, orientation, labelsize, editsize)
         self.button.clicked.connect(self.browse)
         self.lineEdit.textChanged.connect(lambda x: self.pathExists(x))
         self.browseCallback = None
 
-    def setupUi(self, label, placeholder, orientation, size):
+    def setupUi(self, label, placeholder, orientation, labelsize, editsize):
         self.label = QLabel()
         self.label.setText(label)
-        self.label.setObjectName(f"Label{size}")
+        self.label.setFixedSize(*labelsize)
+
         self.lineEdit = QLineEdit()
-        self.lineEdit.setObjectName("InputDefault")
+        lew = editsize[0]
+        leh = editsize[1]
+        self.lineEdit.setFixedHeight(leh)
+        if lew is not None:
+            self.lineEdit.setFixedWidth(lew)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.setPlaceholder(placeholder)
+
         self.button = QToolButton()
         self.button.setCursor(QCursor(Qt.PointingHandCursor))
         self.button.setText("2")
         self.button.setObjectName("Browse")
+
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()
             layout.addWidget(self.label)
@@ -114,19 +123,21 @@ class FolderInput(IOWidget):
     warning = ("InputWarn", "Path should be a folder")
 
     def __init__(self,
-                 label="",
-                 placeholder=PATH_PLACEHOLDER,
-                 parent=None,
-                 orientation=HORIZONTAL,
-                 size=70,
+                 label: str = '',
+                 placeholder: str = PATH_PLACEHOLDER,
+                 orientation: str = HORIZONTAL,
+                 labelsize: Tuple[int] = (70, 22),
+                 editsize: Tuple[Union[int, None]] = (None, 22),
+                 parent: Union[QWidget, None] = None,
                  *args,
                  **kwargs):
         super().__init__(label=label,
                          placeholder=placeholder,
                          parent=parent,
                          orientation=orientation,
-                         size=size,
-                         *args,
+                         labelsize=labelsize,
+                         editsize=editsize,
+                         * args,
                          **kwargs)
 
     def browse(self):
@@ -142,32 +153,34 @@ class FolderInput(IOWidget):
         if path:
             if os.path.exists(path):
                 if os.path.isdir(path):
-                    self.updateStyle("InputOk")
+                    self.updateStyle("ok")
                 else:
-                    self.updateStyle("InputWarn")
+                    self.updateStyle("warning")
             else:
-                self.updateStyle("InputError")
+                self.updateStyle("error")
         else:
-            self.updateStyle("InputDefault")
+            self.updateStyle("")
 
 
 class FileInput(IOWidget):
     warning = ("InputWarn", "Path should be a folder")
 
     def __init__(self,
-                 label="",
-                 placeholder=PATH_PLACEHOLDER,
-                 parent=None,
-                 orientation=HORIZONTAL,
-                 size=70,
+                 label: str = '',
+                 placeholder: str = PATH_PLACEHOLDER,
+                 orientation: str = HORIZONTAL,
+                 labelsize: Tuple[int] = (70, 22),
+                 editsize: Tuple[Union[int, None]] = (None, 22),
+                 parent: Union[QWidget, None] = None,
                  *args,
                  **kwargs):
         super().__init__(label=label,
                          placeholder=placeholder,
                          parent=parent,
                          orientation=orientation,
-                         size=size,
-                         *args,
+                         labelsize=labelsize,
+                         editsize=editsize,
+                         * args,
                          **kwargs)
 
     def browse(self):
@@ -183,31 +196,33 @@ class FileInput(IOWidget):
     def pathExists(self, path):
         if path:
             if os.path.exists(path):
-                if os.path.isfile(path):
-                    self.updateStyle("InputOk")
+                if os.path.isdir(path):
+                    self.updateStyle("ok")
                 else:
-                    self.updateStyle("InputWarn")
+                    self.updateStyle("warning")
             else:
-                self.updateStyle("InputError")
+                self.updateStyle("error")
         else:
-            self.updateStyle("InputDefault")
+            self.updateStyle("")
 
 
 class FileOutput(IOWidget):
     def __init__(self,
-                 label="",
-                 placeholder=PATH_PLACEHOLDER,
-                 parent=None,
-                 orientation=HORIZONTAL,
-                 size=70,
+                 label: str = '',
+                 placeholder: str = PATH_PLACEHOLDER,
+                 orientation: str = HORIZONTAL,
+                 labelsize: Tuple[int] = (70, 22),
+                 editsize: Tuple[Union[int, None]] = (None, 22),
+                 parent: Union[QWidget, None] = None,
                  *args,
                  **kwargs):
         super().__init__(label=label,
                          placeholder=placeholder,
                          parent=parent,
                          orientation=orientation,
-                         size=size,
-                         *args,
+                         labelsize=labelsize,
+                         editsize=editsize,
+                         * args,
                          **kwargs)
 
     def browse(self):

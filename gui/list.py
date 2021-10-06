@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from typing import Union
 from at.gui.check import CheckInput
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QAbstractItemView, QLabel, QListWidget,
@@ -11,33 +12,30 @@ from pathlib import Path
 
 
 class ListWidget(QWidget):
-    def __init__(self, label='', items=None, parent: QWidget = None, *args, **kwargs):
+    def __init__(self,
+                 label: str = '',
+                 items: Union[list, tuple, None] = None,
+                 labelsize: tuple = (100, 22),
+                 widgetsize: tuple = (200, 250),
+                 parent: Union[QWidget, None] = None,
+                 *args,
+                 **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
         self.items = {}
-        self.setupUi(label, items)
+        self.setupUi(label, items, labelsize, widgetsize)
         self.loadFunc = None
         self.checkBox.subscribe(self.selectAll)
         self.buttonLoad.subscribe(self.loadContent)
         self.buttonClear.subscribe(self.clearContent)
 
-    def setupUi(self, label, items):
-        self.layout = QVBoxLayout()
-        self.layout.setSpacing(1)
-        self.layout.setContentsMargins(0, 4, 0, 4)
-
-        self.layoutTop = QHBoxLayout()
-        self.layoutTop.setSpacing(1)
-
-        self.layoutBottom = QHBoxLayout()
-        self.layoutTop.setSpacing(1)
+    def setupUi(self, label, items, labelsize, widgetsize):
+        self.setFixedSize(*widgetsize)
 
         self.label = QLabel()
         self.label.setText(label)
-        self.label.setObjectName(f"Label150")
+        self.label.setFixedSize(*labelsize)
 
-        self.setObjectName("ListWidget")
         self.listWidget = QListWidget(self)
-        self.listWidget.setObjectName("ListWidget")
         self.listWidget.setSortingEnabled(True)
         self.listWidget.setAlternatingRowColors(True)
         self.listWidget.setSpacing(1)
@@ -45,7 +43,6 @@ class ListWidget(QWidget):
         self.listWidget.setSizeAdjustPolicy(
             QAbstractScrollArea.AdjustToContents)
         self.listWidget.setResizeMode(QListView.Adjust)
-
         if items is not None:
             for item in items:
                 qlistwidgetitem = QListWidgetItem(self.listWidget)
@@ -55,15 +52,20 @@ class ListWidget(QWidget):
                                     'checked': qlistwidgetitem.checkState()}
 
         self.checkBox = CheckInput('Select All', checked=False, parent=self)
-        self.buttonLoad = Button('Load')
-        self.buttonClear = Button('Clear')
+        self.buttonLoad = Button('Load', size=(60, 20))
+        self.buttonClear = Button('Clear', size=(60, 20))
 
-        self.layoutTop.addWidget(self.label)
-        self.layoutTop.addWidget(self.checkBox, 0, Qt.AlignRight)
-
+        self.layout = QVBoxLayout()
+        self.layout.setSpacing(1)
+        self.layout.setContentsMargins(0, 4, 0, 4)
+        self.layoutTop = QHBoxLayout()
+        self.layoutTop.setSpacing(1)
+        self.layoutBottom = QHBoxLayout()
+        self.layoutTop.setSpacing(1)
+        self.layoutTop.addWidget(self.label, alignment=Qt.AlignHCenter)
+        self.layoutBottom.addWidget(self.checkBox)
         self.layoutBottom.addWidget(self.buttonLoad)
         self.layoutBottom.addWidget(self.buttonClear)
-
         self.layout.addLayout(self.layoutTop)
         self.layout.addWidget(self.listWidget)
         self.layout.addLayout(self.layoutBottom)

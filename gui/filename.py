@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from typing import Tuple, Union
 from helper import *
 
 from PyQt5.QtCore import QRegExp, Qt
@@ -11,27 +12,34 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
 
 class FileNameInput(QWidget):
     def __init__(self,
-                 label='',
-                 placeholder='',
-                 parent=None,
-                 size=(70, 200),
+                 label: str = '',
+                 placeholder: str = '',
+                 labelsize: Tuple[int] = (70, 22),
+                 editsize: Tuple[Union[int, None]] = (None, 22),
+                 parent: Union[QWidget, None] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.setupUi(label, placeholder, size)
+        self.setupUi(label, placeholder, labelsize, editsize)
 
-    def setupUi(self, label, placeholder, size):
+    def setupUi(self, label, placeholder, labelsize, editsize):
         self.label = QLabel()
         self.label.setText(label)
-        self.label.setObjectName(f"Label{size[0]}")
+        self.label.setFixedSize(*labelsize)
+
         self.lineEdit = QLineEdit()
-        self.lineEdit.setObjectName(f"LineEdit{size[1]}")
+        lew = editsize[0]
+        leh = editsize[1]
+        self.lineEdit.setFixedHeight(leh)
+        if lew is not None:
+            self.lineEdit.setFixedWidth(lew)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         regexp = QRegExp('[^\.\<\>:\"/\\\|\?\*]*')
         validator = QRegExpValidator(regexp, self.lineEdit)
         self.lineEdit.setValidator(validator)
         self.setPlaceholder(placeholder)
+
         layout = QHBoxLayout()
         layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)

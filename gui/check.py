@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from helper import *
 
-from PyQt5.QtCore import QRegExp, Qt
-from PyQt5.QtGui import QCursor, QFont, QIntValidator, QRegExpValidator, QIcon
-from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
-                             QFileDialog, QHBoxLayout, QLabel, QLineEdit,
-                             QMessageBox, QSizePolicy, QStackedLayout, QStyle,
-                             QToolButton, QVBoxLayout, QWidget, QProgressBar)
+from PyQt5.QtWidgets import QCheckBox, QWidget
 
 
 class CheckInput(QCheckBox):
-    def __init__(self, label='', checked=True, parent=None, *args, **kwargs):
+    def __init__(self,
+                 label: str = '',
+                 checked: bool = True,
+                 parent: QWidget = None,
+                 *args,
+                 **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
         self.setupUi(label, checked)
 

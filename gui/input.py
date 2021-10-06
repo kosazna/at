@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from typing import Tuple, Union
 from helper import *
 
 from PyQt5.QtCore import QRegExp, Qt
@@ -11,25 +12,30 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QCompleter,
 
 class StrInput(QWidget):
     def __init__(self,
-                 label='',
-                 orientation=HORIZONTAL,
-                 parent=None,
-                 completer=None,
-                 hidden=False,
-                 size=(70, 200),
+                 label: str = '',
+                 orientation: str = HORIZONTAL,
+                 completer:Union[list, tuple, None]=None,
+                 hidden:bool=False,
+                 labelsize: Tuple[int] = (70, 22),
+                 editsize: Tuple[Union[int, None]] = (None, 22),
+                 parent: Union[QWidget, None] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.setupUi(label, orientation, hidden, size)
+        self.setupUi(label, orientation, hidden, labelsize, editsize)
         self.setCompleter(completer)
-        self.lineEditOriginalSize = size[1]
 
-    def setupUi(self, label, orientation, hidden, size):
+    def setupUi(self, label, orientation, hidden, labelsize, editsize):
         self.label = QLabel()
         self.label.setText(label)
-        self.label.setObjectName(f"Label{size[0]}")
+        self.label.setFixedSize(*labelsize)
+
         self.lineEdit = QLineEdit()
-        self.lineEdit.setObjectName(f"LineEdit{size[1]}")
+        lew = editsize[0]
+        leh = editsize[1]
+        self.lineEdit.setFixedHeight(leh)
+        if lew is not None:
+            self.lineEdit.setFixedWidth(lew)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         if hidden:
@@ -47,11 +53,11 @@ class StrInput(QWidget):
 
     def disable(self):
         self.lineEdit.setEnabled(False)
-        self.setStyle('LineEditOff')
+        self.setStyle('off')
 
     def enable(self):
         self.lineEdit.setEnabled(True)
-        self.setStyle(f'LineEdit{self.lineEditOriginalSize}')
+        self.setStyle("")
 
     def setStyle(self, object_name):
         self.lineEdit.setObjectName(object_name)
@@ -98,26 +104,33 @@ class StrInput(QWidget):
 
 class IntInput(QWidget):
     def __init__(self,
-                 label='',
-                 orientation=HORIZONTAL,
-                 value_range=None,
-                 parent=None,
-                 size=(70, 200),
+                 label: str = '',
+                 orientation: str = HORIZONTAL,
+                 value_range:Union[list, tuple, None]=None,
+                 labelsize: Tuple[int] = (70, 22),
+                 editsize: Tuple[Union[int, None]] = (None, 22),
+                 parent: Union[QWidget, None] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.setupUi(label, orientation, value_range, size)
-        self.lineEditOriginalSize = size[1]
+        self.setupUi(label, orientation, value_range, labelsize, editsize)
 
-    def setupUi(self, label, orientation, value_range, size):
+    def setupUi(self, label, orientation, value_range, labelsize, editsize):
         self.label = QLabel()
         self.label.setText(label)
-        self.label.setObjectName(f"Label{size[0]}")
+        self.label.setFixedSize(*labelsize)
+
+
         self.validator = QIntValidator()
         if value_range is not None:
             self.validator.setRange(*value_range)
+
         self.lineEdit = QLineEdit()
-        self.lineEdit.setObjectName(f"LineEdit{size[1]}")
+        lew = editsize[0]
+        leh = editsize[1]
+        self.lineEdit.setFixedHeight(leh)
+        if lew is not None:
+            self.lineEdit.setFixedWidth(lew)
         self.lineEdit.setValidator(self.validator)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
@@ -134,11 +147,11 @@ class IntInput(QWidget):
 
     def disable(self):
         self.lineEdit.setEnabled(False)
-        self.setStyle('LineEditOff')
+        self.setStyle('off')
 
     def enable(self):
         self.lineEdit.setEnabled(True)
-        self.setStyle(f'LineEdit{self.lineEditOriginalSize}')
+        self.setStyle("")
 
     def setStyle(self, object_name):
         self.lineEdit.setObjectName(object_name)
