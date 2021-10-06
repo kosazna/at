@@ -3,7 +3,7 @@
 import operator
 from typing import List, Union
 
-from .item import Item
+from at.data.item import Item
 
 
 class ItemCollection:

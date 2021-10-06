@@ -6,8 +6,8 @@ from pathlib import Path
 from shutil import copy2, copytree
 from typing import List, Tuple, Union
 
-from pattern import FilePattern
-from text import replace_all
+from at.pattern import FilePattern
+from at.text import replace_all
 
 SHP_EXTS = ('.shp', '.shx', '.dbf')
 

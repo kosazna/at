@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from .element import *
-from .request import *
-from .parser import *
+from at.web.element import *
+from at.web.request import *
+from at.web.parser import *
