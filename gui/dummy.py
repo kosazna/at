@@ -96,7 +96,7 @@ class Dummy(QWidget):
             print(self.listWidget.getCheckState('list'))
         else:
             self.button2.enable('red')
-            self.statusSmall.enable('Online')
+            self.statusSmall.changeStatus('Done', 'statusOk')
             self.input.disable()
 
     def button2action(self):

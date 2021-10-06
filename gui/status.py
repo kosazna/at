@@ -89,11 +89,6 @@ class StatusLabel(QWidget):
         self.status.setObjectName('statusNeutral')
         self.status.setAlignment(Qt.AlignCenter)
 
-        self.button = QToolButton()
-        self.button.setText(status)
-        self.button.setEnabled(False)
-        self.button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-
         layout = QHBoxLayout()
         layout.addWidget(self.label)
         layout.addWidget(self.status, 1, alignment=Qt.AlignLeft)
@@ -113,7 +108,7 @@ class StatusLabel(QWidget):
         return self.status.text()
 
     def setStyle(self, object_name):
-        self.button.setObjectName(object_name)
+        self.status.setObjectName(object_name)
         self.setStyleSheet(self.styleSheet())
 
     def setOffset(self, offset):
