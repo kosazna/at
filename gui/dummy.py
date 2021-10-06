@@ -110,11 +110,13 @@ class Dummy(QWidget):
 if __name__ == '__main__':
     import sys
 
+    SEGOE = QFont("Segoe UI", 9)
+
     app = QApplication(sys.argv)
-    my_font = QFont("Segoe UI", 9)
-    app.setFont(my_font)
-    # app.setStyleSheet(cssGuide)
+    app.setFont(SEGOE)
     app.setStyle('Fusion')
+
     ui = Dummy()
     ui.show()
+
     sys.exit(app.exec_())
