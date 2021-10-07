@@ -120,7 +120,7 @@ class IOWidget(QWidget):
 
 
 class FolderInput(IOWidget):
-    warning = ("InputWarn", "Path should be a folder")
+    warning = ("warning", "Path should be a folder")
 
     def __init__(self,
                  label: str = '',
@@ -163,7 +163,7 @@ class FolderInput(IOWidget):
 
 
 class FileInput(IOWidget):
-    warning = ("InputWarn", "Path should be a folder")
+    warning = ("warning", "Path should be a file")
 
     def __init__(self,
                  label: str = '',
@@ -196,7 +196,7 @@ class FileInput(IOWidget):
     def pathExists(self, path):
         if path:
             if os.path.exists(path):
-                if os.path.isdir(path):
+                if os.path.isfile(path):
                     self.updateStyle("ok")
                 else:
                     self.updateStyle("warning")

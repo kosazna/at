@@ -51,8 +51,8 @@ class ListWidget(QWidget):
                                     'checked': qlistwidgetitem.checkState()}
 
         self.checkBox = CheckInput('Select All', checked=False, parent=self)
-        self.buttonLoad = Button('Load', size=(60, 20))
-        self.buttonClear = Button('Clear', size=(60, 20))
+        self.buttonLoad = Button('Load', size=(60, 20), parent=self)
+        self.buttonClear = Button('Clear', size=(60, 20), parent=self)
 
         self.layout = QVBoxLayout()
         self.layout.setSpacing(1)
