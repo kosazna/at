@@ -6,7 +6,7 @@ from sqlite3 import Connection, Cursor, Error, connect
 from subprocess import Popen
 from typing import List, Union
 
-from at.sql.object import QueryObject, load_sql_queries
+from at.sql.query import QueryObject
 
 
 def select(cursor: Cursor, query_object: QueryObject):
@@ -100,18 +100,3 @@ class SQLiteEngine:
                     return select(cursor=cur, query_object=query_object)
         except Error as e:
             print(str(e) + " from " + self.db)
-
-
-if __name__ == '__main__':
-    engine = SQLiteEngine("C:/Users/aznavouridis.k/.atcrawl/atcrawl.db")
-
-    queries = load_sql_queries("D:/.temp/.dev/.aztool/atcrawl/static/queries")
-
-    quer = 'update_job'
-
-    print(engine.insert(QueryObject(queries[quer]).set(site='antallaktikaonline.gr',
-                                                       site_counter=10,
-                                                       collected_at='2021-10-08 12:51:11',
-                                                       parameters="{'meta0': '', 'meta1': '', 'meta2': '', 'meta3': '', 'meta4': '', 'meta5': '', 'meta6': '', 'meta7': '', 'meta_check': True}",
-                                                       records=1080,
-                                                       out_file="D:/.temp/.dev/.aztool/atcrawl/static/queries")))
