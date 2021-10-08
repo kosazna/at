@@ -29,10 +29,6 @@ def check_auth_file(filepath: str, ref_hour: int = 12):
         return False
 
 
-class UnlicensedUserException(Exception):
-    pass
-
-
 class Authorize(metaclass=Singleton):
     TOKEN = '33e7a243e44dc089cd52476a3baebc59db6677e2'
     OWNER = 'kosazna'
