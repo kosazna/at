@@ -4,10 +4,11 @@ import json
 from typing import Callable, Tuple, Union
 
 import requests
+from requests.exceptions import ConnectionError
 
-from at.io import write_json
+from at.io import write_json, load_json
 from at.singleton import Singleton
-from at.utils import user
+from at.utils import user, check_auth_file
 
 
 class Authorize(metaclass=Singleton):
@@ -31,10 +32,20 @@ class Authorize(metaclass=Singleton):
 
     def _reload(self) -> None:
         if not self.debug:
-            self.r = requests.get(self.__url, headers=Authorize.HEADERS)
-            self.user_access = json.loads(self.r.text)
-            if self.auth_file is not None:
-                write_json(filepath=self.auth_file, data=self.user_access)
+            try:
+                self.r = requests.get(self.__url, headers=Authorize.HEADERS)
+                self.user_access = json.loads(self.r.text)
+
+                if self.auth_file is not None:
+                    write_json(filepath=self.auth_file, data=self.user_access)
+            except ConnectionError:
+                if self.auth_file is not None:
+                    if check_auth_file(self.auth_file):
+                        self.user_access = load_json(self.auth_file)
+                    else:
+                        self.user_access = {}
+                else:
+                    self.user_access = {}
 
     def user_is_licensed(self, domain: str) -> Tuple[bool, str]:
         if self.debug:
@@ -71,3 +82,14 @@ def licensed(appname: str, callback: Union[Callable, None] = print):
             return result
         return wrapper
     return decorator
+
+
+a = Authorize(appname='atcrawl')
+
+
+@licensed('atcrawl')
+def find_images_run():
+    print('ok')
+
+
+find_images_run()
