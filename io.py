@@ -17,13 +17,10 @@ def open_excel(filepath: Union[str, Path]) -> None:
 
 
 def load_json(filepath: Union[str, Path]) -> dict:
-    try:
-        with open(filepath, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        return data
-    except FileNotFoundError:
-        print(f"File does not exist -> {filepath}")
-        return {}
+    with open(filepath, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data
+
 
 
 def write_json(filepath: Union[str, Path],

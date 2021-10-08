@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
+from pathlib import Path
 from typing import Tuple, Union
+from at.io import load_json, write_json
 
 
 def user() -> str:
@@ -16,3 +18,14 @@ def parse_xlsx_filepath(text: str) -> Tuple[str, Union[str, int]]:
         return _path, _sheet
     else:
         return _text, 0
+
+
+def load_user_settings(settings_file: Union[str, Path],
+                       default_settings: dict) -> dict:
+    try:
+        load_json(settings_file)
+    except FileNotFoundError:
+        write_json(settings_file, default_settings)
+
+    print(f"There are no settings for user '{user()}'. Empty settings created")
+    return default_settings

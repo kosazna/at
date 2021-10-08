@@ -11,6 +11,7 @@ class PathEngine:
         self._appdata = Path(os.environ.get('APPDATA'))
         self._static = self._app.joinpath("static")
         self._db = self._app.joinpath(f"{appname}.db")
+        self._settings = self._app.joinpath("settings.json")
         self._init_paths()
 
     def _init_paths(self):
