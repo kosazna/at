@@ -6,7 +6,7 @@ from at.io import load_json, write_json
 
 
 def user() -> str:
-    os.environ.get('USERNAME')
+    return os.environ.get('USERNAME')
 
 
 def parse_xlsx_filepath(text: str) -> Tuple[str, Union[str, int]]:

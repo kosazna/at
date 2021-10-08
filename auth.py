@@ -3,11 +3,14 @@
 import os
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Union
+from at.singleton import Singleton
 import requests
 import json
 
 from at.date import timestamp
 from at.io import write_json
+from at.utils import user
 
 
 def check_auth_file(filepath: str, ref_hour: int = 12):
@@ -26,42 +29,69 @@ def check_auth_file(filepath: str, ref_hour: int = 12):
         return False
 
 
-class Authorize:
+class UnlicensedUserException(Exception):
+    pass
+
+
+class Authorize(metaclass=Singleton):
     TOKEN = '33e7a243e44dc089cd52476a3baebc59db6677e2'
     OWNER = 'kosazna'
     REPO = 'atauth'
-    FILE = 'atktima.json'
-
-    URL = f"https://api.github.com/repos/{OWNER}/{REPO}/contents/{FILE}"
 
     HEADERS = {'accept': 'application/vnd.github.v3.raw',
                'authorization': f"token {TOKEN}"}
 
-    def __init__(self, auth_filepath: str, debug: bool = False):
-        self.debug = debug
+    def __init__(self,
+                 appname: str,
+                 auth_filepath: Union[str, None] = None,
+                 debug: bool = False):
+        self.__url = f"https://api.github.com/repos/{self.OWNER}/{self.REPO}/contents/{appname}.json"
         self.auth_file = auth_filepath
+        self.debug = debug
+        self.user = user()
+        self.actions = 0
         self._reload()
 
     def _reload(self):
-        self.r = requests.get(Authorize.URL, headers=Authorize.HEADERS)
-        self.user_access = json.loads(self._r.text)
-        self.actions = 0
-        write_json(filepath=self.auth_file, data=self.user_access)
+        if not self.debug:
+            self.r = requests.get(self.__url, headers=Authorize.HEADERS)
+            self.user_access = json.loads(self.r.text)
+            if self.auth_file is not None:
+                write_json(filepath=self.auth_file, data=self.user_access)
 
-    def user_is_licensed(self, domain):
+    def user_is_licensed(self, domain: str):
         if self.debug:
             return True
+
+        if self.user_access:
+            if domain not in self.user_access[self.user]:
+                print(f"\n>>> {domain} is not licensed <<<\n")
+                return True
+            else:
+                try:
+                    if self.actions < 20:
+                        self.actions += 1
+                        return self.user_access[self.user][domain]
+                    else:
+                        self._reload()
+                        self.actions += 1
+                        return self.user_access[self.user][domain]
+                except KeyError:
+                    print("\n>>> User not authorised <<<\n")
+                    return False
         else:
-            try:
-                if self.actions < 20:
-                    self.actions += 1
-                    return self.user_access[self.user][domain]
-                else:
-                    self._reload()
-                    self.actions += 1
-                    return self.user_access[self.user][domain]
-            except KeyError:
-                print("Access to the service can't be verified. Contact support.")
+            print("\n>>> Can't verify authentication due to internet access <<<\n")
+            return False
 
 
-print(check_auth_file("C:/Users/aznavouridis.k/AppData/Roaming/ktima/auth.json"))
+def licensed(appname: str):
+    def decorator(function):
+        def wrapper(*args, **kwargs):
+            auth = Authorize(appname=appname)
+            if auth.user_is_licensed(domain=function.__name__):
+                result = function(*args, **kwargs)
+            else:
+                raise UnlicensedUserException("User not authorised")
+            return result
+        return wrapper
+    return decorator
