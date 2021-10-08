@@ -1,32 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import os
-from datetime import datetime, timedelta
-from pathlib import Path
-from typing import Union
-from at.singleton import Singleton
-import requests
 import json
+from typing import Union
 
-from at.date import timestamp
+import requests
+
 from at.io import write_json
+from at.singleton import Singleton
 from at.utils import user
-
-
-def check_auth_file(filepath: str, ref_hour: int = 12):
-    if os.path.exists(filepath):
-        current_time = timestamp(return_object=True)
-        creation_time = datetime.fromtimestamp(os.stat(filepath).st_ctime)
-
-        if timedelta(minutes=ref_hour) < current_time - creation_time:
-            return False
-        else:
-            return True
-    else:
-        dirname = os.path.dirname(filepath)
-        os.makedirs(dirname, exist_ok=True)
-        write_json(filepath=filepath, data={})
-        return False
 
 
 class Authorize(metaclass=Singleton):
