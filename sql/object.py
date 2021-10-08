@@ -1,22 +1,48 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
+import re
 from dataclasses import dataclass
-from typing import Any, List, Union
+from pathlib import Path
+from typing import Any, Dict, List, Union
+
+
+def load_sql_queries(folder: Union[str, Path]) -> Dict[str, str]:
+    queries = {}
+    for p in Path(folder).iterdir():
+        stem = p.stem
+        queries[stem] = p.read_text(encoding='utf-8')
+
+    return queries
 
 
 @dataclass
 class QueryObject:
     query: str
-    data: Union[dict, List[tuple]]
-    kind: str = 'data' # 'data', 'datastream'
-    fetch: str = 'one' # 'one', 'singlerow', 'multirow', 'singlecol'
+    fetch: str = 'one'  # 'one', 'singlerow', 'multirow', 'singlecol'
     cols: bool = False
     default: Any = None
+    params: Union[dict, None] = None
+    data: Union[List[tuple], None] = None,
 
     def __post_init__(self):
-        if isinstance(self.data, list):
-            self.kind = 'datastream'
+        if ':' in self.query:
+            params = {}
+            parameters = [p.strip(':') for p in re.findall(r':\w+', self.query)]
+            for p in parameters:
+                params[p] = None
+            self.params = params
 
+    def set(self, **kwargs: Any) -> QueryObject:
+        if 'datastream' in kwargs:
+            self.data = kwargs['datastream']
+        else:
+            self.data = None
+            for param in self.params:
+                value = kwargs.get(param, None)
+                if value is None:
+                    raise ValueError(f"'{param}' was not given a value.")
+                else:
+                    self.params[param] = value
 
-a = QueryObject('', {}, fetch='all')
-print(a)
+        return self
