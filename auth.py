@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
-from typing import Union
+from typing import Callable, Tuple, Union
 
 import requests
 
@@ -29,45 +29,44 @@ class Authorize(metaclass=Singleton):
         self.actions = 0
         self._reload()
 
-    def _reload(self):
+    def _reload(self) -> None:
         if not self.debug:
             self.r = requests.get(self.__url, headers=Authorize.HEADERS)
             self.user_access = json.loads(self.r.text)
             if self.auth_file is not None:
                 write_json(filepath=self.auth_file, data=self.user_access)
 
-    def user_is_licensed(self, domain: str):
+    def user_is_licensed(self, domain: str) -> Tuple[bool, str]:
         if self.debug:
-            return True
+            return True, 'Debug Mode'
 
         if self.user_access:
             if domain not in self.user_access[self.user]:
-                print(f"\n>>> {domain} is not licensed <<<\n")
-                return True
+                return False, f"{domain} is not in licensing info"
             else:
                 try:
                     if self.actions < 10:
                         self.actions += 1
-                        return self.user_access[self.user][domain]
+                        return self.user_access[self.user][domain], "User Authorised"
                     else:
                         self._reload()
                         self.actions += 1
-                        return self.user_access[self.user][domain]
+                        return self.user_access[self.user][domain], "User Authorised"
                 except KeyError:
-                    print("\n>>> User not authorised <<<\n")
-                    return False
+                    return False, "User not authorised"
         else:
-            print("\n>>> Can't verify authentication due to internet access <<<\n")
-            return False
+            return False, "Can't verify authentication due to internet access"
 
 
-def licensed(appname: str):
+def licensed(appname: str, callback: Union[Callable, None] = print):
     def decorator(function):
         def wrapper(*args, **kwargs):
             auth = Authorize(appname=appname)
-            if auth.user_is_licensed(domain=function.__name__):
+            authorised, info = auth.user_is_licensed(domain=function.__name__)
+            if authorised:
                 result = function(*args, **kwargs)
             else:
+                callback(info)
                 result = None
             return result
         return wrapper

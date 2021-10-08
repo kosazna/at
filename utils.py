@@ -26,12 +26,12 @@ def parse_xlsx_filepath(text: str) -> Tuple[str, Union[str, int]]:
 def load_user_settings(settings_file: Union[str, Path],
                        default_settings: dict) -> dict:
     try:
-        load_json(settings_file)
+        return load_json(settings_file)
     except FileNotFoundError:
         write_json(settings_file, default_settings)
-
-    print(f"There are no settings for user '{user()}'. Empty settings created")
-    return default_settings
+        print(f"No app setting detected. Empty settings file created")
+        
+        return default_settings
 
 def check_auth_file(filepath: str, ref_hour: int = 12):
     if os.path.exists(filepath):

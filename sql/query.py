@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Union
 
 def load_sql_queries(folder: Union[str, Path]) -> Dict[str, str]:
     queries = {}
-    for p in Path(folder).iterdir():
+    for p in Path(folder).glob('*.sql'):
         stem = p.stem
         queries[stem] = p.read_text(encoding='utf-8')
 
@@ -23,7 +23,7 @@ class QueryObject:
     cols: bool = False
     default: Any = None
     params: Union[dict, None] = None
-    data: Union[List[tuple], None] = None,
+    data: Union[List[tuple], None] = None
 
     def __post_init__(self):
         if ':' in self.query:
@@ -37,7 +37,6 @@ class QueryObject:
         if 'datastream' in kwargs:
             self.data = kwargs['datastream']
         else:
-            self.data = None
             for param in self.params:
                 value = kwargs.get(param, None)
                 if value is None:
