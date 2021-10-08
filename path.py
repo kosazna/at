@@ -7,7 +7,7 @@ class PathEngine:
     def __init__(self, appname: str):
         self._home = Path.home()
         self._cwd = Path.cwd()
-        self._app = self.home.joinpath(f".{appname}")
+        self._app = self._home.joinpath(f".{appname}")
         self._appdata = Path(os.environ.get('APPDATA'))
         self._static = self._app.joinpath("static")
         self._db = self._app.joinpath(f"{appname}.db")
@@ -37,3 +37,6 @@ class PathEngine:
 
     def get_db(self) -> str:
         return self._db.as_posix()
+
+    def get_settings(self) -> str:
+        return self._settings.as_posix()
