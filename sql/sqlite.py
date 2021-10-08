@@ -54,7 +54,7 @@ def insert(connection: Connection, cursor: Cursor, query_object: QueryObject):
 class SQLiteEngine:
     def __init__(self,
                  db: Union[str, Path],
-                 create_queries: Union[List[str], None] = None) -> None:
+                 create_queries: Union[List[QueryObject], None] = None) -> None:
         self.db = str(db)
         self.create_queries = create_queries
         self._check_db_exists()
@@ -66,8 +66,8 @@ class SQLiteEngine:
             if self.create_queries is not None:
                 with closing(connect(self.db)) as con:
                     with closing(con.cursor()) as cur:
-                        for query in self.create_queries:
-                            cur.execute(query)
+                        for query_obj in self.create_queries:
+                            cur.execute(query_obj.query)
 
     def open_db(self, executable: Union[str, Path]):
         if Path(executable).exists():
