@@ -9,45 +9,45 @@ from typing import List, Union
 from at.sql.query import QueryObject
 
 
-def select(cursor: Cursor, query_object: QueryObject):
-    if query_object.params is None:
-        cursor.execute(query_object.query)
+def select(cursor: Cursor, query_obj: QueryObject):
+    if query_obj.params is None:
+        cursor.execute(query_obj.query)
     else:
-        cursor.execute(query_object.query, query_object.params)
+        cursor.execute(query_obj.query, query_obj.params)
 
-    if query_object.fetch == 'one':
+    if query_obj.fetch == 'one':
         r = cursor.fetchone()
-        return query_object.default if r is None else r[0]
-    elif query_object.fetch == 'singlerow':
+        return query_obj.default if r is None else r[0]
+    elif query_obj.fetch == 'singlerow':
         r = cursor.fetchone()
-        if r is not None and query_object.cols == True:
+        if r is not None and query_obj.cols == True:
             cols = [d[0] for d in cursor.description]
             return cols, r
         else:
-            return query_object.default if r is None else r
+            return query_obj.default if r is None else r
     else:
         r = cursor.fetchall()
-        if query_object.fetch == 'multirow':
-            if r is not None and query_object.cols == True:
+        if query_obj.fetch == 'multirow':
+            if r is not None and query_obj.cols == True:
                 cols = [d[0] for d in cursor.description]
                 return cols, r
             else:
-                return query_object.default if r is None else r
-        elif query_object.fetch == 'singlecol':
+                return query_obj.default if r is None else r
+        elif query_obj.fetch == 'singlecol':
             content = [i[0] for i in r]
-            return query_object.default if r is None else content
+            return query_obj.default if r is None else content
 
 
-def update(connection: Connection, cursor: Cursor, query_object: QueryObject):
-    cursor.execute(query_object.query, query_object.params)
+def update(connection: Connection, cursor: Cursor, query_obj: QueryObject):
+    cursor.execute(query_obj.query, query_obj.params)
     connection.commit()
 
 
-def insert(connection: Connection, cursor: Cursor, query_object: QueryObject):
-    if query_object.data is not None:
-        cursor.executemany(query_object.query, query_object.data)
+def insert(connection: Connection, cursor: Cursor, query_obj: QueryObject):
+    if query_obj.data is not None:
+        cursor.executemany(query_obj.query, query_obj.data)
     else:
-        cursor.execute(query_object.query, query_object.params)
+        cursor.execute(query_obj.query, query_obj.params)
     connection.commit()
 
 
@@ -75,28 +75,26 @@ class SQLiteEngine:
         else:
             print('Instal DB Browser (SQLite) to view database.')
 
-    def update(self, query_object: QueryObject):
+    def update(self, query_obj: QueryObject):
         try:
             with closing(connect(self.db)) as con:
                 with closing(con.cursor()) as cur:
-                    update(connection=con, cursor=cur,
-                           query_object=query_object)
+                    update(connection=con, cursor=cur, query_obj=query_obj)
         except Error as e:
-            print(str(e) + " from " + self.db)
+            print(f"{str(e)} from {self.db}")
 
-    def insert(self, query_object: QueryObject):
+    def insert(self, query_obj: QueryObject):
         try:
             with closing(connect(self.db)) as con:
                 with closing(con.cursor()) as cur:
-                    insert(connection=con, cursor=cur,
-                           query_object=query_object)
+                    insert(connection=con, cursor=cur, query_obj=query_obj)
         except Error as e:
-            print(str(e) + " from " + self.db)
+            print(f"{str(e)} from {self.db}")
 
-    def select(self, query_object: QueryObject):
+    def select(self, query_obj: QueryObject):
         try:
             with closing(connect(self.db)) as con:
                 with closing(con.cursor()) as cur:
-                    return select(cursor=cur, query_object=query_object)
+                    return select(cursor=cur, query_obj=query_obj)
         except Error as e:
-            print(str(e) + " from " + self.db)
+            print(f"{str(e)} from {self.db}")
