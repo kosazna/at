@@ -69,7 +69,7 @@ class Authorize(metaclass=Singleton):
                 return True
             else:
                 try:
-                    if self.actions < 20:
+                    if self.actions < 10:
                         self.actions += 1
                         return self.user_access[self.user][domain]
                     else:
