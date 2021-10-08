@@ -91,7 +91,7 @@ def licensed(appname: str):
             if auth.user_is_licensed(domain=function.__name__):
                 result = function(*args, **kwargs)
             else:
-                raise UnlicensedUserException("User not authorised")
+                result = None
             return result
         return wrapper
     return decorator
