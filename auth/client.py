@@ -1,67 +1,17 @@
 # -*- coding: utf-8 -*-
 
 import json
-import os
-from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Callable, Tuple, Union
 
 import requests
-from requests.exceptions import ConnectionError
-
+from at.auth.utils import create_temp_auth
 from at.date import timestamp
-from at.io import load_json, load_pickle, write_pickle
+from at.io import load_pickle
 from at.singleton import Singleton
-from at.utils import create_hex_string, user
-
-
-def create_temp_auth(authdata: Union[str, Path],
-                     appname: str,
-                     licfolder: Union[str, Path, None],
-                     date: Union[str, None] = None):
-    for p in Path(licfolder).glob('*.lic'):
-        p.unlink()
-
-    if date is None:
-        date_str = timestamp(time=False)
-    else:
-        date_str = date
-
-    temp_auth = create_hex_string(f"{appname}-{date_str}")
-    dst = Path(licfolder).joinpath(f"{temp_auth}.lic")
-
-    if isinstance(authdata, dict):
-        data = authdata
-    else:
-        auth_path = Path(authdata)
-        if auth_path.suffix == '.json':
-            data = load_json(auth_path)
-        else:
-            data = load_pickle(auth_path)
-
-    write_pickle(dst, data)
-
-
-def check_auth_file(filepath: Union[str, Path],
-                    appname: str,
-                    ref_hour: int = 12) -> Tuple[bool, dict]:
-    authfile = Path(filepath)
-    if authfile.exists():
-        current_time = timestamp(return_object=True)
-        creation_time = datetime.fromtimestamp(os.stat(filepath).st_ctime)
-
-        auth = load_pickle(filepath)
-
-        if timedelta(minutes=ref_hour) < current_time - creation_time:
-            print("Credentials need to be refreshed soon")
-            authfile.unlink()
-            create_temp_auth(filepath, appname, authfile.parent)
-            return False, auth
-        else:
-            return True, auth
-    else:
-        print("Authentication file does not exist")
-        return False, dict()
+from at.text import create_hex_string
+from at.utils import user
+from requests.exceptions import ConnectionError
 
 
 class Authorize(metaclass=Singleton):
@@ -101,7 +51,6 @@ class Authorize(metaclass=Singleton):
                     date_str = timestamp(time=False)
                     temp_auth = create_hex_string(f"{self.appname}-{date_str}")
                     licfile = self.auth_loc.joinpath(f"{temp_auth}.lic")
-                    print(licfile)
 
                     if licfile.exists():
                         print("Temporary authentication in use")
@@ -155,7 +104,7 @@ if __name__ == "__main__":
     APPNAME = 'atcrawl'
     AUTHFOLDER = "C:/Users/aznavouridis.k/AppData/Roaming/.atcrawl"
 
-    create_temp_auth(authdata="D:/.temp/.dev/auth_template.json",
+    create_temp_auth(authdata="D:/.temp/.dev/.aztool/atauth/atcrawl.json",
                      appname="atcrawl",
                      licfolder=AUTHFOLDER)
 

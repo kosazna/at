@@ -3,7 +3,7 @@ import json
 from os import startfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from shutil import copy2, copytree
+from shutil import copy2, copytree, unpack_archive
 from typing import Any, List, Tuple, Union
 import pickle
 
@@ -38,6 +38,13 @@ def write_pickle(filepath: Union[str, Path],
                  data: dict) -> None:
     with open(filepath, 'wb') as pf:
         pickle.dump(data, pf, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+def unzip(zipfile: Union[str, Path], dst: Union[str, Path]):
+    dst_path = Path(dst)
+    if not dst_path.exists():
+        dst_path.mkdir(parents=True, exist_ok=True)
+    unpack_archive(zipfile, dst_path)
 
 
 def file_copy(src: Union[str, Path],
