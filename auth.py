@@ -19,6 +19,9 @@ def create_temp_auth(authdata: Union[str, Path],
                      appname: str,
                      licfolder: Union[str, Path, None],
                      date: Union[str, None] = None):
+    for p in Path(licfolder).glob('*.lic'):
+        p.unlink()
+
     if date is None:
         date_str = timestamp(time=False)
     else:
@@ -156,11 +159,11 @@ if __name__ == "__main__":
                      appname="atcrawl",
                      licfolder=AUTHFOLDER)
 
-    a = Authorize(appname=APPNAME,
-                  auth_loc=AUTHFOLDER)
+    # a = Authorize(appname=APPNAME,
+    #               auth_loc=AUTHFOLDER)
 
-    @licensed('atcrawl')
-    def find_images_run():
-        print('ok')
+    # @licensed('atcrawl')
+    # def find_images_run():
+    #     print('ok')
 
-    find_images_run()
+    # find_images_run()
