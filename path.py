@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from pathlib import Path
 import os
+from pathlib import Path
+from typing import Union
 
 
 class PathEngine:
@@ -23,29 +24,42 @@ class PathEngine:
         if not self._appdata.exists():
             self._appdata.mkdir(parents=True, exist_ok=True)
 
-    def get_home(self) -> str:
+    def get_home(self, obj: bool = False) -> Union[str, Path]:
+        if obj:
+            return self._home
         return self._home.as_posix()
 
-    def get_cwd(self) -> str:
+    def get_cwd(self, obj: bool = False) -> Union[str, Path]:
+        if obj:
+            return self._cwd
         return self._cwd.as_posix()
 
-    def get_app(self) -> str:
+    def get_app(self, obj: bool = False) -> Union[str, Path]:
+        if obj:
+            return self._app
         return self._app.as_posix()
 
-    def get_appdata(self) -> str:
+    def get_appdata(self, obj: bool = False) -> Union[str, Path]:
+        if obj:
+            return self._appdata
         return self._appdata.as_posix()
 
-    def get_static(self) -> str:
+    def get_static(self, obj: bool = False) -> Union[str, Path]:
+        if obj:
+            return self._static
         return self._static.as_posix()
 
-    def get_db(self) -> str:
+    def get_db(self, obj: bool = False) -> Union[str, Path]:
+        if obj:
+            return self._db
         return self._db.as_posix()
 
-    def get_settings(self) -> str:
+    def get_settings(self, obj: bool = False) -> Union[str, Path]:
+        if obj:
+            return self._settings
         return self._settings.as_posix()
 
-    def get_authfile(self) -> str:
+    def get_authfile(self, obj: bool = False) -> Union[str, Path]:
+        if obj:
+            return self._authfile
         return self._authfile.as_posix()
-
-
-p = PathEngine('atcrawl')
