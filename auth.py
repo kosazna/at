@@ -3,7 +3,6 @@
 import json
 import os
 from datetime import datetime, timedelta
-from hashlib import sha256
 from pathlib import Path
 from typing import Callable, Tuple, Union
 
@@ -11,9 +10,9 @@ import requests
 from requests.exceptions import ConnectionError
 
 from at.date import timestamp
-from at.io import load_json, write_json, load_pickle, write_pickle
+from at.io import load_json, load_pickle, write_pickle
 from at.singleton import Singleton
-from at.utils import user, create_hex_string
+from at.utils import create_hex_string, user
 
 
 def create_temp_auth(authdata: Union[str, Path],
@@ -50,11 +49,10 @@ def check_auth_file(filepath: Union[str, Path],
 
         auth = load_pickle(filepath)
 
-        authfile.unlink()
-        create_temp_auth(filepath, appname, authfile.parent)
-
         if timedelta(minutes=ref_hour) < current_time - creation_time:
             print("Credentials need to be refreshed soon")
+            authfile.unlink()
+            create_temp_auth(filepath, appname, authfile.parent)
             return False, auth
         else:
             return True, auth
@@ -100,6 +98,7 @@ class Authorize(metaclass=Singleton):
                     date_str = timestamp(time=False)
                     temp_auth = create_hex_string(f"{self.appname}-{date_str}")
                     licfile = self.auth_loc.joinpath(f"{temp_auth}.lic")
+                    print(licfile)
 
                     if licfile.exists():
                         print("Temporary authentication in use")
@@ -152,12 +151,13 @@ if __name__ == "__main__":
 
     APPNAME = 'atcrawl'
     AUTHFOLDER = "C:/Users/aznavouridis.k/AppData/Roaming/.atcrawl"
-    AUTHFILE = "C:/Users/aznavouridis.k/AppData/Roaming/.atcrawl/user.auth"
 
-    # create_temporary_authentication(APPNAME, AUTHFOLDER)
+    create_temp_auth(authdata="D:/.temp/.dev/auth_template.json",
+                     appname="atcrawl",
+                     licfolder=AUTHFOLDER)
 
     a = Authorize(appname=APPNAME,
-                  auth_loc=AUTHFILE)
+                  auth_loc=AUTHFOLDER)
 
     @licensed('atcrawl')
     def find_images_run():
