@@ -6,7 +6,7 @@ from at.gui.button import Button
 from at.gui.check import CheckInput
 from at.gui.combo import ComboInput
 from at.gui.filename import FileNameInput
-from at.gui.helper import *
+from at.gui.utils import *
 from at.gui.input import IntInput, StrInput
 from at.gui.io import FileInput, FileOutput, FolderInput
 from at.gui.list import ListWidget

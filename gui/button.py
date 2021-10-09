@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from typing import Union
-from helper import *
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor

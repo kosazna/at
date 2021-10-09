@@ -6,7 +6,7 @@ from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import (QCompleter, QHBoxLayout, QLabel, QLineEdit,
                              QVBoxLayout, QWidget)
 
-from at.gui.helper import *
+from at.gui.utils import *
 
 
 class StrInput(QWidget):
