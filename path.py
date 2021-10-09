@@ -9,11 +9,10 @@ class PathEngine:
         self._home = Path.home()
         self._cwd = Path.cwd()
         self._app = self._home.joinpath(f".{appname}")
-        self._appdata = Path(os.environ.get('APPDATA')).joinpath(f".{appname}")
+        self._auth = Path(os.environ.get('APPDATA')).joinpath(f".{appname}")
         self._static = self._app.joinpath("static")
         self._db = self._app.joinpath(f"{appname}.db")
         self._settings = self._app.joinpath("settings.json")
-        self._authfile = self._appdata.joinpath("auth.json")
         self._init_paths()
 
     def _init_paths(self):
@@ -21,8 +20,8 @@ class PathEngine:
             self._app.mkdir(parents=True, exist_ok=True)
         if not self._static.exists():
             self._static.mkdir(parents=True, exist_ok=True)
-        if not self._appdata.exists():
-            self._appdata.mkdir(parents=True, exist_ok=True)
+        if not self._auth.exists():
+            self._auth.mkdir(parents=True, exist_ok=True)
 
     def get_home(self, obj: bool = False) -> Union[str, Path]:
         if obj:
@@ -39,10 +38,10 @@ class PathEngine:
             return self._app
         return self._app.as_posix()
 
-    def get_appdata(self, obj: bool = False) -> Union[str, Path]:
+    def get_authfolder(self, obj: bool = False) -> Union[str, Path]:
         if obj:
-            return self._appdata
-        return self._appdata.as_posix()
+            return self._auth
+        return self._auth.as_posix()
 
     def get_static(self, obj: bool = False) -> Union[str, Path]:
         if obj:
@@ -58,8 +57,3 @@ class PathEngine:
         if obj:
             return self._settings
         return self._settings.as_posix()
-
-    def get_authfile(self, obj: bool = False) -> Union[str, Path]:
-        if obj:
-            return self._authfile
-        return self._authfile.as_posix()
