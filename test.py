@@ -1,5 +1,5 @@
 import subprocess
 
-a = subprocess.check_output(["python", "D:/.temp/.dev/.aztool/at/io.py"])
+a = subprocess.check_output("D:/.temp/.dev/.aztool/atauth/dist/auth.exe --appname atcrawl")
 
-print(type(eval(a)))
+print(eval(a))
