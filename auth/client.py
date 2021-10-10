@@ -86,7 +86,7 @@ class Authorize(metaclass=Singleton):
 
 def licensed(appname: str,
              domain: Union[str, None] = None,
-             callback: Union[Callable, None] = print):
+             callback: Union[Callable] = print):
     def decorator(function: Callable):
         def wrapper(*args, **kwargs):
             auth = Authorize(appname=appname)

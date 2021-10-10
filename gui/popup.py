@@ -31,6 +31,7 @@ def show_popup(appname: str = 'Dialog',
                buttons: Union[list, tuple, None] = None):
     msg = QMessageBox()
     msg.setWindowTitle(f"{appname}")
+
     msg.setIcon(popup_status_map[status])
 
     if primary:
@@ -45,7 +46,85 @@ def show_popup(appname: str = 'Dialog',
             if button in popup_button_map:
                 msg.addButton(popup_button_map[button])
 
-    return msg.exec_()
+    user_action = msg.exec_()
+
+    for button_action in popup_button_map:
+        if user_action == popup_button_map[button_action]:
+            return button_action
+    return None
+
+
+class Popup(QMessageBox):
+    def __init__(self,
+                 appname: str = 'Dialog',
+                 *args,
+                 **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.setWindowTitle(f"{appname}")
+
+    def info(self,
+             primary: str = '',
+             secondary: str = '',
+             details: str = '',
+             buttons: Union[list, tuple, None] = None):
+        self.setIcon(popup_status_map['info'])
+
+        if primary:
+            self.setText(primary)
+        if secondary:
+            self.setInformativeText(secondary)
+        if details:
+            self.setDetailedText(details)
+
+        if buttons is not None:
+            for button in buttons:
+                if button in popup_button_map:
+                    self.addButton(popup_button_map[button])
+
+        user_action = self.exec_()
+
+        for button_action in popup_button_map:
+            if user_action == popup_button_map[button_action]:
+                return button_action
+        return None
+
+    def warning(self,
+                primary: str = '',
+                secondary: str = '',
+                details: str = '',
+                buttons: Union[list, tuple, None] = None):
+        self.setIcon(popup_status_map['info'])
+
+        if primary:
+            self.setText(primary)
+        if secondary:
+            self.setInformativeText(secondary)
+        if details:
+            self.setDetailedText(details)
+
+        if buttons is not None:
+            for button in buttons:
+                if button in popup_button_map:
+                    self.addButton(popup_button_map[button])
+
+        user_action = self.exec_()
+
+        for button_action in popup_button_map:
+            if user_action == popup_button_map[button_action]:
+                return button_action
+        return None
+
+    def error(self, primary: str = ''):
+        self.setIcon(popup_status_map['error'])
+        self.setText(primary)
+        self.addButton(popup_button_map['close'])
+
+        user_action = self.exec_()
+
+        for button_action in popup_button_map:
+            if user_action == popup_button_map[button_action]:
+                return button_action
+        return None
 
 
 if __name__ == '__main__':
@@ -56,10 +135,12 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setFont(SEGOE)
     app.setStyle('Fusion')
-    result = show_popup(
-        primary='Something went wrong with validating dataset', buttons=('ok', 'cancel', 'ignore'))
+    # result = show_popup(
+    #     primary='Something went wrong with validating dataset', buttons=('ok', 'cancel', 'ignore'))
 
-    if result == QMessageBox.Ok:
-        print('kostas')
-    else:
-        print('azna')
+    # if result == QMessageBox.Ok:
+    #     print('kostas')
+    # else:
+    #     print('azna')
+
+    print(Popup('atcrawl').error("You are not licensed to use this process"))
