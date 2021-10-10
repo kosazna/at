@@ -102,22 +102,3 @@ def licensed(appname: str,
             return result
         return wrapper
     return decorator
-
-
-if __name__ == "__main__":
-
-    APPNAME = 'atcrawl'
-    AUTHFOLDER = "C:/Users/aznavouridis.k/AppData/Roaming/.atcrawl"
-
-    create_lic(authdata="D:/.temp/.dev/.aztool/atauth/atcrawl.json",
-               appname="atcrawl",
-               folder=AUTHFOLDER)
-
-    # a = Authorize(appname=APPNAME,
-    #               auth_loc=AUTHFOLDER)
-
-    # @licensed('atcrawl')
-    # def find_images_run():
-    #     print('ok')
-
-    # find_images_run()
