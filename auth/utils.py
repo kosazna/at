@@ -3,14 +3,15 @@
 from pathlib import Path
 from typing import Union
 
-from at.date import timestamp
-from at.io import file_copy, load_json, load_pickle, unzip, write_pickle
+from at.date import daterange, timestamp
+from at.io import (file_copy, load_json, load_pickle, unzip_file, write_pickle,
+                   zip_file)
 from at.text import create_hex_string
 
 
 def create_temp_auth(authdata: Union[str, Path],
                      appname: str,
-                     licfolder: Union[str, Path, None],
+                     licfolder: Union[str, Path],
                      date: Union[str, None] = None):
     if date is None:
         date_str = timestamp(time=False)
@@ -32,13 +33,30 @@ def create_temp_auth(authdata: Union[str, Path],
     write_pickle(dst, data)
 
 
+def create_temp_auth_batch(authdata: Union[str, Path],
+                           appname: str,
+                           licfolder: Union[str, Path, None],
+                           periods: int,
+                           start_date: Union[str, None] = None):
+
+    dates = daterange(periods=periods, start_date=start_date)
+
+    for date in dates:
+        create_temp_auth(authdata=authdata,
+                         appname=appname,
+                         licfolder=licfolder,
+                         date=date)
+    zip_dest = Path(licfolder).parent.joinpath(appname)
+    zip_file(src=licfolder, dst=zip_dest, save_name=f"lic{periods}")
+
+
 def load_temp_auth(filepath: Union[str, Path],
                    licfolder: Union[str, Path]):
     file_path = Path(filepath)
     licfolder_path = Path(licfolder)
 
     if file_path.suffix == '.zip':
-        unzip(file_path, licfolder_path)
+        unzip_file(file_path, licfolder_path)
     else:
         file_copy(file_path, licfolder_path)
 
@@ -49,3 +67,9 @@ def show_lic(appname: str, licfolder: Union[str, Path]) -> str:
     temp_auth = create_hex_string(f"{appname}-{date_str}")
     licfile = licfolder_path.joinpath(f"{temp_auth}.lic")
     print(load_pickle(licfile))
+
+
+create_temp_auth_batch(authdata="D:/.temp/.dev/.aztool/atauth/atcrawl.json",
+                       appname='atcrawl',
+                       licfolder="D:/Terpos/lics",
+                       periods=10)

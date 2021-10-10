@@ -3,7 +3,7 @@ import json
 from os import startfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from shutil import copy2, copytree, unpack_archive
+from shutil import copy2, copytree, unpack_archive, make_archive
 from typing import Any, List, Tuple, Union
 import pickle
 
@@ -37,10 +37,28 @@ def load_pickle(filepath: Union[str, Path]) -> Any:
 def write_pickle(filepath: Union[str, Path],
                  data: dict) -> None:
     with open(filepath, 'wb') as pf:
-        pickle.dump(data, pf, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump(data, pf, protocol=pickle.DEFAULT_PROTOCOL)
 
 
-def unzip(zipfile: Union[str, Path], dst: Union[str, Path]):
+def zip_file(src: Union[str, Path],
+             dst: Union[str, Path, None] = None,
+             save_name: Union[str, None] = None):
+    src_path = Path(src)
+
+    if dst is None:
+        dst_path = src_path.parent
+    else:
+        dst_path = Path(dst)
+
+    if save_name is None:
+        d = dst_path.joinpath(f"{src_path.stem}")
+    else:
+        d = dst_path.joinpath(f"{save_name}")
+
+    make_archive(d, 'zip', src_path)
+
+
+def unzip_file(zipfile: Union[str, Path], dst: Union[str, Path]):
     dst_path = Path(dst)
     if not dst_path.exists():
         dst_path.mkdir(parents=True, exist_ok=True)
@@ -151,3 +169,7 @@ def pattern_copy(src: Union[str, Path],
                     d = dst_path.joinpath(sub_dst)
 
                 executor.submit(file_copy, p, d, name)
+
+
+zip_file(src="D:/Terpos/_htmls",
+         dst="D:/Terpos/ziped")
