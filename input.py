@@ -105,6 +105,3 @@ def input_path(prompt: str,
                 else:
                     _error = f"{_path} can't be used for any operation."
                     raise IOError(_error)
-
-
-input_path('Give Path\n', ensure=FILE)
