@@ -70,10 +70,3 @@ class Logger(metaclass=Singleton):
             self._add(content=content, modified=_c)
         else:
             print(Fore.LIGHTGREEN_EX + content)
-
-log = Logger(mode='GUI')
-log.info('kostas')
-log.waring('kostas')
-log.error('kostas')
-log.success('kostas')
-print(log.get_content())
