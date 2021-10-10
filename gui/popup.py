@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
 from typing import Union
-from PyQt5.QtWidgets import QMessageBox, QApplication
-from PyQt5.QtGui import QFont
 
-button_map = {
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QApplication, QMessageBox
+
+popup_button_map = {
     'ok': QMessageBox.Ok,
     'open': QMessageBox.Open,
     'save': QMessageBox.Save,
@@ -14,7 +16,7 @@ button_map = {
     'retry': QMessageBox.Retry,
     'ignore': QMessageBox.Ignore}
 
-status_map = {
+popup_status_map = {
     'info': QMessageBox.Information,
     'question': QMessageBox.Question,
     'warning': QMessageBox.Warning,
@@ -29,7 +31,7 @@ def show_popup(appname: str = 'Dialog',
                buttons: Union[list, tuple, None] = None):
     msg = QMessageBox()
     msg.setWindowTitle(f"{appname}")
-    msg.setIcon(status_map[status])
+    msg.setIcon(popup_status_map[status])
 
     if primary:
         msg.setText(primary)
@@ -40,8 +42,8 @@ def show_popup(appname: str = 'Dialog',
 
     if buttons is not None:
         for button in buttons:
-            if button in button_map:
-                msg.addButton(button_map[button])
+            if button in popup_button_map:
+                msg.addButton(popup_button_map[button])
 
     return msg.exec_()
 
