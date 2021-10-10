@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 from at.singleton import Singleton
-from colorama import init, Fore, Style
-
-init(autoreset=True)
-
 
 class Logger(metaclass=Singleton):
     INFO = 'INFO'
