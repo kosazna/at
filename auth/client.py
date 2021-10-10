@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Callable, Tuple, Union
 
 import requests
-from at.auth.utils import create_temp_auth
+from at.auth.utils import create_lic
 from at.date import timestamp
 from at.io import load_pickle
 from at.singleton import Singleton
@@ -43,9 +43,9 @@ class Authorize(metaclass=Singleton):
 
                 if self.auth_loc is not None:
                     if self.auth[self.user]['templic']:
-                        create_temp_auth(authdata=self.auth,
-                                         appname=self.appname,
-                                         licfolder=self.auth_loc)
+                        create_lic(authdata=self.auth,
+                                   appname=self.appname,
+                                   folder=self.auth_loc)
             except ConnectionError:
                 if self.auth_loc is not None:
                     date_str = timestamp(time=False)
@@ -62,7 +62,7 @@ class Authorize(metaclass=Singleton):
                 else:
                     self.auth = {}
 
-    def user_is_licensed(self, domain: str) -> Tuple[bool, str]:
+    def is_licensed(self, domain: str) -> Tuple[bool, str]:
         if self.debug:
             return True, 'Debug Mode'
 
@@ -84,11 +84,16 @@ class Authorize(metaclass=Singleton):
             return False, "Can't verify authentication due to internet access"
 
 
-def licensed(appname: str, callback: Union[Callable, None] = print):
-    def decorator(function):
+def licensed(appname: str,
+             domain: Union[str, None] = None,
+             callback: Union[Callable, None] = print):
+    def decorator(function: Callable):
         def wrapper(*args, **kwargs):
             auth = Authorize(appname=appname)
-            authorised, info = auth.user_is_licensed(domain=function.__name__)
+            if domain is None:
+                authorised, info = auth.is_licensed(domain=function.__name__)
+            else:
+                authorised, info = auth.is_licensed(domain=domain)
             if authorised:
                 result = function(*args, **kwargs)
             else:
@@ -104,9 +109,9 @@ if __name__ == "__main__":
     APPNAME = 'atcrawl'
     AUTHFOLDER = "C:/Users/aznavouridis.k/AppData/Roaming/.atcrawl"
 
-    create_temp_auth(authdata="D:/.temp/.dev/.aztool/atauth/atcrawl.json",
-                     appname="atcrawl",
-                     licfolder=AUTHFOLDER)
+    create_lic(authdata="D:/.temp/.dev/.aztool/atauth/atcrawl.json",
+               appname="atcrawl",
+               folder=AUTHFOLDER)
 
     # a = Authorize(appname=APPNAME,
     #               auth_loc=AUTHFOLDER)

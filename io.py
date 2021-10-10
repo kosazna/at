@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+from zipfile import ZipFile
 from os import startfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -42,20 +43,29 @@ def write_pickle(filepath: Union[str, Path],
 
 def zip_file(src: Union[str, Path],
              dst: Union[str, Path, None] = None,
-             save_name: Union[str, None] = None):
+             save_name: Union[str, None] = None,
+             file_filter: Union[str, None] = None):
     src_path = Path(src)
 
     if dst is None:
-        dst_path = src_path.parent
+        dst_path = src_path
     else:
         dst_path = Path(dst)
 
     if save_name is None:
-        d = dst_path.joinpath(f"{src_path.stem}")
+        d = dst_path.joinpath(f"{src_path.stem}.zip")
     else:
-        d = dst_path.joinpath(f"{save_name}")
+        d = dst_path.joinpath(f"{save_name}.zip")
 
-    make_archive(d, 'zip', src_path)
+    if file_filter is None:
+        files2zip = tuple(src_path.iterdir())
+    else:
+        files2zip = tuple(src_path.glob(file_filter))
+
+    if files2zip:
+        with ZipFile(d, 'w') as zf:
+            for filepath in files2zip:
+                zf.write(filepath, arcname=filepath.name)
 
 
 def unzip_file(zipfile: Union[str, Path], dst: Union[str, Path]):
@@ -65,7 +75,7 @@ def unzip_file(zipfile: Union[str, Path], dst: Union[str, Path]):
     unpack_archive(zipfile, dst_path)
 
 
-def file_copy(src: Union[str, Path],
+def copy_file(src: Union[str, Path],
               dst: Union[str, Path],
               save_name: Union[str, None] = None):
     src_path = Path(src)
@@ -123,7 +133,7 @@ def file_copy(src: Union[str, Path],
                 print(f"'{str(src)}' missing auxiliary shapefile files.")
 
 
-def pattern_copy(src: Union[str, Path],
+def copy_pattern(src: Union[str, Path],
                  dst: Union[str, Path],
                  filters: Union[str, List[str], Tuple[str]],
                  read_pattern: str,
@@ -168,8 +178,4 @@ def pattern_copy(src: Union[str, Path],
                     sub_dst = replace_all(save_pattern, parts)
                     d = dst_path.joinpath(sub_dst)
 
-                executor.submit(file_copy, p, d, name)
-
-
-zip_file(src="D:/Terpos/_htmls",
-         dst="D:/Terpos/ziped")
+                executor.submit(copy_file, p, d, name)

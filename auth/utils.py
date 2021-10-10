@@ -4,22 +4,22 @@ from pathlib import Path
 from typing import Union
 
 from at.date import daterange, timestamp
-from at.io import (file_copy, load_json, load_pickle, unzip_file, write_pickle,
+from at.io import (copy_file, load_json, load_pickle, unzip_file, write_pickle,
                    zip_file)
 from at.text import create_hex_string
 
 
-def create_temp_auth(authdata: Union[str, Path],
-                     appname: str,
-                     licfolder: Union[str, Path],
-                     date: Union[str, None] = None):
+def create_lic(authdata: Union[str, Path],
+               appname: str,
+               folder: Union[str, Path],
+               date: Union[str, None] = None):
     if date is None:
         date_str = timestamp(time=False)
     else:
         date_str = date
 
     temp_auth = create_hex_string(f"{appname}-{date_str}")
-    dst = Path(licfolder).joinpath(f"{temp_auth}.lic")
+    dst = Path(folder).joinpath(f"{temp_auth}.lic")
 
     if isinstance(authdata, dict):
         data = authdata
@@ -33,43 +33,40 @@ def create_temp_auth(authdata: Union[str, Path],
     write_pickle(dst, data)
 
 
-def create_temp_auth_batch(authdata: Union[str, Path],
-                           appname: str,
-                           licfolder: Union[str, Path, None],
-                           periods: int,
-                           start_date: Union[str, None] = None):
+def create_lic_zip(authdata: Union[str, Path],
+                   appname: str,
+                   folder: Union[str, Path, None],
+                   periods: int,
+                   start_date: Union[str, None] = None):
 
     dates = daterange(periods=periods, start_date=start_date)
 
     for date in dates:
-        create_temp_auth(authdata=authdata,
-                         appname=appname,
-                         licfolder=licfolder,
-                         date=date)
-    zip_dest = Path(licfolder).parent.joinpath(appname)
-    zip_file(src=licfolder, dst=zip_dest, save_name=f"lic{periods}")
+        create_lic(authdata=authdata,
+                   appname=appname,
+                   folder=folder,
+                   date=date)
+    out_name = f"{start_date}_{periods}lic"
+    zip_file(src=folder, dst=folder, save_name=out_name, file_filter='*.lic')
 
 
-def load_temp_auth(filepath: Union[str, Path],
-                   licfolder: Union[str, Path]):
+def load_lic(filepath: Union[str, Path],
+             dst: Union[str, Path]):
     file_path = Path(filepath)
-    licfolder_path = Path(licfolder)
+    licfolder_path = Path(dst)
 
     if file_path.suffix == '.zip':
         unzip_file(file_path, licfolder_path)
     else:
-        file_copy(file_path, licfolder_path)
+        copy_file(file_path, licfolder_path)
 
 
-def show_lic(appname: str, licfolder: Union[str, Path]) -> str:
+def check_lic(appname: str, licfolder: Union[str, Path]) -> str:
     licfolder_path = Path(licfolder)
     date_str = timestamp(time=False)
     temp_auth = create_hex_string(f"{appname}-{date_str}")
     licfile = licfolder_path.joinpath(f"{temp_auth}.lic")
-    print(load_pickle(licfile))
-
-
-create_temp_auth_batch(authdata="D:/.temp/.dev/.aztool/atauth/atcrawl.json",
-                       appname='atcrawl',
-                       licfolder="D:/Terpos/lics",
-                       periods=10)
+    if licfile.exists():
+        print(load_pickle(licfile))
+    else:
+        print({})
