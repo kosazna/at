@@ -8,6 +8,7 @@ from typing import List, Union
 
 from at.sql.action import insert, select, update
 from at.sql.query import QueryObject
+from at.logger import log
 
 
 class SQLiteEngine:
@@ -32,7 +33,7 @@ class SQLiteEngine:
         if Path(executable).exists():
             Popen([str(executable), self.db])
         else:
-            print('Instal DB Browser (SQLite) to view database.')
+            log.info('Instal DB Browser (SQLite) to view database.')
 
     def update(self, query_obj: QueryObject):
         try:
@@ -40,7 +41,7 @@ class SQLiteEngine:
                 with closing(con.cursor()) as cur:
                     update(connection=con, cursor=cur, query_obj=query_obj)
         except Error as e:
-            print(f"{str(e)} from {self.db}")
+            log.error(f"{str(e)} from {self.db}")
 
     def insert(self, query_obj: QueryObject):
         try:
@@ -48,7 +49,7 @@ class SQLiteEngine:
                 with closing(con.cursor()) as cur:
                     insert(connection=con, cursor=cur, query_obj=query_obj)
         except Error as e:
-            print(f"{str(e)} from {self.db}")
+            log.error(f"{str(e)} from {self.db}")
 
     def select(self, query_obj: QueryObject):
         try:
@@ -56,4 +57,4 @@ class SQLiteEngine:
                 with closing(con.cursor()) as cur:
                     return select(cursor=cur, query_obj=query_obj)
         except Error as e:
-            print(f"{str(e)} from {self.db}")
+            log.error(f"{str(e)} from {self.db}")

@@ -8,6 +8,7 @@ import requests
 from at.auth.utils import create_lic
 from at.date import timestamp
 from at.io import load_pickle
+from at.logger import log, strferror, strfsuccess, strfwarning
 from at.singleton import Singleton
 from at.text import create_hex_string
 from at.utils import user
@@ -53,11 +54,11 @@ class Authorize(metaclass=Singleton):
                     licfile = self.auth_loc.joinpath(f"{temp_auth}.lic")
 
                     if licfile.exists():
-                        print("Temporary authentication in use")
+                        log.warning("Temporary authentication in use")
                         content = load_pickle(licfile)
                         self.auth = content
                     else:
-                        print("No temporary authentication found")
+                        log.error("No temporary authentication found")
                         self.auth = {}
                 else:
                     self.auth = {}
@@ -68,25 +69,25 @@ class Authorize(metaclass=Singleton):
 
         if self.auth:
             if domain not in self.auth[self.user]['action']:
-                return False, f"{domain} is not in licensing info"
+                return False, strfwarning(f"{domain} is not in licensing info")
             else:
                 try:
                     if self.actions < 10:
                         self.actions += 1
-                        return self.auth[self.user]['action'][domain], "User Authorised"
+                        return self.auth[self.user]['action'][domain], strfsuccess("User Authorised")
                     else:
                         self._reload()
                         self.actions += 1
-                        return self.auth[self.user]['action'][domain], "User Authorised"
+                        return self.auth[self.user]['action'][domain], strfsuccess("User Authorised")
                 except KeyError:
-                    return False, "User not authorised"
+                    return False, strferror("User not authorised")
         else:
-            return False, "Can't verify authentication due to internet access"
+            return False, strferror("Can't verify authentication due to internet access")
 
 
 def licensed(appname: str,
              domain: Union[str, None] = None,
-             callback: Union[Callable] = print):
+             callback: Union[Callable] = log.info):
     def decorator(function: Callable):
         def wrapper(*args, **kwargs):
             auth = Authorize(appname=appname)

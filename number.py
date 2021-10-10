@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 from typing import Union, Type
+from at.logger import log
 
 
 def text2num(text: str):
@@ -16,7 +17,7 @@ def intify(iterable: Union[list, tuple, set, dict, str],
             return return_type(map(int, iterable))
         except ValueError:
             not_accepted = list(filter(lambda v: not v.isnumeric(), iterable))
-            print(f"String should contain only numbers -> {not_accepted}")
+            log.error(f"String should contain only numbers -> {not_accepted}")
             return return_type()
     else:
         raise TypeError(f"Not supported type for iterable: {type(iterable)}")
@@ -30,7 +31,7 @@ def floatify(iterable: Union[list, tuple, set, dict, str],
             return return_type(map(float, iterable))
         except ValueError:
             not_accepted = list(filter(lambda v: not v.isnumeric(), iterable))
-            print(f"String should contain only numbers -> {not_accepted}")
+            log.error(f"String should contain only numbers -> {not_accepted}")
             return return_type()
     else:
         raise TypeError(f"Not supported type for iterable: {type(iterable)}")

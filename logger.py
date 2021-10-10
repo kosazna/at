@@ -5,6 +5,11 @@ from colorama import init, Fore
 init(autoreset=True)
 
 
+def strfwarning(string: str) -> str: return f"{Fore.LIGHTYELLOW_EX}{string}"
+def strferror(string: str) -> str: return f"{Fore.LIGHTRED_EX}{string}"
+def strfsuccess(string: str) -> str: return f"{Fore.LIGHTGREEN_EX}{string}"
+
+
 class Logger(metaclass=Singleton):
     INFO = 'INFO'
     WARNING = 'WARNING'
@@ -50,23 +55,26 @@ class Logger(metaclass=Singleton):
         else:
             print(content)
 
-    def waring(self, content: str):
+    def warning(self, content: str):
         if self.mode == 'GUI':
             _c = f'<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{self.color[self.WARNING]};">{content.strip()}</span></p>'
             self._add(content=content, modified=_c)
         else:
-            print(Fore.LIGHTYELLOW_EX + content)
+            print(strfwarning(content))
 
     def error(self, content: str):
         if self.mode == 'GUI':
             _c = f'<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{self.color[self.ERROR]};">{content.strip()}</span></p>'
             self._add(content=content, modified=_c)
         else:
-            print(Fore.LIGHTRED_EX + content)
+            print(strferror(content))
 
     def success(self, content: str):
         if self.mode == 'GUI':
             _c = f'<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{self.color[self.SUCCESS]};">{content.strip()}</span></p>'
             self._add(content=content, modified=_c)
         else:
-            print(Fore.LIGHTGREEN_EX + content)
+            print(strfsuccess(content))
+
+
+log = Logger(mode='CLI')

@@ -4,12 +4,13 @@ from zipfile import ZipFile
 from os import startfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from shutil import copy2, copytree, unpack_archive, make_archive
+from shutil import copy2, copytree, unpack_archive
 from typing import Any, List, Tuple, Union
 import pickle
 
 from at.pattern import FilePattern
 from at.text import replace_all
+from at.logger import log
 
 SHP_EXTS = ('.shp', '.shx', '.dbf')
 
@@ -82,7 +83,7 @@ def copy_file(src: Union[str, Path],
     dst_path = Path(dst)
 
     if not src_path.exists():
-        print(f"File '{str(src)}' does not exist.")
+        log.error(f"File '{str(src)}' does not exist.")
         return
 
     src_is_dir = src_path.is_dir()
@@ -130,7 +131,7 @@ def copy_file(src: Union[str, Path],
 
                         copy2(src_path.with_suffix(ext), d)
             else:
-                print(f"'{str(src)}' missing auxiliary shapefile files.")
+                log.warning(f"'{str(src)}' missing auxiliary shapefile files.")
 
 
 def copy_pattern(src: Union[str, Path],

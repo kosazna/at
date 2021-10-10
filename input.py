@@ -2,6 +2,8 @@
 import os
 from typing import Union
 
+from at.logger import log, strferror, strfsuccess, strfwarning
+
 DIR = 'directory'
 FILE = 'file'
 
@@ -28,8 +30,9 @@ def input_filename(prompt: str, suffix: str = None) -> str:
 
     if not valid:
         _banned = ' '.join(not_valid)
-        _display = f"\nFilename must not contain these 10 characters: {_banned}\nTry again:\n"
-        return input_filename(_display, suffix)
+        log.warning(
+            f"\nFilename must not contain these 10 characters: {_banned}\nTry again:")
+        return input_filename('', suffix)
     else:
         if suffix is not None:
             return f"{_user_input}.{suffix}"
@@ -38,7 +41,7 @@ def input_filename(prompt: str, suffix: str = None) -> str:
 
 
 def input_bool(prompt: str) -> bool:
-    _yes_no = '[Y]/N'
+    _yes_no = strfsuccess('[Y]/N')
 
     _prompt = prompt.strip('\n')
     _prompt = f"\n{_prompt}  -  {_yes_no}\n"
@@ -72,27 +75,28 @@ def input_path(prompt: str,
                 if _bool:
                     return _path
                 else:
-                    _display = f"\nPath must be a {ensure}. Give path again:\n"
-                    return input_path(_display, accept_empty, ensure)
+                    log.warning(
+                        f"Path must be a {ensure}. Give path again:")
+                    return input_path('', accept_empty, ensure)
             return _path
         else:
             _, ext = os.path.splitext(_path)
 
             if ensure is not None:
-                _display = f"\nPath must be a {ensure}. Give path again:\n"
-
                 if ensure == DIR and ext != '':
-                    return input_path(_display, accept_empty, ensure)
+                    log.warning(f"Path must be a {ensure}. Give path again:")
+                    return input_path('', accept_empty, ensure)
                 elif ensure == FILE and ext == '':
-                    return input_path(_display, accept_empty, ensure)
+                    log.warning(f"Path must be a {ensure}. Give path again:")
+                    return input_path('', accept_empty, ensure)
                 else:
                     pass
 
             if ext != '':
-                _display = "\nFile does not exist. Give path again:\n"
-                return input_path(_display, accept_empty, ensure)
+                log.error("File does not exist. Give path again:")
+                return input_path('', accept_empty, ensure)
             else:
-                _display = "\nDirectory does not exist. Create?\n"
+                _display = "Directory does not exist. Create?"
                 _create = input_bool(_display)
 
                 if _create:
@@ -101,3 +105,6 @@ def input_path(prompt: str,
                 else:
                     _error = f"{_path} can't be used for any operation."
                     raise IOError(_error)
+
+
+input_path('Give Path\n', ensure=FILE)

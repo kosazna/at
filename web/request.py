@@ -7,6 +7,7 @@ from shutil import copyfileobj
 from typing import Union
 
 import requests
+from at.logger import log
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 
@@ -85,6 +86,6 @@ def download_image(url: str,
         r.raw.decode_content = True
         with open(dst, 'wb') as f:
             copyfileobj(r.raw, f)
-            print(f"Saved -> {filename}")
+            log.success(f"Saved -> {filename}")
     else:
-        print(f"Request failed -> {url}")
+        log.error(f"Request failed -> {url}")
