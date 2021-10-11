@@ -170,10 +170,9 @@ class Dummy(QWidget):
         log.warning('Ok\n')
         log.error('Wrong')
         log.success('Done')
-        log.info('\nfinished\n')
 
     def button3action(self):
-        run_thread(self.threadpool, self.execute, )
+        run_thread(self.threadpool, self.execute)
         self.threadpool.clear()
 
     def execute(self, _progress, _popup):
