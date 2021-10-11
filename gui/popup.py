@@ -28,7 +28,7 @@ def show_popup(appname: str = 'Dialog',
                secondary: str = '',
                details: str = '',
                status: str = 'info',
-               buttons: Union[list, tuple, None] = None):
+               buttons: Union[str, list, tuple, None] = None) -> Union[str, None]:
     msg = QMessageBox()
     msg.setWindowTitle(f"{appname}")
 
@@ -42,6 +42,8 @@ def show_popup(appname: str = 'Dialog',
         msg.setDetailedText(details)
 
     if buttons is not None:
+        if isinstance(buttons, str):
+            buttons = [buttons]
         for button in buttons:
             if button in pbutton:
                 msg.addButton(pbutton[button])
@@ -63,7 +65,7 @@ class Popup(QMessageBox):
              primary: str = '',
              secondary: str = '',
              details: str = '',
-             buttons: Union[list, tuple, None] = None):
+             buttons: Union[str, list, tuple, None] = None) -> Union[str, None]:
         msg = QMessageBox()
         msg.setWindowTitle(f"{self.appname}")
         msg.setIcon(pstatus['info'])
@@ -76,6 +78,8 @@ class Popup(QMessageBox):
             msg.setDetailedText(details)
 
         if buttons is not None:
+            if isinstance(buttons, str):
+                buttons = [buttons]
             for button in buttons:
                 if button in pbutton:
                     msg.addButton(pbutton[button])
@@ -92,7 +96,7 @@ class Popup(QMessageBox):
                 primary: str = '',
                 secondary: str = '',
                 details: str = '',
-                buttons: Union[list, tuple, None] = None):
+                buttons: Union[str, list, tuple, None] = None) -> Union[str, None]:
         msg = QMessageBox()
         msg.setWindowTitle(f"{self.appname}")
         msg.setIcon(pstatus['warning'])
@@ -105,6 +109,8 @@ class Popup(QMessageBox):
             msg.setDetailedText(details)
 
         if buttons is not None:
+            if isinstance(buttons, str):
+                buttons = [buttons]
             for button in buttons:
                 if button in pbutton:
                     msg.addButton(pbutton[button])
@@ -117,7 +123,7 @@ class Popup(QMessageBox):
                 return button_action
         return None
 
-    def error(self, primary: str = ''):
+    def error(self, primary: str = '') -> Union[str, None]:
         msg = QMessageBox()
         msg.setWindowTitle(f"{self.appname}")
         msg.setIcon(pstatus['error'])

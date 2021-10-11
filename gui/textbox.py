@@ -2,7 +2,7 @@
 import sys
 from typing import Tuple, Union
 
-from at.logger import GUI_EMPTY, Logger
+from at.logger import GUI_EMPTY
 from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtGui import QTextCursor
 from PyQt5.QtWidgets import QTextBrowser, QWidget

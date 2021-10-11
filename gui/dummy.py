@@ -170,7 +170,7 @@ class Dummy(QWidget):
         log.info('\nfinished\n')
 
     def button3action(self):
-        log.error(self.pop.error("Something went wrong"))
+        log.error(self.pop.warning("Something went wrong", buttons='ignore'))
 
 
 if __name__ == '__main__':
