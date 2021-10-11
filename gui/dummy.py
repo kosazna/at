@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 from pathlib import Path
+from time import sleep
 
 from at.gui.button import Button
 from at.gui.check import CheckInput
@@ -14,8 +15,9 @@ from at.gui.progress import ProgressBar
 from at.gui.status import StatusButton, StatusLabel
 from at.gui.textbox import TextBox
 from at.gui.utils import *
+from at.gui.worker import run_thread
 from at.logger import log
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QThreadPool
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
 
@@ -38,6 +40,7 @@ class Dummy(QWidget):
         self.button1.clicked.connect(self.button1action)
         self.button2.clicked.connect(self.button2action)
         self.button3.clicked.connect(self.button3action)
+        self.threadpool = QThreadPool(parent=self)
 
     def setupUi(self):
         self.setObjectName("MainWidget")
@@ -122,8 +125,8 @@ class Dummy(QWidget):
                                      labelsize=(200, 22),
                                      widgetsize=(None, 220),
                                      parent=self)
-        self.listWidget.assignLoadFunc(self.button2action)
-        self.textBox = TextBox(parent=self)
+        self.listWidget.assignLoadFunc(self.load_content)
+        self.textBox = TextBox(size=(None, 200), parent=self)
 
         self.layoutGeneral.addWidget(self.folderInput)
         self.layoutGeneral.addWidget(self.fileInput)
@@ -170,7 +173,18 @@ class Dummy(QWidget):
         log.info('\nfinished\n')
 
     def button3action(self):
-        log.error(self.pop.warning("Something went wrong", buttons='ignore'))
+        run_thread(self.threadpool, self.execute)
+        self.threadpool.clear()
+
+    def execute(self, _progress, _popup):
+        log.info("Starting Process")
+        sleep(1)
+        log.info("Processing...\n")
+        sleep(2)
+        log.success("Finished")
+
+    def load_content(self):
+        return ("ASTOTA", "ASTENOT", "ASTIK", "ROADS", "PST")
 
 
 if __name__ == '__main__':
