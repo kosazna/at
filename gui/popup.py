@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from typing import Union
+from PyQt5.QtCore import QMessageAuthenticationCode
 
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QMessageBox
@@ -55,33 +56,32 @@ def show_popup(appname: str = 'Dialog',
 
 
 class Popup(QMessageBox):
-    def __init__(self,
-                 appname: str = 'Dialog',
-                 *args,
-                 **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.setWindowTitle(f"{appname}")
+    def __init__(self, appname: str = 'Dialog') -> None:
+        self.appname = appname
 
     def info(self,
              primary: str = '',
              secondary: str = '',
              details: str = '',
              buttons: Union[list, tuple, None] = None):
-        self.setIcon(popup_status_map['info'])
+        msg = QMessageBox()
+        msg.setWindowTitle(f"{self.appname}")
+        msg.setIcon(popup_status_map['info'])
 
         if primary:
-            self.setText(primary)
+            msg.setText(primary)
         if secondary:
-            self.setInformativeText(secondary)
+            msg.setInformativeText(secondary)
         if details:
-            self.setDetailedText(details)
+            msg.setDetailedText(details)
 
         if buttons is not None:
             for button in buttons:
                 if button in popup_button_map:
-                    self.addButton(popup_button_map[button])
+                    msg.addButton(popup_button_map[button])
 
-        user_action = self.exec_()
+        user_action = msg.exec_()
+        msg.destroy()
 
         for button_action in popup_button_map:
             if user_action == popup_button_map[button_action]:
@@ -93,21 +93,24 @@ class Popup(QMessageBox):
                 secondary: str = '',
                 details: str = '',
                 buttons: Union[list, tuple, None] = None):
-        self.setIcon(popup_status_map['info'])
+        msg = QMessageBox()
+        msg.setWindowTitle(f"{self.appname}")
+        msg.setIcon(popup_status_map['warning'])
 
         if primary:
-            self.setText(primary)
+            msg.setText(primary)
         if secondary:
-            self.setInformativeText(secondary)
+            msg.setInformativeText(secondary)
         if details:
-            self.setDetailedText(details)
+            msg.setDetailedText(details)
 
         if buttons is not None:
             for button in buttons:
                 if button in popup_button_map:
-                    self.addButton(popup_button_map[button])
+                    msg.addButton(popup_button_map[button])
 
-        user_action = self.exec_()
+        user_action = msg.exec_()
+        msg.destroy()
 
         for button_action in popup_button_map:
             if user_action == popup_button_map[button_action]:
@@ -115,11 +118,14 @@ class Popup(QMessageBox):
         return None
 
     def error(self, primary: str = ''):
-        self.setIcon(popup_status_map['error'])
-        self.setText(primary)
-        self.addButton(popup_button_map['close'])
+        msg = QMessageBox()
+        msg.setWindowTitle(f"{self.appname}")
+        msg.setIcon(popup_status_map['error'])
+        msg.setText(primary)
+        msg.addButton(popup_button_map['close'])
 
-        user_action = self.exec_()
+        user_action = msg.exec_()
+        msg.destroy()
 
         for button_action in popup_button_map:
             if user_action == popup_button_map[button_action]:

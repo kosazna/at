@@ -127,3 +127,9 @@ QListWidget {
   color: #212529;
   border-radius: 3px;
 }
+
+QTextBrowser{
+  background-color: #f8f8f8;
+  border: 1px solid #6c757d;
+  border-radius: 3px;
+}

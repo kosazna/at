@@ -21,6 +21,7 @@ class WorkerSignalsStr(QObject):
     progress = pyqtSignal(str)
     popup = pyqtSignal(str)
 
+
 class WorkerSignalsTuple(QObject):
     '''
     Defines the signals available from a running worker thread.
@@ -33,8 +34,11 @@ class WorkerSignalsTuple(QObject):
     finished = pyqtSignal()
     error = pyqtSignal(tuple)
     result = pyqtSignal(object)
+    # (progress_bar_current_value, progress_bar_max_value, status)
     progress = pyqtSignal(tuple)
-    popup = pyqtSignal(str)
+    # (popup_type, primary, secondary, details, buttons)
+    popup = pyqtSignal(tuple)
+
 
 class Worker(QRunnable):
     '''
@@ -68,3 +72,11 @@ class Worker(QRunnable):
             self.signals.result.emit(result)
         finally:
             self.signals.finished.emit()  # Done
+
+
+def run_thread(threadpool, process, on_update, on_finish, on_popup):
+    worker = Worker(process, WorkerSignalsTuple)
+    worker.signals.finished.connect(on_finish)
+    worker.signals.progress.connect(on_update)
+    worker.signals.popup.connect(on_popup)
+    threadpool.start(worker)

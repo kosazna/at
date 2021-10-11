@@ -12,11 +12,17 @@ from at.gui.io import FileInput, FileOutput, FolderInput
 from at.gui.list import ListWidget
 from at.gui.progress import ProgressBar
 from at.gui.status import StatusButton, StatusLabel
+from at.gui.textbox import TextBox
+from at.gui.popup import Popup
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
+from at.logger import log, Logger
+
 
 cssGuide = Path("D:/.temp/.dev/.aztool/at/gui/_style.css").read_text()
+log.set_mode("GUI")
+log.success("Loaded css file")
 
 # When setting fixed width to QLineEdit ->
 # -> add alignment=Qt.AlignLeft when adding widget to layout
@@ -32,16 +38,19 @@ class Dummy(QWidget):
         self.i = 0
         self.button1.clicked.connect(self.button1action)
         self.button2.clicked.connect(self.button2action)
+        self.button3.clicked.connect(self.button3action)
 
     def setupUi(self):
         self.setObjectName("MainWidget")
         self.setStyleSheet(cssGuide)
-        self.resize(700, 600)
+        self.resize(700, 700)
         self.layout = QVBoxLayout()
         self.layoutTop = QHBoxLayout()
         self.layoutGeneral = QVBoxLayout()
         self.layoutButtons = QVBoxLayout()
         self.layoutComboCheck = QHBoxLayout()
+
+        self.pop = Popup("atcrawl")
 
         self.folderInput = FolderInput(label="Folder",
                                        placeholder=PATH_PLACEHOLDER,
@@ -115,6 +124,8 @@ class Dummy(QWidget):
                                      widgetsize=(220, 220),
                                      parent=self)
         self.listWidget.assignLoadFunc(self.button2action)
+        self.textBox = TextBox(logger=log, parent=self)
+        self.textBox.addText()
 
         self.layoutGeneral.addWidget(self.folderInput)
         self.layoutGeneral.addWidget(self.fileInput)
@@ -139,6 +150,7 @@ class Dummy(QWidget):
         self.layout.addLayout(self.layoutTop)
         self.layout.addWidget(self.progress)
         self.layout.addWidget(self.status)
+        self.layout.addWidget(self.textBox)
 
         self.setLayout(self.layout)
 
@@ -154,9 +166,20 @@ class Dummy(QWidget):
             self.input.disable()
 
     def button2action(self):
-        p = Path("D:/.temp/_cplex_examples/cp/jupyter")
+        log.set_mode("GUI")
+        log.info('kostas')
+        log.warning('azna')
+        log.error('Oooops\n')
+        log.success('yeaah')
+        log.info('KOSTAS')
+        log.info('KOSTAS')
+        log.info('KOSTAS')
+        log.success('\nProcess Finished')
+        self.textBox.addText()
 
-        return [f.name for f in p.glob('*.ipynb')]
+    def button3action(self):
+        log.error(self.pop.error("Something went wrong"))
+        self.textBox.addText()
 
 
 if __name__ == '__main__':

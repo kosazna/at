@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from at.gui.helper import *
+from at.gui.utils import *
 
 if get_dpi() < 120:
     dpi_cat = 'LowDPI'
