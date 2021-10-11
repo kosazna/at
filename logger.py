@@ -39,23 +39,27 @@ def strfsuccess(string: str) -> str: return f"{Fore.LIGHTGREEN_EX}{string}"
 
 
 def guinormal(string: str) -> str:
-    prefix, suffix = parse_newlines(string)
-    return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span">{string.strip()}</span></p>{suffix}'
+    if isinstance(string, str):
+        prefix, suffix = parse_newlines(string)
+        return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span">{string.strip()}</span></p>{suffix}'
 
 
 def guiwarning(string: str) -> str:
-    prefix, suffix = parse_newlines(string)
-    return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[WARNING]};font-weight:bold;">{string.strip()}</span></p>{suffix}'
+    if isinstance(string, str):
+        prefix, suffix = parse_newlines(string)
+        return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[WARNING]};font-weight:bold;">{string.strip()}</span></p>{suffix}'
 
 
 def guierror(string: str) -> str:
-    prefix, suffix = parse_newlines(string)
-    return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[ERROR]};font-weight:bold;">{string.strip()}</span></p>{suffix}'
+    if isinstance(string, str):
+        prefix, suffix = parse_newlines(string)
+        return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[ERROR]};font-weight:bold;">{string.strip()}</span></p>{suffix}'
 
 
 def guisuccess(string: str) -> str:
-    prefix, suffix = parse_newlines(string)
-    return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[SUCCESS]};font-weight:bold;">{string.strip()}</span></p>{suffix}'
+    if isinstance(string, str):
+        prefix, suffix = parse_newlines(string)
+        return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[SUCCESS]};font-weight:bold;">{string.strip()}</span></p>{suffix}'
 
 
 class Logger(metaclass=Singleton):

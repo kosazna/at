@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import Union
 
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QApplication, QMessageBox
+from PyQt5.QtWidgets import QMessageBox
 
 pbutton = {
     'ok': QMessageBox.Ok,
@@ -137,15 +136,3 @@ class Popup(QMessageBox):
             if user_action == pbutton[button_action]:
                 return button_action
         return None
-
-
-if __name__ == '__main__':
-    import sys
-
-    SEGOE = QFont("Segoe UI", 9)
-
-    app = QApplication(sys.argv)
-    app.setFont(SEGOE)
-    app.setStyle('Fusion')
-
-    print(Popup('atcrawl').error("You are not licensed to use this process"))

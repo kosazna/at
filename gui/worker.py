@@ -3,6 +3,7 @@
 import sys
 import traceback
 from typing import Callable, Union
+from at.gui.popup import show_popup
 
 from PyQt5.QtCore import QObject, QRunnable, QThreadPool, pyqtSignal, pyqtSlot
 
@@ -78,14 +79,13 @@ class Worker(QRunnable):
 def run_thread(threadpool: QThreadPool,
                process: Callable,
                on_update: Union[Callable, None] = None,
-               on_finish: Union[Callable, None] = None,
-               on_popup: Union[Callable, None] = None):
+               on_finish: Union[Callable, None] = None):
     worker = Worker(process, WorkerSignalsTuple)
     if on_update is not None:
         worker.signals.progress.connect(on_update)
     if on_finish is not None:
         worker.signals.finished.connect(on_finish)
-    if on_popup is not None:
-        worker.signals.popup.connect(on_popup)
+
+    worker.signals.popup.connect(show_popup)
 
     threadpool.start(worker)
