@@ -1,44 +1,63 @@
 # -*- coding: utf-8 -*-
+import sys
 from typing import Tuple, Union
-from pathlib import Path
-from PyQt5.QtGui import QFont, QTextCursor
-from PyQt5.QtWidgets import QApplication, QTextBrowser, QWidget
 
-from at.logger import Logger
+from at.logger import GUI_EMPTY, Logger
+from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtGui import QTextCursor
+from PyQt5.QtWidgets import QTextBrowser, QWidget
+
+
+class TextStream(QObject):
+    _stdout = None
+    _stderr = None
+    messageWritten = pyqtSignal(str)
+
+    def flush(self):
+        pass
+
+    def fileno(self):
+        return -1
+
+    def write(self, msg: str):
+        if not self.signalsBlocked():
+            self.messageWritten.emit('%s%s' % (msg, GUI_EMPTY))
+
+    @staticmethod
+    def stdout():
+        if not TextStream._stdout:
+            TextStream._stdout = TextStream()
+            sys.stdout = TextStream._stdout
+        return TextStream._stdout
+
+    @staticmethod
+    def stderr():
+        if not TextStream._stderr:
+            TextStream._stderr = TextStream()
+            sys.stderr = TextStream._stderr
+        return TextStream._stderr
 
 
 class TextBox(QTextBrowser):
     def __init__(self,
-                 logger: Logger,
-                 size: Union[Tuple[int], None] = None,
+                 size: Tuple[Union[int, None]] = (None, None),
                  parent: Union[QWidget, None] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.logger = logger
+        TextStream.stdout().messageWritten.connect(lambda text: self.addText(text))
+        TextStream.stderr().messageWritten.connect(lambda text: self.addText(text))
         self.setupUi(size)
 
     def setupUi(self, size):
         self.setReadOnly(True)
+        lew = size[0]
+        leh = size[1]
+        if lew is not None:
+            self.setFixedWidth(lew)
+        if leh is not None:
+            self.setFixedHeight(leh)
 
-        if size is not None:
-            self.setFixedSize(*size)
-
-    def addText(self):
-        self.setText(self.logger.get_content())
+    def addText(self, text):
+        self.insertHtml(text)
         self.moveCursor(QTextCursor.End)
-
-
-if __name__ == '__main__':
-    import sys
-
-    SEGOE = QFont("Segoe UI", 9)
-
-    app = QApplication(sys.argv)
-    app.setFont(SEGOE)
-    app.setStyle('Fusion')
-
-    ui = TextBox(size=(600, 400))
-    ui.show()
-
-    sys.exit(app.exec_())

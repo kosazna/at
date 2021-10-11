@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from typing import Union
+from typing import Tuple, Union
 
 from at.gui.button import Button
 from at.gui.check import CheckInput
+from at.gui.popup import Popup, pbutton
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QAbstractItemView, QAbstractScrollArea,
                              QHBoxLayout, QLabel, QListView, QListWidget,
@@ -14,7 +15,7 @@ class ListWidget(QWidget):
                  label: str = '',
                  items: Union[list, tuple, None] = None,
                  labelsize: tuple = (100, 22),
-                 widgetsize: tuple = (200, 250),
+                 widgetsize: Tuple[Union[int, None]] = (None, 250),
                  parent: Union[QWidget, None] = None,
                  *args,
                  **kwargs):
@@ -27,7 +28,11 @@ class ListWidget(QWidget):
         self.buttonClear.subscribe(self.clearContent)
 
     def setupUi(self, label, items, labelsize, widgetsize):
-        self.setFixedSize(*widgetsize)
+        lew = widgetsize[0]
+        leh = widgetsize[1]
+        self.setFixedHeight(leh)
+        if lew is not None:
+            self.setFixedWidth(lew)
 
         self.label = QLabel()
         self.label.setText(label)
@@ -94,8 +99,11 @@ class ListWidget(QWidget):
     def addItems(self, items):
         if isinstance(items, str):
             items2add = [items]
-        else:
+        elif isinstance(items, (list, tuple)):
             items2add = items
+        else:
+            Popup().info("No items were added", buttons=[pbutton['ok']])
+            return
 
         for item in items2add:
             qlistwidgetitem = QListWidgetItem(self.listWidget)

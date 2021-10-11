@@ -1,28 +1,27 @@
 # -*- coding: utf-8 -*-
-
+import sys
 from pathlib import Path
 
 from at.gui.button import Button
 from at.gui.check import CheckInput
 from at.gui.combo import ComboInput
 from at.gui.filename import FileNameInput
-from at.gui.utils import *
 from at.gui.input import IntInput, StrInput
 from at.gui.io import FileInput, FileOutput, FolderInput
 from at.gui.list import ListWidget
+from at.gui.popup import Popup
 from at.gui.progress import ProgressBar
 from at.gui.status import StatusButton, StatusLabel
 from at.gui.textbox import TextBox
-from at.gui.popup import Popup
+from at.gui.utils import *
+from at.logger import log
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
-from at.logger import log, Logger
-
 
 cssGuide = Path("D:/.temp/.dev/.aztool/at/gui/_style.css").read_text()
+
 log.set_mode("GUI")
-log.success("Loaded css file")
 
 # When setting fixed width to QLineEdit ->
 # -> add alignment=Qt.AlignLeft when adding widget to layout
@@ -121,11 +120,10 @@ class Dummy(QWidget):
                                     parent=self)
         self.listWidget = ListWidget(label='Select Shapefiles',
                                      labelsize=(200, 22),
-                                     widgetsize=(220, 220),
+                                     widgetsize=(None, 220),
                                      parent=self)
         self.listWidget.assignLoadFunc(self.button2action)
-        self.textBox = TextBox(logger=log, parent=self)
-        self.textBox.addText()
+        self.textBox = TextBox(parent=self)
 
         self.layoutGeneral.addWidget(self.folderInput)
         self.layoutGeneral.addWidget(self.fileInput)
@@ -166,24 +164,16 @@ class Dummy(QWidget):
             self.input.disable()
 
     def button2action(self):
-        log.set_mode("GUI")
-        log.info('kostas')
-        log.warning('azna')
-        log.error('Oooops\n')
-        log.success('yeaah')
-        log.info('KOSTAS')
-        log.info('KOSTAS')
-        log.info('KOSTAS')
-        log.success('\nProcess Finished')
-        self.textBox.addText()
+        log.warning('Ok\n')
+        log.error('Wrong')
+        log.success('Done')
+        log.info('\nfinished\n')
 
     def button3action(self):
         log.error(self.pop.error("Something went wrong"))
-        self.textBox.addText()
 
 
 if __name__ == '__main__':
-    import sys
 
     SEGOE = QFont("Segoe UI", 9)
 
