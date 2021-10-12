@@ -38,7 +38,7 @@ class TextStream(QObject):
         return TextStream._stderr
 
 
-class TextBox(QTextBrowser):
+class Console(QTextBrowser):
     def __init__(self,
                  size: Tuple[Union[int, None]] = (None, None),
                  parent: Union[QWidget, None] = None,

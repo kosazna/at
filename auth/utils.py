@@ -4,8 +4,9 @@ from pathlib import Path
 from typing import Union
 
 from at.date import daterange, timestamp
-from at.io import (copy_file, load_json, load_pickle, unzip_file, write_pickle,
-                   zip_file)
+from at.io.copy import copy_file
+from at.io.utils import (load_json, load_pickle, unzip_file, write_pickle,
+                         zip_file)
 from at.text import create_hex_string
 
 

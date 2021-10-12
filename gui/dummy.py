@@ -13,7 +13,7 @@ from at.gui.list import ListWidget
 from at.gui.popup import Popup
 from at.gui.progress import ProgressBar
 from at.gui.status import StatusButton, StatusLabel
-from at.gui.textbox import TextBox
+from at.gui.console import Console
 from at.gui.utils import *
 from at.gui.worker import run_thread
 from at.logger import log
@@ -126,7 +126,7 @@ class Dummy(QWidget):
                                      widgetsize=(None, 220),
                                      parent=self)
         self.listWidget.assignLoadFunc(self.load_content)
-        self.textBox = TextBox(size=(None, 200), parent=self)
+        self.textBox = Console(size=(None, 200), parent=self)
 
         self.layoutGeneral.addWidget(self.folderInput)
         self.layoutGeneral.addWidget(self.fileInput)
@@ -177,6 +177,8 @@ class Dummy(QWidget):
 
     def execute(self, _progress, _popup):
         log.info("Starting Process")
+        log.warning("Warning")
+        log.error("Error")
         sleep(1)
         log.info("Processing...\n")
         sleep(2)

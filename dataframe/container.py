@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import pandas as pd
 from typing import List, Union
 
+import pandas as pd
 from at.data.collection import ItemCollection
 
 

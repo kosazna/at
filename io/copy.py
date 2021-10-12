@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from concurrent.futures import ThreadPoolExecutor
-
 from pathlib import Path
-from shutil import copy2, copytree, copy
-from typing import List, Tuple, Union
+from shutil import copy2, copytree
+from typing import Iterable, List, Tuple, Union
 
-from at.input import DIR, FILE
+from at.io.object import CopyObject
 from at.logger import log
 from at.pattern import FilePattern
 from at.text import replace_all
@@ -14,14 +13,14 @@ from at.text import replace_all
 SHP_EXTS = ('.shp', '.shx', '.dbf')
 
 
-def make_paths(src: Union[str, Path],
-               dst: Union[str, Path],
-               save_name: Union[str, None] = None) -> Union[dict, list, None]:
+def create_copy_obj(src: Union[str, Path],
+                    dst: Union[str, Path],
+                    save_name: Union[str, None] = None) -> CopyObject:
     src_path = Path(src)
     dst_path = Path(dst)
 
     if not src_path.exists():
-        log.error(f"File '{str(src)}' does not exist.")
+        log.error(f"File '{str(src_path)}' does not exist.")
         return None
 
     src_is_dir = src_path.is_dir()
@@ -36,91 +35,53 @@ def make_paths(src: Union[str, Path],
 
     if src_is_dir:
         if save_name is None:
-            # copytree(src_path, dst_path, dirs_exist_ok=True)
-            return {'src': src_path,
-                    'dst': dst_path,
-                    'type': DIR}
+            _dst_path = dst_path
         else:
-            # copytree(src_path, dst_path.joinpath(save_name), dirs_exist_ok=True)
-            # return (src_path, dst_path.joinpath(save_name), DIR)
-            return {'src': src_path,
-                    'dst': dst_path.joinpath(save_name),
-                    'type': DIR}
+            _dst_path = dst_path.joinpath(save_name)
     else:
         src_suffix = src_path.suffix
 
-        if src_suffix not in SHP_EXTS:
-            if save_name is None:
-                # copy2(src_path, dst_path)
-                return {'src': src_path,
-                        'dst': dst_path,
-                        'type': FILE}
-            else:
-                if dst_is_dir:
-                    d = dst_path.joinpath(f"{save_name}{src_suffix}")
-                else:
-                    d = dst_path.with_name(save_name).with_suffix(src_suffix)
-
-                # copy2(src_path, d)
-                return {'src': src_path,
-                        'dst': d,
-                        'type': FILE}
+        if save_name is None:
+            _dst_path = dst_path
         else:
-            all_exist = all([src_path.with_suffix(ext).exists()
-                            for ext in SHP_EXTS])
-
-            if all_exist:
-                files2copy = []
-                for ext in SHP_EXTS:
-                    if save_name is None:
-                        # copy2(src_path.with_suffix(ext), dst_path)
-                        files2copy.append({'src': src_path.with_suffix(ext),
-                                           'dst': dst_path,
-                                           'type': FILE})
-                    else:
-                        if dst_is_dir:
-                            d = dst_path.joinpath(f"{save_name}{ext}")
-                        else:
-                            d = dst_path.with_name(save_name).with_suffix(ext)
-
-                        # copy2(src_path.with_suffix(ext), d)
-                        files2copy.append({'src': src_path.with_suffix(ext),
-                                           'dst': d,
-                                           'type': FILE})
-                return files2copy
+            if dst_is_dir:
+                _dst_path = dst_path.joinpath(f"{save_name}{src_suffix}")
             else:
-                log.warning(f"'{str(src)}' missing auxiliary shapefile files.")
-                return None
+                _dst_path = dst_path.with_name(
+                    save_name).with_suffix(src_suffix)
 
-
-def _copy(src: Union[str, Path],
-          dst: Union[str, Path],
-          save_name: Union[str, None] = None,
-          copymode: str = 'normal'):
-
-    if copymode == 'normal':
-        copyfunc = copy2
-    else:
-        copyfunc = copy
-
-    copyobj = make_paths(src=src, dst=dst, save_name=save_name)
-
-    if copyobj is not None:
-        if isinstance(copyobj, dict):
-            copyfunc(copyobj["src"], copyobj["dst"])
-        else:
-            for item in copyobj:
-                copyfunc(item["src"], item["dst"])
+    return CopyObject(src=src_path, dst=_dst_path)
 
 
 def copy_file(src: Union[str, Path],
               dst: Union[str, Path],
-              save_name: Union[str, None] = None):
+              save_name: Union[str, None] = None,
+              copymode: str = 'normal') -> str:
+    copyobj = create_copy_obj(src=src, dst=dst, save_name=save_name)
+
+    if copyobj is not None:
+        return copyobj.copy(copymode=copymode)
+    return ''
+
+
+def batch_copy_file(files: Iterable[CopyObject],
+                    copymode: str = 'fast',
+                    verbose: bool = False) -> None:
+    with ThreadPoolExecutor() as executor:
+        for idx, file2copy in enumerate(files, 1):
+            future = executor.submit(file2copy.copy, copymode)
+            if verbose:
+                log.info(f"{idx:5d} - {future.result()}")
+
+
+def copy_file_legacy(src: Union[str, Path],
+                     dst: Union[str, Path],
+                     save_name: Union[str, None] = None):
     src_path = Path(src)
     dst_path = Path(dst)
 
     if not src_path.exists():
-        log.error(f"File '{str(src)}' does not exist.")
+        log.error(f"File '{str(src_path)}' does not exist.")
         return
 
     src_is_dir = src_path.is_dir()

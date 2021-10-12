@@ -7,12 +7,14 @@ from at.singleton import Singleton
 
 init(autoreset=True)
 
+NORMAL = "NORMAL"
 INFO = 'INFO'
 WARNING = 'WARNING'
 ERROR = 'ERROR'
 SUCCESS = 'SUCCESS'
 
-color = {INFO: '#0D6EFD',
+color = {NORMAL: '#f8f8f8',
+         INFO: '#0D6EFD',
          WARNING: '#E7AF06',
          ERROR: '#EF3E4F',
          SUCCESS: '#19CB5C'}
@@ -41,7 +43,7 @@ def strfsuccess(string: str) -> str: return f"{Fore.LIGHTGREEN_EX}{string}"
 def guinormal(string: str) -> str:
     if isinstance(string, str):
         prefix, suffix = parse_newlines(string)
-        return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span">{string.strip()}</span></p>{suffix}'
+        return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[NORMAL]};">{string.strip()}</span></p>{suffix}'
 
 
 def guiwarning(string: str) -> str:

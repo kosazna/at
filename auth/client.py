@@ -7,7 +7,7 @@ from typing import Callable, Tuple, Union
 import requests
 from at.auth.utils import create_lic
 from at.date import timestamp
-from at.io import load_pickle
+from at.io.utils import load_pickle
 from at.logger import log, strferror, strfsuccess, strfwarning
 from at.singleton import Singleton
 from at.text import create_hex_string

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from typing import List, Union
+
+from at.web.element import Element
 from bs4 import BeautifulSoup
-from .element import Element
 
 
 def parse_soup(soup: BeautifulSoup,

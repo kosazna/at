@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from typing import Tuple, Union
 
-from at.io import load_json, write_json
+from at.io.utils import load_json, write_json
 from at.logger import log
 
 

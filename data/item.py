@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from dataclasses import astuple, dataclass, asdict
+from dataclasses import asdict, astuple, dataclass
 from typing import Union
 
 

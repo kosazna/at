@@ -37,14 +37,14 @@ QToolButton#greyButton {
 }
 
 QToolButton#statusOn {
-  background-color: #212529;
+  background-color: #2f3236;
   color: #f8f8f8;
   border-radius: 3px;
   font-weight: bold;
 }
 
 QToolButton#statusOff {
-  background-color: #212529;
+  background-color: #2f3236;
   color: #212529;
   border-radius: 3px;
   font-weight: bold;
@@ -129,7 +129,7 @@ QListWidget {
 }
 
 QTextBrowser{
-  background-color: #f8f8f8;
+  background-color: #2f3236;
   border: 1px solid #6c757d;
   border-radius: 3px;
 }
