@@ -77,13 +77,21 @@ class ListWidget(QWidget):
 
     def getCheckState(self, rtype='list'):
         if self.items:
+            checked = [name for name in self.items if bool(
+                self.items[name]['widget'].checkState())]
             if rtype == 'list':
-                return [name for name in self.items if bool(self.items[name]['widget'].checkState())]
-            return {name: bool(self.items[name]['widget'].checkState()) for name in self.items}
+                return checked
+            elif rtype == 'string':
+                return '-'.join(checked)
+            else:
+                return {name: bool(self.items[name]['widget'].checkState()) for name in self.items}
         else:
             if rtype == 'list':
                 return list()
-            return dict()
+            elif rtype == 'string':
+                return ''
+            else:
+                return dict()
 
     def selectAll(self):
         if self.items:

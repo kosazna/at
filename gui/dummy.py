@@ -160,7 +160,7 @@ class Dummy(QWidget):
             self.i += 10
             self.progress.setValueMaximum(self.i, 100)
 
-            print(self.listWidget.getCheckState('list'))
+            log.info(self.listWidget.getCheckState('string'))
         else:
             self.button2.enable('red')
             self.statusSmall.changeStatus('Done', 'statusOk')
