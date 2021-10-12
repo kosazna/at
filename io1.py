@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 import json
-from zipfile import ZipFile
-from os import startfile
-from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
-from shutil import copy2, copytree, unpack_archive
-from typing import Any, List, Tuple, Union
 import pickle
+from concurrent.futures import ThreadPoolExecutor
+from os import startfile
+from pathlib import Path
+from shutil import copy2, copytree, unpack_archive, copy
+from typing import Any, List, Tuple, Union
+from zipfile import ZipFile
 
+from at.input import DIR, FILE
+from at.logger import log
 from at.pattern import FilePattern
 from at.text import replace_all
-from at.logger import log
 
 SHP_EXTS = ('.shp', '.shx', '.dbf')
 
@@ -74,6 +75,105 @@ def unzip_file(zipfile: Union[str, Path], dst: Union[str, Path]):
     if not dst_path.exists():
         dst_path.mkdir(parents=True, exist_ok=True)
     unpack_archive(zipfile, dst_path)
+
+
+def make_paths(src: Union[str, Path],
+               dst: Union[str, Path],
+               save_name: Union[str, None] = None) -> Union[dict, list, None]:
+    src_path = Path(src)
+    dst_path = Path(dst)
+
+    if not src_path.exists():
+        log.error(f"File '{str(src)}' does not exist.")
+        return None
+
+    src_is_dir = src_path.is_dir()
+    dst_is_dir = not bool(dst_path.suffix)
+
+    if dst_is_dir:
+        if not dst_path.exists():
+            dst_path.mkdir(parents=True, exist_ok=True)
+    else:
+        if not dst.parent.exists():
+            dst_path.parent.mkdir(parents=True, exist_ok=True)
+
+    if src_is_dir:
+        if save_name is None:
+            # copytree(src_path, dst_path, dirs_exist_ok=True)
+            return {'src': src_path,
+                    'dst': dst_path,
+                    'type': DIR}
+        else:
+            # copytree(src_path, dst_path.joinpath(save_name), dirs_exist_ok=True)
+            # return (src_path, dst_path.joinpath(save_name), DIR)
+            return {'src': src_path,
+                    'dst': dst_path.joinpath(save_name),
+                    'type': DIR}
+    else:
+        src_suffix = src_path.suffix
+
+        if src_suffix not in SHP_EXTS:
+            if save_name is None:
+                # copy2(src_path, dst_path)
+                return {'src': src_path,
+                        'dst': dst_path,
+                        'type': FILE}
+            else:
+                if dst_is_dir:
+                    d = dst_path.joinpath(f"{save_name}{src_suffix}")
+                else:
+                    d = dst_path.with_name(save_name).with_suffix(src_suffix)
+
+                # copy2(src_path, d)
+                return {'src': src_path,
+                        'dst': d,
+                        'type': FILE}
+        else:
+            all_exist = all([src_path.with_suffix(ext).exists()
+                            for ext in SHP_EXTS])
+
+            if all_exist:
+                files2copy = []
+                for ext in SHP_EXTS:
+                    if save_name is None:
+                        # copy2(src_path.with_suffix(ext), dst_path)
+                        files2copy.append({'src': src_path.with_suffix(ext),
+                                           'dst': dst_path,
+                                           'type': FILE})
+                    else:
+                        if dst_is_dir:
+                            d = dst_path.joinpath(f"{save_name}{ext}")
+                        else:
+                            d = dst_path.with_name(save_name).with_suffix(ext)
+
+                        # copy2(src_path.with_suffix(ext), d)
+                        files2copy.append({'src': src_path.with_suffix(ext),
+                                           'dst': d,
+                                           'type': FILE})
+                return files2copy
+            else:
+                log.warning(f"'{str(src)}' missing auxiliary shapefile files.")
+                return None
+
+
+def _copy(src: Union[str, Path],
+          dst: Union[str, Path],
+          save_name: Union[str, None] = None,
+          copymode: str = 'normal'):
+
+    if copymode == 'normal':
+        copyfunc = copy2
+    else:
+        copyfunc = copy
+
+    copyobj = make_paths(src=src, dst=dst, save_name=save_name)
+
+    if copyobj is not None:
+        if isinstance(copyobj, dict):
+            copyfunc(copyobj["src"], copyobj["dst"])
+        else:
+            for item in copyobj:
+                copyfunc(item["src"], item["dst"])
 
 
 def copy_file(src: Union[str, Path],
