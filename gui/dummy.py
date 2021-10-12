@@ -125,8 +125,10 @@ class Dummy(QWidget):
                                      labelsize=(200, 22),
                                      widgetsize=(None, 220),
                                      parent=self)
-        self.listWidget.assignLoadFunc(self.load_content)
         self.textBox = Console(size=(None, 200), parent=self)
+
+        self.listWidget.assignLoadFunc(self.load_content)
+        self.status.enable('Welcome')
 
         self.layoutGeneral.addWidget(self.folderInput)
         self.layoutGeneral.addWidget(self.fileInput)

@@ -48,7 +48,7 @@ class StatusButton(QWidget):
         if text:
             self.setText(text)
         self.button.setEnabled(True)
-        self.setStyle("statusOon")
+        self.setStyle("statusOn")
 
     def setText(self, text):
         self.button.setText(text)

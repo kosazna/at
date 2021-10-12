@@ -39,14 +39,12 @@ QToolButton#greyButton {
 QToolButton#statusOn {
   background-color: #2f3236;
   color: #f8f8f8;
-  border-radius: 3px;
   font-weight: bold;
 }
 
 QToolButton#statusOff {
   background-color: #2f3236;
-  color: #212529;
-  border-radius: 3px;
+  color: #2f3236;
   font-weight: bold;
 }
 
