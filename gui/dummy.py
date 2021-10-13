@@ -125,6 +125,7 @@ class Dummy(QWidget):
                                        parent=self)
         self.button1 = Button(label="accept",
                               color=None,
+                              icon='x',
                               size=(70, 22),
                               parent=self)
         self.button2 = Button(label="decline",

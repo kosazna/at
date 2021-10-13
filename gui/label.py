@@ -4,9 +4,10 @@ import sys
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIcon, QPixmap, QFont
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget, QApplication
+from PyQt5.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QWidget, QApplication
 
 from at.gui import icons
+
 
 class Label(QWidget):
     def __init__(self,
@@ -27,7 +28,7 @@ class Label(QWidget):
 
         self.iconLabel = QLabel(parent=self)
         self.iconLabel.setFixedSize(*iconsize)
-        self.iconLabel.setPixmap(QPixmap(f":/svg/bootstrap/{icon}.svg"))
+        self.iconLabel.setPixmap(QPixmap(f":/bootstrap/icons/{icon}.svg"))
         self.iconLabel.setAlignment(Qt.AlignCenter)
 
         self.statusLabel = QLabel(parent=self)
@@ -45,17 +46,3 @@ class Label(QWidget):
         layout.addWidget(self.statusLabel)
 
         self.setLayout(layout)
-
-
-if __name__ == '__main__':
-
-    SEGOE = QFont("Segoe UI", 9)
-
-    app = QApplication(sys.argv)
-    app.setFont(SEGOE)
-    app.setStyle('Fusion')
-
-    ui = Label(icon='people-fill', label='aznavouridis.k')
-    ui.show()
-
-    sys.exit(app.exec_())

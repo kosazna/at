@@ -2,8 +2,9 @@
 from typing import Tuple, Union
 
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QSizePolicy, QToolButton,
-                             QWidget)
+                             QWidget, QPushButton)
 
 
 class StatusButton(QWidget):
@@ -18,7 +19,7 @@ class StatusButton(QWidget):
 
     def setupUi(self, status, size):
         layout = QHBoxLayout()
-        self.button = QToolButton()
+        self.button = QPushButton()
         self.button.setText(status)
         self.button.setEnabled(False)
         self.button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -44,12 +45,14 @@ class StatusButton(QWidget):
         self.setText(text)
         self.button.setEnabled(False)
         self.setStyle("statusOff")
+        self.setCursor(QCursor(Qt.ForbiddenCursor))
 
     def enable(self, text):
         if text:
             self.setText(text)
         self.button.setEnabled(True)
         self.setStyle("statusOn")
+        self.setCursor(QCursor(Qt.PointingHandCursor))
 
     def setText(self, text):
         self.button.setText(text)

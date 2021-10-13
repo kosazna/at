@@ -1,26 +1,32 @@
 # -*- coding: utf-8 -*-
 from typing import Union
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import QToolButton, QWidget
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QCursor, QIcon
+from PyQt5.QtWidgets import QToolButton, QWidget, QPushButton
 
 
-class Button(QToolButton):
+class Button(QPushButton):
     def __init__(self,
                  label: str = '',
                  color: Union[str, None] = None,
+                 icon: Union[str, None] = None,
                  size: tuple = (70, 22),
                  parent: Union[QWidget, None] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.setupUi(label, color, size)
+        self.setupUi(label, color, icon, size)
 
-    def setupUi(self, label, color, size):
-        self.setText(label)
+    def setupUi(self, label, color, icon, size):
         self.setCursor(QCursor(Qt.PointingHandCursor))
         self.setStyle(color, size)
+        if icon is not None:
+            qicon = QIcon()
+            qicon.addFile(f":/bootstrap/icons/{icon}.svg", QSize(16, 16),
+                          QIcon.Normal, QIcon.Off)
+            self.setIcon(qicon)
+        self.setText(label)
 
     def disable(self, color='grey', size=None):
         self.setEnabled(False)
