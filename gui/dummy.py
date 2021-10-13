@@ -164,8 +164,8 @@ class Dummy(QWidget):
 
     def updateProgress(self, metadata: dict):
         if metadata:
-            progress_now = metadata.get('bar', None)
-            progress_max = metadata.get('bar_max', None)
+            progress_now = metadata.get('pbar', None)
+            progress_max = metadata.get('pbar_max', None)
             status = metadata.get('status', None)
 
             if progress_now is not None:
@@ -210,13 +210,13 @@ class Dummy(QWidget):
         log.info("Starting Process")
         log.warning("Warning")
         log.error("Error")
-        _progress.emit({'bar': 20, 'status': 'something'})
+        _progress.emit({'pbar': 20, 'status': 'something'})
         sleep(1)
         log.info("Processing...\n")
-        _progress.emit({'bar': 60})
+        _progress.emit({'pbar': 60, 'status': 'Still processing...'})
         sleep(2)
         log.success("Finished")
-        _progress.emit({'bar': 100})
+        _progress.emit({'pbar': 100})
 
         return 'Everything OK'
 
