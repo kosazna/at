@@ -5,12 +5,12 @@ from time import sleep
 from typing import Any, Tuple, Union
 
 from at.auth.client import Authorize, AuthStatus, licensed
-from at.gui import icons
 from at.gui.button import Button
 from at.gui.check import CheckInput
 from at.gui.combo import ComboInput
 from at.gui.console import Console
 from at.gui.filename import FileNameInput
+from at.gui.icons import *
 from at.gui.input import IntInput, StrInput
 from at.gui.io import FileInput, FileOutput, FolderInput
 from at.gui.label import Label
