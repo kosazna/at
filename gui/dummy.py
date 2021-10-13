@@ -4,24 +4,25 @@ from pathlib import Path
 from time import sleep
 from typing import Any, Tuple, Union
 
-from at.io.copy import batch_copy_file, copy_file
-from at.gui.label import Label
-from at.path import PathEngine
-from at.auth.client import licensed, Authorize, AuthStatus
+from at.auth.client import Authorize, AuthStatus, licensed
+from at.gui import icons
 from at.gui.button import Button
 from at.gui.check import CheckInput
 from at.gui.combo import ComboInput
+from at.gui.console import Console
 from at.gui.filename import FileNameInput
 from at.gui.input import IntInput, StrInput
 from at.gui.io import FileInput, FileOutput, FolderInput
+from at.gui.label import Label
 from at.gui.list import ListWidget
 from at.gui.popup import Popup, show_popup
 from at.gui.progress import ProgressBar
 from at.gui.status import StatusButton, StatusLabel
-from at.gui.console import Console
 from at.gui.utils import *
 from at.gui.worker import run_thread
+from at.io.copy import batch_copy_file, copy_file
 from at.logger import log
+from at.path import PathEngine
 from PyQt5.QtCore import Qt, QThreadPool
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
@@ -144,9 +145,12 @@ class Dummy(QWidget):
                                      parent=self)
         self.console = Console(size=(400, None), parent=self)
 
-        self.customLabel1 = Label(icon='people-fill', label='aznavouridis.k', parent=self)
-        self.customLabel2 = Label(icon='calendar-range-fill', label='2021-10-13', parent=self)
-        self.customLabel3 = Label(icon='bar-chart-fill', label='2829', parent=self)
+        self.customLabel1 = Label(
+            icon='people-fill', label='aznavouridis.k', parent=self)
+        self.customLabel2 = Label(
+            icon='calendar-range-fill', label='2021-10-13', parent=self)
+        self.customLabel3 = Label(
+            icon='bar-chart-fill', label='2829', parent=self)
 
         # self.console.hide()
 

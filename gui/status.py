@@ -3,7 +3,7 @@ from typing import Tuple, Union
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QSizePolicy, QToolButton,
+from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QSizePolicy,
                              QWidget, QPushButton)
 
 

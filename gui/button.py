@@ -3,7 +3,7 @@ from typing import Union
 
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QCursor, QIcon
-from PyQt5.QtWidgets import QToolButton, QWidget, QPushButton
+from PyQt5.QtWidgets import QWidget, QPushButton
 
 
 class Button(QPushButton):

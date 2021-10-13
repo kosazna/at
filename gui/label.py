@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 from typing import Tuple, Union
-import sys
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon, QPixmap, QFont
-from PyQt5.QtWidgets import QGroupBox, QHBoxLayout, QLabel, QWidget, QApplication
-
-from at.gui import icons
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
 
 
 class Label(QWidget):
