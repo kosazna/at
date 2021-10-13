@@ -39,8 +39,8 @@ class StatusButton(QWidget):
 
         self.setLayout(layout)
 
-    def disable(self):
-        self.setText('')
+    def disable(self, text=''):
+        self.setText(text)
         self.button.setEnabled(False)
         self.setStyle("statusOff")
 

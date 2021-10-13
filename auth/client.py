@@ -3,7 +3,7 @@
 import json
 from pathlib import Path
 from typing import Callable, Tuple, Union
-
+from dataclasses import dataclass
 import requests
 from at.auth.utils import create_lic
 from at.date import timestamp
@@ -13,6 +13,15 @@ from at.singleton import Singleton
 from at.text import create_hex_string
 from at.utils import user
 from requests.exceptions import ConnectionError
+
+AUTHORISED = "Authorised"
+UNAUTHORISED = "Unauthorised"
+
+
+@dataclass
+class AuthStatus:
+    authorised: bool
+    info: str
 
 
 class Authorize(metaclass=Singleton):
@@ -29,7 +38,7 @@ class Authorize(metaclass=Singleton):
                  debug: bool = False):
         self.__url = f"https://api.github.com/repos/{self.OWNER}/{self.REPO}/contents/{appname}.json"
         self.appname = appname
-        self.auth_loc = Path(auth_loc)
+        self.auth_loc = Path(auth_loc) if auth_loc is not None else auth_loc
         self.debug = debug
         self.user = user()
         self.actions = 0
@@ -69,20 +78,24 @@ class Authorize(metaclass=Singleton):
 
         if self.auth:
             if domain not in self.auth[self.user]['action']:
-                return False, strfwarning(f"{domain} is not in licensing info")
+                return False, f"'{domain}' is not in licensing info"
             else:
                 try:
                     if self.actions < 10:
                         self.actions += 1
-                        return self.auth[self.user]['action'][domain], strfsuccess("User Authorised")
+                        _valid = self.auth[self.user]['action'][domain]
+                        _info = AUTHORISED if _valid else UNAUTHORISED
+                        return _valid, _info
                     else:
                         self._reload()
                         self.actions += 1
-                        return self.auth[self.user]['action'][domain], strfsuccess("User Authorised")
+                        _valid = self.auth[self.user]['action'][domain]
+                        _info = AUTHORISED if _valid else UNAUTHORISED
+                        return _valid, _info
                 except KeyError:
-                    return False, strferror("User not authorised")
+                    return False, "User not authorised"
         else:
-            return False, strferror("Can't verify authentication due to internet access")
+            return False, "Can't verify authentication due to internet access"
 
 
 def licensed(appname: str,
@@ -99,7 +112,7 @@ def licensed(appname: str,
                 result = function(*args, **kwargs)
             else:
                 callback(info)
-                result = None
+                result = AuthStatus(authorised, info)
             return result
         return wrapper
     return decorator

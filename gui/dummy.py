@@ -2,7 +2,10 @@
 import sys
 from pathlib import Path
 from time import sleep
+from typing import Any
 
+from at.path import PathEngine
+from at.auth.client import licensed, Authorize, AuthStatus
 from at.gui.button import Button
 from at.gui.check import CheckInput
 from at.gui.combo import ComboInput
@@ -10,7 +13,7 @@ from at.gui.filename import FileNameInput
 from at.gui.input import IntInput, StrInput
 from at.gui.io import FileInput, FileOutput, FolderInput
 from at.gui.list import ListWidget
-from at.gui.popup import Popup
+from at.gui.popup import Popup, show_popup
 from at.gui.progress import ProgressBar
 from at.gui.status import StatusButton, StatusLabel
 from at.gui.console import Console
@@ -21,12 +24,15 @@ from PyQt5.QtCore import Qt, QThreadPool
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
 
+# When setting fixed width to QLineEdit ->
+# -> add alignment=Qt.AlignLeft when adding widget to layout
+
 cssGuide = Path("D:/.temp/.dev/.aztool/at/gui/_style.css").read_text()
 
 log.set_mode("GUI")
-
-# When setting fixed width to QLineEdit ->
-# -> add alignment=Qt.AlignLeft when adding widget to layout
+APPNAME = 'ktima'
+paths = PathEngine(APPNAME)
+authenticator = Authorize(APPNAME, paths.get_authfolder())
 
 
 class Dummy(QWidget):
@@ -52,7 +58,7 @@ class Dummy(QWidget):
         self.layoutButtons = QVBoxLayout()
         self.layoutComboCheck = QHBoxLayout()
 
-        self.pop = Popup("atcrawl")
+        self.pop = Popup("ktima")
 
         self.folderInput = FolderInput(label="Folder",
                                        placeholder=PATH_PLACEHOLDER,
@@ -128,7 +134,6 @@ class Dummy(QWidget):
         self.textBox = Console(size=(None, 200), parent=self)
 
         self.listWidget.assignLoadFunc(self.load_content)
-        self.status.enable('Welcome')
 
         self.layoutGeneral.addWidget(self.folderInput)
         self.layoutGeneral.addWidget(self.fileInput)
@@ -157,6 +162,27 @@ class Dummy(QWidget):
 
         self.setLayout(self.layout)
 
+    def updateProgress(self, metadata: dict):
+        if metadata:
+            progress_now = metadata.get('bar', None)
+            progress_max = metadata.get('bar_max', None)
+            status = metadata.get('status', None)
+
+            if progress_now is not None:
+                self.progress.setValue(progress_now)
+            if progress_max is not None:
+                self.progress.setValue(progress_max)
+            if status is not None:
+                self.status.disable(str(status))
+
+    def updateResult(self, status: Any):
+        if status is not None:
+            if isinstance(status, AuthStatus):
+                if not status.authorised:
+                    self.pop.error(status.info)
+            elif isinstance(status, str):
+                self.status.enable(status)
+
     def button1action(self):
         if self.i < self.progress.maximum():
             self.i += 10
@@ -174,17 +200,25 @@ class Dummy(QWidget):
         log.success('Done')
 
     def button3action(self):
-        run_thread(self.threadpool, self.execute)
-        self.threadpool.clear()
+        run_thread(threadpool=self.threadpool,
+                   function=self.execute,
+                   on_update=self.updateProgress,
+                   on_result=self.updateResult)
 
-    def execute(self, _progress, _popup):
+    @licensed(appname=APPNAME, domain=None)
+    def execute(self, _progress):
         log.info("Starting Process")
         log.warning("Warning")
         log.error("Error")
+        _progress.emit({'bar': 20, 'status': 'something'})
         sleep(1)
         log.info("Processing...\n")
+        _progress.emit({'bar': 60})
         sleep(2)
         log.success("Finished")
+        _progress.emit({'bar': 100})
+
+        return 'Everything OK'
 
     def load_content(self):
         return ("ASTOTA", "ASTENOT", "ASTIK", "ROADS", "PST")
