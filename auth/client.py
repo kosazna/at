@@ -45,6 +45,10 @@ class Authorize(metaclass=Singleton):
         self.auth = None
         self._reload()
 
+    def set_alias(self, alias:str):
+        self.user = alias
+        log.success("Alias set successfully")
+
     def _reload(self) -> None:
         if not self.debug:
             try:
