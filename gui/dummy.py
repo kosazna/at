@@ -5,7 +5,7 @@ from time import sleep
 from typing import Any, Tuple, Union
 
 from at.io.copy import batch_copy_file, copy_file
-
+from at.gui.label import Label
 from at.path import PathEngine
 from at.auth.client import licensed, Authorize, AuthStatus
 from at.gui.button import Button
@@ -143,6 +143,10 @@ class Dummy(QWidget):
                                      parent=self)
         self.console = Console(size=(400, None), parent=self)
 
+        self.customLabel1 = Label(icon='people-fill', label='aznavouridis.k', parent=self)
+        self.customLabel2 = Label(icon='calendar-range-fill', label='2021-10-13', parent=self)
+        self.customLabel3 = Label(icon='bar-chart-fill', label='2829', parent=self)
+
         # self.console.hide()
 
         self.listWidget.assignLoadFunc(self.load_content)
@@ -153,6 +157,9 @@ class Dummy(QWidget):
         self.layoutGeneral.addWidget(self.filename)
         self.layoutGeneral.addWidget(self.input)
         self.layoutGeneral.addWidget(self.inputInt)
+        self.layoutGeneral.addWidget(self.customLabel1)
+        self.layoutGeneral.addWidget(self.customLabel2)
+        self.layoutGeneral.addWidget(self.customLabel3)
 
         self.layoutComboCheck.addWidget(self.combo)
         self.layoutComboCheck.addWidget(self.check, 1)

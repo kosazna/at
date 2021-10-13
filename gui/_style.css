@@ -93,6 +93,12 @@ QLabel {
   font-weight: bold;
 }
 
+QLabel#statusLabel {
+  background-color: transparent;
+  color: #2f3236;
+  font-weight: bold;
+}
+
 QLabel#statusNeutral {
   background-color: #f8f8f8;
   border: 1px solid #f8f8f8;
