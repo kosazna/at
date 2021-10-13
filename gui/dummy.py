@@ -143,18 +143,22 @@ class Dummy(QWidget):
                                      labelsize=(200, 22),
                                      widgetsize=(None, 220),
                                      parent=self)
-        self.console = Console(size=(400, None), parent=self)
-
-        self.customLabel1 = Label(
-            icon='people-fill', label='aznavouridis.k', parent=self)
-        self.customLabel2 = Label(
-            icon='calendar-range-fill', label='2021-10-13', parent=self)
-        self.customLabel3 = Label(
-            icon='bar-chart-fill', label='2829', parent=self)
-
-        # self.console.hide()
+        self.console = Console(size=(400, None),
+                               parent=self)
+        self.customLabel1 = Label(icon='people-fill',
+                                  label='aznavouridis.k',
+                                  parent=self)
+        self.customLabel2 = Label(icon='calendar-range-fill',
+                                  label='2021-10-13',
+                                  parent=self)
+        self.customLabel3 = Label(icon='bar-chart-fill',
+                                  label='2829',
+                                  parent=self)
 
         self.listWidget.assignLoadFunc(self.load_content)
+
+        self.layoutComboCheck.addWidget(self.combo)
+        self.layoutComboCheck.addWidget(self.check, 1)
 
         self.layoutGeneral.addWidget(self.folderInput)
         self.layoutGeneral.addWidget(self.fileInput)
@@ -165,9 +169,6 @@ class Dummy(QWidget):
         self.layoutGeneral.addWidget(self.customLabel1)
         self.layoutGeneral.addWidget(self.customLabel2)
         self.layoutGeneral.addWidget(self.customLabel3)
-
-        self.layoutComboCheck.addWidget(self.combo)
-        self.layoutComboCheck.addWidget(self.check, 1)
         self.layoutGeneral.addLayout(self.layoutComboCheck)
         self.layoutGeneral.addWidget(self.statusSmall)
         self.layoutGeneral.addWidget(self.listWidget)
