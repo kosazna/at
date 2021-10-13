@@ -30,11 +30,12 @@ class StrInput(QWidget):
         self.label.setFixedSize(*labelsize)
 
         self.lineEdit = QLineEdit()
-        lew = editsize[0]
-        leh = editsize[1]
-        self.lineEdit.setFixedHeight(leh)
-        if lew is not None:
-            self.lineEdit.setFixedWidth(lew)
+        _width = editsize[0]
+        _height = editsize[1]
+        if _width is not None:
+            self.lineEdit.setFixedWidth(_width)
+        if _height is not None:
+            self.lineEdit.setFixedHeight(_height)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         if hidden:
@@ -122,11 +123,12 @@ class IntInput(QWidget):
             self.validator.setRange(*value_range)
 
         self.lineEdit = QLineEdit()
-        lew = editsize[0]
-        leh = editsize[1]
-        self.lineEdit.setFixedHeight(leh)
-        if lew is not None:
-            self.lineEdit.setFixedWidth(lew)
+        _width = editsize[0]
+        _height = editsize[1]
+        if _width is not None:
+            self.lineEdit.setFixedWidth(_width)
+        if _height is not None:
+            self.lineEdit.setFixedHeight(_height)
         self.lineEdit.setValidator(self.validator)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)

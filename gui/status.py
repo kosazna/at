@@ -27,11 +27,12 @@ class StatusButton(QWidget):
         else:
             self.disable()
 
-        bew = size[0]
-        beh = size[1]
-        self.button.setFixedHeight(beh)
-        if bew is not None:
-            self.button.setFixedWidth(bew)
+        _width = size[0]
+        _height = size[1]
+        if _width is not None:
+            self.button.setFixedWidth(_width)
+        if _height is not None:
+            self.button.setFixedHeight(_height)
 
         layout.addWidget(self.button)
         layout.setContentsMargins(0, 4, 0, 4)

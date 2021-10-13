@@ -51,12 +51,12 @@ class Console(QTextBrowser):
 
     def setupUi(self, size):
         self.setReadOnly(True)
-        lew = size[0]
-        leh = size[1]
-        if lew is not None:
-            self.setFixedWidth(lew)
-        if leh is not None:
-            self.setFixedHeight(leh)
+        _width = size[0]
+        _height = size[1]
+        if _width is not None:
+            self.setFixedWidth(_width)
+        if _height is not None:
+            self.setFixedHeight(_height)
 
     def addText(self, text):
         self.insertHtml(text)

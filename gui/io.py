@@ -37,11 +37,12 @@ class IOWidget(QWidget):
         self.label.setFixedSize(*labelsize)
 
         self.lineEdit = QLineEdit()
-        lew = editsize[0]
-        leh = editsize[1]
-        self.lineEdit.setFixedHeight(leh)
-        if lew is not None:
-            self.lineEdit.setFixedWidth(lew)
+        _width = editsize[0]
+        _height = editsize[1]
+        if _width is not None:
+            self.lineEdit.setFixedWidth(_width)
+        if _height is not None:
+            self.lineEdit.setFixedHeight(_height)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.setPlaceholder(placeholder)
@@ -50,7 +51,7 @@ class IOWidget(QWidget):
         self.button.setCursor(QCursor(Qt.PointingHandCursor))
         self.button.setText("2")
         self.button.setObjectName("Browse")
-        self.button.setFixedSize(leh, leh)
+        self.button.setFixedSize(_height, _height)
 
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()

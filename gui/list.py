@@ -28,11 +28,12 @@ class ListWidget(QWidget):
         self.buttonClear.subscribe(self.clearContent)
 
     def setupUi(self, label, items, labelsize, widgetsize):
-        lew = widgetsize[0]
-        leh = widgetsize[1]
-        self.setFixedHeight(leh)
-        if lew is not None:
-            self.setFixedWidth(lew)
+        _width = widgetsize[0]
+        _height = widgetsize[1]
+        if _width is not None:
+            self.setFixedWidth(_width)
+        if _height is not None:
+            self.setFixedHeight(_height)
 
         self.label = QLabel()
         self.label.setText(label)

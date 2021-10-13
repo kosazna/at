@@ -18,11 +18,12 @@ class ProgressBar(QProgressBar):
         self.setMinimum(0)
         self.setMaximum(100)
         self.setValue(0)
-        pew = size[0]
-        peh = size[1]
-        self.setFixedHeight(peh)
-        if pew is not None:
-            self.setFixedWidth(pew)
+        _width = size[0]
+        _height = size[1]
+        if _width is not None:
+            self.setFixedWidth(_width)
+        if _height is not None:
+            self.setFixedHeight(_height)
         self.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
 
     def setStyle(self, object_name):

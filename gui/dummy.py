@@ -2,7 +2,9 @@
 import sys
 from pathlib import Path
 from time import sleep
-from typing import Any
+from typing import Any, Tuple, Union
+
+from at.io.copy import batch_copy_file, copy_file
 
 from at.path import PathEngine
 from at.auth.client import licensed, Authorize, AuthStatus
@@ -37,21 +39,29 @@ authenticator = Authorize(APPNAME, paths.get_authfolder())
 
 class Dummy(QWidget):
     def __init__(self,
+                 size: Tuple[Union[int, None]] = (None, None),
                  parent=None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.setupUi()
+        self.setupUi(size)
         self.i = 0
         self.button1.clicked.connect(self.button1action)
         self.button2.clicked.connect(self.button2action)
         self.button3.clicked.connect(self.button3action)
         self.threadpool = QThreadPool(parent=self)
 
-    def setupUi(self):
+    def setupUi(self, size):
         self.setObjectName("MainWidget")
         self.setStyleSheet(cssGuide)
-        self.resize(700, 700)
+        _width = size[0]
+        _height = size[1]
+        if _width is not None:
+            self.setMinimumWidth(_width)
+        if _height is not None:
+            self.setMinimumHeight(_height)
+
+        self.total_layout = QHBoxLayout()
         self.layout = QVBoxLayout()
         self.layoutTop = QHBoxLayout()
         self.layoutGeneral = QVBoxLayout()
@@ -131,7 +141,9 @@ class Dummy(QWidget):
                                      labelsize=(200, 22),
                                      widgetsize=(None, 220),
                                      parent=self)
-        self.textBox = Console(size=(None, 200), parent=self)
+        self.console = Console(size=(400, None), parent=self)
+
+        # self.console.hide()
 
         self.listWidget.assignLoadFunc(self.load_content)
 
@@ -158,9 +170,11 @@ class Dummy(QWidget):
         self.layout.addLayout(self.layoutTop)
         self.layout.addWidget(self.progress)
         self.layout.addWidget(self.status)
-        self.layout.addWidget(self.textBox)
 
-        self.setLayout(self.layout)
+        self.total_layout.addLayout(self.layout)
+        self.total_layout.addWidget(self.console)
+
+        self.setLayout(self.total_layout)
 
     def updateProgress(self, metadata: dict):
         if metadata:
@@ -183,6 +197,9 @@ class Dummy(QWidget):
             elif isinstance(status, str):
                 self.status.enable(status)
 
+    def updateFinish(self):
+        pass
+
     def button1action(self):
         if self.i < self.progress.maximum():
             self.i += 10
@@ -195,15 +212,18 @@ class Dummy(QWidget):
             self.input.disable()
 
     def button2action(self):
-        log.warning('Ok\n')
-        log.error('Wrong')
-        log.success('Done')
+        run_thread(threadpool=self.threadpool,
+                   function=self.copy_files,
+                   on_update=self.updateProgress,
+                   on_result=self.updateResult,
+                   on_finish=self.updateFinish)
 
     def button3action(self):
         run_thread(threadpool=self.threadpool,
                    function=self.execute,
                    on_update=self.updateProgress,
-                   on_result=self.updateResult)
+                   on_result=self.updateResult,
+                   on_finish=self.updateFinish)
 
     @licensed(appname=APPNAME, domain=None)
     def execute(self, _progress):
@@ -212,16 +232,25 @@ class Dummy(QWidget):
         log.error("Error")
         _progress.emit({'pbar': 20, 'status': 'something'})
         sleep(1)
-        log.info("Processing...\n")
+        log.info("Processing.../n")
         _progress.emit({'pbar': 60, 'status': 'Still processing...'})
         sleep(2)
         log.success("Finished")
         _progress.emit({'pbar': 100})
 
+        a = 5/0
+
         return 'Everything OK'
 
     def load_content(self):
         return ("ASTOTA", "ASTENOT", "ASTIK", "ROADS", "PST")
+
+    def copy_files(self, _progress):
+        all_files = list(Path("D:/.temp/bootstrap-icons-1.5.0").iterdir())
+        _progress.emit({'pbar_max': len(all_files), 'status': 'Copying Files'})
+        for idx, p in enumerate(all_files, 1):
+            log.info(copy_file(p, "D:/.temp/copy_tests"))
+            _progress.emit({'pbar': idx})
 
 
 if __name__ == '__main__':
@@ -232,7 +261,7 @@ if __name__ == '__main__':
     app.setFont(SEGOE)
     app.setStyle('Fusion')
 
-    ui = Dummy()
+    ui = Dummy(size=(1000, None))
     ui.show()
 
     sys.exit(app.exec_())
