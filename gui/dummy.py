@@ -232,13 +232,11 @@ class Dummy(QWidget):
         log.error("Error")
         _progress.emit({'pbar': 20, 'status': 'something'})
         sleep(1)
-        log.info("Processing.../n")
+        log.info("Processing...\n")
         _progress.emit({'pbar': 60, 'status': 'Still processing...'})
         sleep(2)
         log.success("Finished")
         _progress.emit({'pbar': 100})
-
-        a = 5/0
 
         return 'Everything OK'
 
