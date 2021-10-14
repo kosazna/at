@@ -39,7 +39,10 @@ class CopyObject:
             copyfunc = shutil.copy
 
         if self.directory:
-            return shutil.copytree(self.src, self.dst, copy_function=copyfunc)
+            return shutil.copytree(self.src,
+                                   self.dst,
+                                   copy_function=copyfunc,
+                                   dirs_exist_ok=True)
         else:
             if self.shapefile:
                 if self.shapefile_aux:

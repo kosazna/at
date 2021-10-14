@@ -99,7 +99,7 @@ def copy_file_legacy(src: Union[str, Path],
             shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
         else:
             shutil.copytree(src_path, dst_path.joinpath(save_name),
-                     dirs_exist_ok=True)
+                            dirs_exist_ok=True)
     else:
         src_suffix = src_path.suffix
 
@@ -164,7 +164,7 @@ def copy_pattern(src: Union[str, Path],
                     parts = pattern.match(p.stem)
 
                 parts['%name%'] = p.stem
-                parts['%parent%'] = p.parent
+                parts['%parent%'] = str(p.parent)
 
                 if save_name is None:
                     name = save_name
@@ -172,11 +172,12 @@ def copy_pattern(src: Union[str, Path],
                     name = replace_all(save_name, parts)
 
                 if save_pattern is None:
-                    d = dst_path
+                    d = dst_path.joinpath(
+                        p.stem) if pattern.kind == 'FolderPattern' else dst_path
                 else:
                     sub_dst = replace_all(save_pattern, parts)
                     d = dst_path.joinpath(sub_dst)
-                print(p, d, save_name)
+
                 executor.submit(copy_file, p, d, name)
 
 
