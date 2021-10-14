@@ -167,7 +167,7 @@ def copy_pattern(src: Union[str, Path],
                 parts = pattern.match(p.stem)
 
             parts['%name%'] = p.stem
-            parts['%parent%'] = str(p.parent)
+            parts['%parent%'] = p.parts[-2]
 
             if save_name is None:
                 name = save_name
