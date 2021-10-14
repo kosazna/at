@@ -1,9 +1,10 @@
+# -*- coding: utf-8 -*-
 from typing import List, Tuple, Union
 import zipfile
 from pathlib import Path
 
-file_name = "D:/.temp/ktima.zip"
-dst = "D:/.temp/copy_tests"
+file_name = "D:/.temp/KT2-11_ΠΑΡΑΔΟΤΕΑ_ΨΗΦΙΑΚΗ ΒΑΣΗ ΧΩΡΙΚΩΝ ΣΤΟΙΧΕΙΩΝ.zip"
+dst = "D:/.temp/unzip"
 SHP_EXTS = ('.shp', '.shx', '.dbf')
 
 # with zipfile.ZipFile(file_name, 'r') as zipf:
@@ -34,10 +35,60 @@ def unzip_file(src: Union[str, Path],
                 for fn, p in files.items():
                     if p.suffix in file_filters:
                         f.extract(fn, dst)
-            elif filter_type == 'name':
+            elif filter_type == 'filename':
                 for fn, p in files.items():
                     if p.stem in file_filters:
                         f.extract(fn, dst)
+            elif filter_type == 'dir':
+                for fn, p in files.items():
+                    for filter_item in file_filters:
+                        if filter_item in p.parts:
+                            f.extract(fn, dst)
 
 
-unzip_file(file_name, dst, 'OIK', 'name')
+otas = [
+    "22003",
+    "22006",
+    "22008",
+    "22011",
+    "22012",
+    "22019",
+    "22022",
+    "22033",
+    "22044",
+    "22049",
+    "22050",
+    "22055",
+    "22057",
+    "22058",
+    "22059",
+    "22062",
+    "22063",
+    "22066",
+    "22070",
+    "22071",
+    "22076",
+    "22085",
+    "22093",
+    "22095",
+    "22098",
+    "22100",
+    "22101",
+    "22103",
+    "22104",
+    "22105",
+    "22106",
+    "22107",
+    "22110",
+    "22116",
+    "22123",
+    "22125",
+    "22126",
+    "22129",
+    "22132",
+    "22134",
+    "22140",
+    "22141"
+]
+
+unzip_file(file_name, dst, otas, 'filename')

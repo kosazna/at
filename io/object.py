@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from shutil import copy, copy2, copytree
 from typing import Union
 
 from at.logger import log
@@ -34,12 +34,12 @@ class CopyObject:
 
     def copy(self, copymode: str = 'normal'):
         if copymode == 'normal':
-            copyfunc = copy2
+            copyfunc = shutil.copy2
         else:
-            copyfunc = copy
+            copyfunc = shutil.copy
 
         if self.directory:
-            return copytree(self.src, self.dst, copy_function=copyfunc)
+            return shutil.copytree(self.src, self.dst, copy_function=copyfunc)
         else:
             if self.shapefile:
                 if self.shapefile_aux:

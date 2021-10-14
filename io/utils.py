@@ -93,7 +93,12 @@ def unzip_file_pro(src: Union[str, Path],
                 for fn, p in files.items():
                     if p.suffix in file_filters:
                         f.extract(fn, dst)
-            elif filter_type == 'name':
+            elif filter_type == 'filename':
                 for fn, p in files.items():
                     if p.stem in file_filters:
                         f.extract(fn, dst)
+            elif filter_type == 'dir':
+                for fn, p in files.items():
+                    for filter_item in file_filters:
+                        if filter_item in p.parts:
+                            f.extract(fn, dst)

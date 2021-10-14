@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import shutil
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from shutil import copy2, copytree
 from typing import Iterable, List, Tuple, Union
 
 from at.io.object import CopyObject
@@ -96,23 +96,23 @@ def copy_file_legacy(src: Union[str, Path],
 
     if src_is_dir:
         if save_name is None:
-            copytree(src_path, dst_path, dirs_exist_ok=True)
+            shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
         else:
-            copytree(src_path, dst_path.joinpath(save_name),
+            shutil.copytree(src_path, dst_path.joinpath(save_name),
                      dirs_exist_ok=True)
     else:
         src_suffix = src_path.suffix
 
         if src_suffix not in SHP_EXTS:
             if save_name is None:
-                copy2(src_path, dst_path)
+                shutil.copy2(src_path, dst_path)
             else:
                 if dst_is_dir:
                     d = dst_path.joinpath(f"{save_name}{src_suffix}")
                 else:
                     d = dst_path.with_name(save_name).with_suffix(src_suffix)
 
-                copy2(src_path, d)
+                shutil.copy2(src_path, d)
         else:
             all_exist = all([src_path.with_suffix(ext).exists()
                             for ext in SHP_EXTS])
@@ -120,14 +120,14 @@ def copy_file_legacy(src: Union[str, Path],
             if all_exist:
                 for ext in SHP_EXTS:
                     if save_name is None:
-                        copy2(src_path.with_suffix(ext), dst_path)
+                        shutil.copy2(src_path.with_suffix(ext), dst_path)
                     else:
                         if dst_is_dir:
                             d = dst_path.joinpath(f"{save_name}{ext}")
                         else:
                             d = dst_path.with_name(save_name).with_suffix(ext)
 
-                        copy2(src_path.with_suffix(ext), d)
+                        shutil.copy2(src_path.with_suffix(ext), d)
             else:
                 log.warning(f"'{str(src)}' missing auxiliary shapefile files.")
 
@@ -176,5 +176,58 @@ def copy_pattern(src: Union[str, Path],
                 else:
                     sub_dst = replace_all(save_pattern, parts)
                     d = dst_path.joinpath(sub_dst)
-
+                print(p, d, save_name)
                 executor.submit(copy_file, p, d, name)
+
+
+otas = [
+    "22003",
+    "22006",
+    "22008",
+    "22011",
+    "22012",
+    "22019",
+    "22022",
+    "22033",
+    "22044",
+    "22049",
+    "22050",
+    "22055",
+    "22057",
+    "22058",
+    "22059",
+    "22062",
+    "22063",
+    "22066",
+    "22070",
+    "22071",
+    "22076",
+    "22085",
+    "22093",
+    "22095",
+    "22098",
+    "22100",
+    "22101",
+    "22103",
+    "22104",
+    "22105",
+    "22106",
+    "22107",
+    "22110",
+    "22116",
+    "22123",
+    "22125",
+    "22126",
+    "22129",
+    "22132",
+    "22134",
+    "22140",
+    "22141"]
+
+copy_pattern(src="D:/.temp/KT2-11_ΠΑΡΑΔΟΤΕΑ_ΨΗΦΙΑΚΗ ΒΑΣΗ ΧΩΡΙΚΩΝ ΣΤΟΙΧΕΙΩΝ",
+             dst="D:/.temp/copy_tests",
+             filters=otas,
+             read_pattern="<ota$0>",
+             save_pattern=None,
+             save_name=None,
+             recursive=False)
