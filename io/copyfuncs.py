@@ -72,6 +72,7 @@ def batch_copy_file(files: Iterable[CopyObject],
             future = executor.submit(file2copy.copy, copymode)
             if verbose:
                 log.info(f"{idx:5d} - {future.result()}")
+    log.info(f"Copied files: [{len(files)}]")
 
 
 def copy_file_legacy(src: Union[str, Path],
@@ -138,7 +139,8 @@ def copy_pattern(src: Union[str, Path],
                  read_pattern: str,
                  save_pattern: Union[str, None] = None,
                  save_name: Union[str, None] = None,
-                 recursive: bool = False):
+                 recursive: bool = False,
+                 verbose: bool = False):
     src_path = Path(src)
     dst_path = Path(dst)
 
@@ -155,80 +157,33 @@ def copy_pattern(src: Union[str, Path],
             else:
                 file_filters.append(_filter)
 
-    with ThreadPoolExecutor() as executor:
-        for file_filter in file_filters:
-            for p in src_path.glob(file_filter):
-                if pattern.kind == 'FolderPattern':
-                    parts = pattern.match_from_path(p)
-                else:
-                    parts = pattern.match(p.stem)
+    copyobjs = []
 
-                parts['%name%'] = p.stem
-                parts['%parent%'] = str(p.parent)
+    for file_filter in file_filters:
+        for p in src_path.glob(file_filter):
+            if pattern.kind == 'FolderPattern':
+                parts = pattern.match_from_path(p)
+            else:
+                parts = pattern.match(p.stem)
 
-                if save_name is None:
-                    name = save_name
-                else:
-                    name = replace_all(save_name, parts)
+            parts['%name%'] = p.stem
+            parts['%parent%'] = str(p.parent)
 
-                if save_pattern is None:
-                    d = dst_path.joinpath(
-                        p.stem) if pattern.kind == 'FolderPattern' else dst_path
-                else:
-                    sub_dst = replace_all(save_pattern, parts)
-                    d = dst_path.joinpath(sub_dst)
+            if save_name is None:
+                name = save_name
+            else:
+                name = replace_all(save_name, parts)
 
-                executor.submit(copy_file, p, d, name)
+            if save_pattern is None:
+                d = dst_path.joinpath(
+                    p.stem) if pattern.kind == 'FolderPattern' else dst_path
+            else:
+                sub_dst = replace_all(save_pattern, parts)
+                d = dst_path.joinpath(sub_dst)
 
+            copyobjs.append(create_copy_obj(p, d, name))
 
-otas = [
-    "22003",
-    "22006",
-    "22008",
-    "22011",
-    "22012",
-    "22019",
-    "22022",
-    "22033",
-    "22044",
-    "22049",
-    "22050",
-    "22055",
-    "22057",
-    "22058",
-    "22059",
-    "22062",
-    "22063",
-    "22066",
-    "22070",
-    "22071",
-    "22076",
-    "22085",
-    "22093",
-    "22095",
-    "22098",
-    "22100",
-    "22101",
-    "22103",
-    "22104",
-    "22105",
-    "22106",
-    "22107",
-    "22110",
-    "22116",
-    "22123",
-    "22125",
-    "22126",
-    "22129",
-    "22132",
-    "22134",
-    "22140",
-    "22141"]
-
-copy_pattern(src="D:/.temp/KT2-11_ΠΑΡΑΔΟΤΕΑ_ΨΗΦΙΑΚΗ ΒΑΣΗ ΧΩΡΙΚΩΝ ΣΤΟΙΧΕΙΩΝ",
-             dst="D:/.temp/copy_tests",
-             filters=otas,
-             read_pattern="<ota$0>",
-             save_pattern=None,
-             save_name=None,
-             recursive=False)
+    if copyobjs:
+        batch_copy_file(files=copyobjs, copymode='normal', verbose=verbose)
+    else:
+        log.warning("Nothing to copy")

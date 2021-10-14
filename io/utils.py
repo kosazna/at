@@ -76,7 +76,7 @@ def unzip_file(zipfile: Union[str, Path], dst: Union[str, Path]):
 def unzip_file_pro(src: Union[str, Path],
                    dst: Union[str, Path],
                    filters: Union[str, List[str], Tuple[str], None] = None,
-                   filter_type: str = 'name'):
+                   filter_type: str = 'filename'):
 
     if filters is not None:
         if isinstance(filters, str):

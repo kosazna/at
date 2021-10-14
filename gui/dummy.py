@@ -20,7 +20,7 @@ from at.gui.progress import ProgressBar
 from at.gui.status import StatusButton, StatusLabel
 from at.gui.utils import *
 from at.gui.worker import run_thread
-from at.io.copy import batch_copy_file, copy_file
+from at.io.copyfuncs import batch_copy_file, copy_file
 from at.logger import log
 from at.path import PathEngine
 from PyQt5.QtCore import Qt, QThreadPool
