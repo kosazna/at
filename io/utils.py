@@ -4,7 +4,7 @@ import pickle
 from os import startfile
 from pathlib import Path
 from shutil import unpack_archive
-from typing import Any, Union
+from typing import Any, List, Tuple, Union
 from zipfile import ZipFile
 
 
@@ -38,7 +38,8 @@ def write_pickle(filepath: Union[str, Path],
 def zip_file(src: Union[str, Path],
              dst: Union[str, Path, None] = None,
              save_name: Union[str, None] = None,
-             file_filter: Union[str, None] = None):
+             file_filter: Union[str, None] = None,
+             schema: bool = False):
     src_path = Path(src)
 
     if dst is None:
@@ -59,7 +60,10 @@ def zip_file(src: Union[str, Path],
     if files2zip:
         with ZipFile(d, 'w') as zf:
             for filepath in files2zip:
-                zf.write(filepath, arcname=filepath.name)
+                if schema:
+                    zf.write(filepath)
+                else:
+                    zf.write(filepath, arcname=filepath.name)
 
 
 def unzip_file(zipfile: Union[str, Path], dst: Union[str, Path]):
@@ -67,3 +71,29 @@ def unzip_file(zipfile: Union[str, Path], dst: Union[str, Path]):
     if not dst_path.exists():
         dst_path.mkdir(parents=True, exist_ok=True)
     unpack_archive(zipfile, dst_path)
+
+
+def unzip_file_pro(src: Union[str, Path],
+                   dst: Union[str, Path],
+                   filters: Union[str, List[str], Tuple[str], None] = None,
+                   filter_type: str = 'name'):
+
+    if filters is not None:
+        if isinstance(filters, str):
+            file_filters = [filters]
+        else:
+            file_filters = filters
+
+    with ZipFile(src, 'r') as f:
+        if filters is None:
+            f.extractall(dst)
+        else:
+            files = {filename: Path(filename) for filename in f.namelist()}
+            if filter_type == 'suffix':
+                for fn, p in files.items():
+                    if p.suffix in file_filters:
+                        f.extract(fn, dst)
+            elif filter_type == 'name':
+                for fn, p in files.items():
+                    if p.stem in file_filters:
+                        f.extract(fn, dst)
