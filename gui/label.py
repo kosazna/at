@@ -29,7 +29,7 @@ class Label(QWidget):
         self.iconLabel.setAlignment(Qt.AlignCenter)
 
         self.statusLabel = QLabel(parent=self)
-        self.statusLabel.setObjectName('statusLabel')
+        self.statusLabel.setObjectName('infoLabel')
         self.statusLabel.setText(label)
         self.statusLabel.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         _width = labelsize[0]

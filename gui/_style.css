@@ -2,13 +2,11 @@
   background-color: #bdbdbd;
 }
 
-#Browse {
-  background-color: #f8f8f8;
+QTextBrowser {
+  background-color: #2f3236;
+  color: #dd4f4f;
   border: 1px solid #6c757d;
-  color: #212529;
-  border-radius: 3px;
-  font-family: "Webdings";
-  font: 15px;
+  border-radius: 5px;
 }
 
 QPushButton {
@@ -54,21 +52,18 @@ QCheckBox {
 }
 
 QComboBox {
-  background-color: #f8f8f8;
-  border: 1px solid #6c757d;
   color: #212529;
-  border-radius: 3px;
 }
 
 QLineEdit {
   background-color: #f8f8f8;
   border: 1px solid #6c757d;
   color: #212529;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 QLineEdit:focus {
-  border: 1px outset #25b4ee;
+  border: 1px solid #258dee;
 }
 
 QLineEdit#off {
@@ -93,10 +88,10 @@ QLabel {
   font-weight: bold;
 }
 
-QLabel#statusLabel {
+QLabel#infoLabel {
   background-color: transparent;
   color: #2f3236;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 QLabel#statusNeutral {
@@ -131,11 +126,4 @@ QListWidget {
   border: 1px solid #6c757d;
   color: #212529;
   border-radius: 3px;
-}
-
-QTextBrowser{
-  background-color: #2f3236;
-  color: #dd4f4f;
-  border: 1px solid #6c757d;
-  border-radius: 5px;
 }

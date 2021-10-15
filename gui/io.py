@@ -47,11 +47,10 @@ class IOWidget(QWidget):
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.setPlaceholder(placeholder)
 
-        self.button = QToolButton()
+        self.button = QToolButton(self)
+        self.button.setText('...')
         self.button.setCursor(QCursor(Qt.PointingHandCursor))
-        self.button.setText("2")
-        self.button.setObjectName("Browse")
-        self.button.setFixedSize(_height, _height)
+        self.button.setFixedSize(_height + 2, _height - 1)
 
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()
