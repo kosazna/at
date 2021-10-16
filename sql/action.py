@@ -18,7 +18,7 @@ def select(cursor: Cursor, query_obj: QueryObject):
         r = cursor.fetchone()
         if r is not None and query_obj.cols == True:
             cols = [d[0] for d in cursor.description]
-            return cols, r
+            return tuple(cols), r
         else:
             return query_obj.default if r is None else r
     else:
@@ -26,7 +26,7 @@ def select(cursor: Cursor, query_obj: QueryObject):
         if query_obj.fetch == 'multirow':
             if r is not None and query_obj.cols == True:
                 cols = [d[0] for d in cursor.description]
-                return cols, r
+                return tuple(cols), r
             else:
                 return query_obj.default if r is None else r
         elif query_obj.fetch == 'singlecol':

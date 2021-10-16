@@ -60,8 +60,9 @@ class SQLiteEngine:
             log.error(f"{str(e)} from {self.db}")
 
 
-a = QueryObject("""SELECT setting, value
-FROM user_settings""", fetch='multirow')
+a = QueryObject("""SELECT *
+FROM user""", fetch='singlerow', cols=True)
 
 db = SQLiteEngine("C:/Users/aznavouridis.k/.ktima/ktima.db")
-print(dict(db.select(a)))
+result = db.select(a)
+print(dict(zip(result[0], result[1])))
