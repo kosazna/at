@@ -7,7 +7,7 @@ from subprocess import Popen
 from typing import List, Union
 
 from at.sql.action import insert, select, update
-from at.sql.query import QueryObject
+from at.sql.utils import QueryObject
 from at.logger import log
 
 
@@ -58,3 +58,10 @@ class SQLiteEngine:
                     return select(cursor=cur, query_obj=query_obj)
         except Error as e:
             log.error(f"{str(e)} from {self.db}")
+
+
+a = QueryObject("""SELECT setting, value
+FROM user_settings""", fetch='multirow')
+
+db = SQLiteEngine("C:/Users/aznavouridis.k/.ktima/ktima.db")
+print(dict(db.select(a)))

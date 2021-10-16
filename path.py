@@ -11,6 +11,8 @@ class PathEngine:
         self._app = self._home.joinpath(f".{appname}")
         self._auth = Path(os.environ.get('APPDATA')).joinpath(f".{appname}")
         self._static = self._app.joinpath("static")
+        self._sql = self._static.joinpath("sql")
+        self._css = self._static.joinpath("css")
         self._db = self._app.joinpath(f"{appname}.db")
         self._settings = self._app.joinpath("settings.json")
         self._init_paths()
@@ -49,10 +51,25 @@ class PathEngine:
             return self._static
         return self._static.as_posix()
 
-    def get_create_folder(self, obj: bool = False) -> Union[str, Path]:
+    def get_css(self, obj: bool = False) -> Union[str, Path]:
         if obj:
-            return self._static.joinpath("init")
-        return self._static.joinpath("init").as_posix()
+            return self._css
+        return self._css.as_posix()
+
+    def get_sql(self, obj: bool = False) -> Union[str, Path]:
+        if obj:
+            return self._sql
+        return self._sql.as_posix()
+
+    def get_init_sql(self, obj: bool = False) -> Union[str, Path]:
+        if obj:
+            return self._sql.joinpath("init")
+        return self._sql.joinpath("init").as_posix()
+
+    def get_settings_sql(self, obj: bool = False) -> Union[str, Path]:
+        if obj:
+            return self._sql.joinpath("settings")
+        return self._sql.joinpath("settings").as_posix()
 
     def get_db(self, obj: bool = False) -> Union[str, Path]:
         if obj:

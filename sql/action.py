@@ -2,7 +2,7 @@
 
 from sqlite3 import Connection, Cursor
 
-from at.sql.query import QueryObject
+from at.sql.object import QueryObject
 
 
 def select(cursor: Cursor, query_obj: QueryObject):

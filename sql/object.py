@@ -3,25 +3,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Dict, List, Union
-
-
-def load_sql_queries(folder: Union[str, Path]) -> Dict[str, str]:
-    queries = {}
-    for p in Path(folder).glob('*.sql'):
-        stem = p.stem
-        queries[stem] = p.read_text(encoding='utf-8')
-
-    return queries
-
-
-def load_create_queries(folder: Union[str, Path]) -> List[QueryObject]:
-    queries = []
-    for p in Path(folder).glob('*.sql'):
-        queries.append(QueryObject(p.read_text(encoding='utf-8')))
-
-    return queries
+from typing import Any, List, Union
 
 
 @dataclass
