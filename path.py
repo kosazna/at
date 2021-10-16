@@ -20,6 +20,7 @@ class PathEngine:
             self._app.mkdir(parents=True, exist_ok=True)
         if not self._static.exists():
             self._static.mkdir(parents=True, exist_ok=True)
+            self._static.joinpath("init").mkdir(parents=True, exist_ok=True)
         if not self._auth.exists():
             self._auth.mkdir(parents=True, exist_ok=True)
 
@@ -47,6 +48,11 @@ class PathEngine:
         if obj:
             return self._static
         return self._static.as_posix()
+
+    def get_create_folder(self, obj: bool = False) -> Union[str, Path]:
+        if obj:
+            return self._static.joinpath("init")
+        return self._static.joinpath("init").as_posix()
 
     def get_db(self, obj: bool = False) -> Union[str, Path]:
         if obj:

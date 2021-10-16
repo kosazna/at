@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-from typing import Tuple, Union
+from typing import Optional, Tuple, Union
 
 from at.gui.button import Button
 from at.gui.check import CheckInput
 from at.gui.popup import Popup, pbutton
+from at.gui.utils import set_size
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QAbstractItemView, QAbstractScrollArea,
                              QHBoxLayout, QLabel, QListView, QListWidget,
@@ -13,10 +14,10 @@ from PyQt5.QtWidgets import (QAbstractItemView, QAbstractScrollArea,
 class ListWidget(QWidget):
     def __init__(self,
                  label: str = '',
-                 items: Union[list, tuple, None] = None,
-                 labelsize: tuple = (100, 22),
-                 widgetsize: Tuple[Union[int, None]] = (None, 250),
-                 parent: Union[QWidget, None] = None,
+                 items: Optional[Union[list, tuple]] = None,
+                 labelsize: tuple = (100, 24),
+                 widgetsize: Tuple[Optional[int]] = (None, 250),
+                 parent: Optional[QWidget] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
@@ -28,16 +29,11 @@ class ListWidget(QWidget):
         self.buttonClear.subscribe(self.clearContent)
 
     def setupUi(self, label, items, labelsize, widgetsize):
-        _width = widgetsize[0]
-        _height = widgetsize[1]
-        if _width is not None:
-            self.setFixedWidth(_width)
-        if _height is not None:
-            self.setFixedHeight(_height)
+        set_size(widget=self, size=widgetsize)
 
         self.label = QLabel()
         self.label.setText(label)
-        self.label.setFixedSize(*labelsize)
+        set_size(widget=self.label, size=labelsize)
         self.label.setAlignment(Qt.AlignCenter)
 
         self.listWidget = QListWidget(self)

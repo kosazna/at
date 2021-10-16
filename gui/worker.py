@@ -2,7 +2,7 @@
 
 import sys
 import traceback
-from typing import Callable, Union
+from typing import Callable, Optional
 
 from PyQt5.QtCore import QObject, QRunnable, QThreadPool, pyqtSignal, pyqtSlot
 
@@ -41,9 +41,9 @@ class Worker(QRunnable):
 
 def run_thread(threadpool: QThreadPool,
                function: Callable,
-               on_update: Union[Callable, None] = None,
-               on_result: Union[Callable, None] = None,
-               on_finish: Union[Callable, None] = None):
+               on_update: Optional[Callable] = None,
+               on_result: Optional[Callable] = None,
+               on_finish: Optional[Callable] = None):
     worker = Worker(function, WorkerSignals)
 
     if on_update is not None:

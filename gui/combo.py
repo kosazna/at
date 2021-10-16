@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from typing import Union
+from typing import Optional, Union
 
+from at.gui.utils import set_size
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QComboBox, QHBoxLayout, QLabel, QWidget
 
@@ -8,10 +9,10 @@ from PyQt5.QtWidgets import QComboBox, QHBoxLayout, QLabel, QWidget
 class ComboInput(QWidget):
     def __init__(self,
                  label: str = '',
-                 items: Union[list, tuple, None] = None,
-                 labelsize: tuple = (70, 22),
-                 combosize: tuple = (150, 22),
-                 parent: QWidget = None,
+                 items: Optional[Union[list, tuple]] = None,
+                 labelsize: tuple = (70, 24),
+                 combosize: tuple = (150, 24),
+                 parent: Optional[QWidget] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
@@ -20,17 +21,21 @@ class ComboInput(QWidget):
     def setupUi(self, label, items, labelsize, combosize):
         self.label = QLabel()
         self.label.setText(label)
-        self.label.setFixedSize(*labelsize)
+        set_size(widget=self.label, size=labelsize)
+
         self.comboEdit = QComboBox()
-        self.comboEdit.setFixedSize(*combosize)
+        set_size(widget=self.comboEdit, size=combosize)
         self.comboEdit.setSizeAdjustPolicy(
             QComboBox.SizeAdjustPolicy.AdjustToContents)
+
         layout = QHBoxLayout()
-        layout.addWidget(self.label)
-        layout.addWidget(self.comboEdit, 1, alignment=Qt.AlignLeft)
         layout.setContentsMargins(0, 4, 0, 4)
         layout.setSpacing(4)
+
+        layout.addWidget(self.label)
+        layout.addWidget(self.comboEdit, 1, alignment=Qt.AlignLeft)
         self.setLayout(layout)
+
         if items is not None:
             self.comboEdit.addItems(items)
 

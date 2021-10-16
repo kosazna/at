@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
-from typing import Tuple, Union
+from typing import Optional, Tuple
 
+from at.gui.utils import set_size
 from at.logger import GUI_EMPTY
 from PyQt5.QtCore import QObject, pyqtSignal
 from PyQt5.QtGui import QTextCursor
@@ -40,8 +41,8 @@ class TextStream(QObject):
 
 class Console(QTextBrowser):
     def __init__(self,
-                 size: Tuple[Union[int, None]] = (None, None),
-                 parent: Union[QWidget, None] = None,
+                 size: Tuple[Optional[int]] = (None, None),
+                 parent: Optional[QWidget] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
@@ -51,12 +52,7 @@ class Console(QTextBrowser):
 
     def setupUi(self, size):
         self.setReadOnly(True)
-        _width = size[0]
-        _height = size[1]
-        if _width is not None:
-            self.setFixedWidth(_width)
-        if _height is not None:
-            self.setFixedHeight(_height)
+        set_size(widget=self, size=size)
 
     def addText(self, text):
         self.insertHtml(text)

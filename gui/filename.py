@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
-from typing import Tuple, Union
+from typing import Optional, Tuple
 
 from PyQt5.QtCore import QRegExp, Qt
 from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QWidget
+
+from at.gui.utils import set_size
 
 
 class FileNameInput(QWidget):
     def __init__(self,
                  label: str = '',
                  placeholder: str = '',
-                 labelsize: Tuple[int] = (70, 22),
-                 editsize: Tuple[Union[int, None]] = (None, 22),
-                 parent: Union[QWidget, None] = None,
+                 labelsize: Tuple[int] = (70, 24),
+                 editsize: Tuple[Optional[int]] = (None, 24),
+                 parent: Optional[QWidget] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
@@ -21,15 +23,10 @@ class FileNameInput(QWidget):
     def setupUi(self, label, placeholder, labelsize, editsize):
         self.label = QLabel()
         self.label.setText(label)
-        self.label.setFixedSize(*labelsize)
+        set_size(widget=self.label, size=labelsize)
 
         self.lineEdit = QLineEdit()
-        _width = editsize[0]
-        _height = editsize[1]
-        if _width is not None:
-            self.lineEdit.setFixedWidth(_width)
-        if _height is not None:
-            self.lineEdit.setFixedHeight(_height)
+        set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         regexp = QRegExp('[^\.\<\>:\"/\\\|\?\*]*')
@@ -38,10 +35,11 @@ class FileNameInput(QWidget):
         self.setPlaceholder(placeholder)
 
         layout = QHBoxLayout()
-        layout.addWidget(self.label)
-        layout.addWidget(self.lineEdit)
         layout.setContentsMargins(0, 4, 0, 4)
         layout.setSpacing(4)
+        layout.addWidget(self.label)
+        layout.addWidget(self.lineEdit)
+
         self.setLayout(layout)
 
     def getText(self, suffix=None):

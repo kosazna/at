@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
-from typing import Union
+from typing import Optional
 
-from PyQt5.QtCore import Qt, QSize
+from at.gui.utils import set_size
+from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QCursor, QIcon
-from PyQt5.QtWidgets import QWidget, QPushButton
+from PyQt5.QtWidgets import QPushButton, QWidget
 
 
 class Button(QPushButton):
     def __init__(self,
                  label: str = '',
-                 color: Union[str, None] = None,
-                 icon: Union[str, None] = None,
-                 size: tuple = (70, 22),
-                 parent: Union[QWidget, None] = None,
+                 color: Optional[str] = None,
+                 icon: Optional[str] = None,
+                 size: tuple = (70, 24),
+                 parent: Optional[QWidget] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
@@ -20,13 +21,13 @@ class Button(QPushButton):
 
     def setupUi(self, label, color, icon, size):
         self.setCursor(QCursor(Qt.PointingHandCursor))
-        self.setStyle(color, size)
         if icon is not None:
             qicon = QIcon()
             qicon.addFile(f":/bootstrap/icons/{icon}.svg", QSize(16, 16),
                           QIcon.Normal, QIcon.Off)
             self.setIcon(qicon)
         self.setText(label)
+        self.setStyle(color, size)
 
     def disable(self, color='grey', size=None):
         self.setEnabled(False)
@@ -47,7 +48,7 @@ class Button(QPushButton):
         self.setStyleSheet(self.styleSheet())
 
         if size is not None:
-            self.setFixedSize(*size)
+            set_size(widget=self, size=size)
 
     def subscribe(self, func):
         self.clicked.connect(func)

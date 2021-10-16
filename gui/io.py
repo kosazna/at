@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
-from typing import Tuple, Union
+from typing import Optional, Tuple
 
+from at.gui.utils import HORIZONTAL, PATH_PLACEHOLDER, VERTICAL, set_size
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import (QFileDialog, QHBoxLayout, QLabel, QLineEdit,
                              QToolButton, QVBoxLayout, QWidget)
-
-from at.gui.utils import *
 
 
 class IOWidget(QWidget):
@@ -20,9 +19,9 @@ class IOWidget(QWidget):
                  label: str = '',
                  placeholder: str = PATH_PLACEHOLDER,
                  orientation: str = HORIZONTAL,
-                 labelsize: Tuple[int] = (70, 25),
-                 editsize: Tuple[Union[int, None]] = (None, 25),
-                 parent: Union[QWidget, None] = None,
+                 labelsize: Tuple[int] = (70, 24),
+                 editsize: Tuple[Optional[int]] = (None, 24),
+                 parent: Optional[QWidget] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
@@ -34,15 +33,10 @@ class IOWidget(QWidget):
     def setupUi(self, label, placeholder, orientation, labelsize, editsize):
         self.label = QLabel()
         self.label.setText(label)
-        self.label.setFixedSize(*labelsize)
+        set_size(widget=self.label, size=labelsize)
 
         self.lineEdit = QLineEdit()
-        _width = editsize[0]
-        _height = editsize[1]
-        if _width is not None:
-            self.lineEdit.setFixedWidth(_width)
-        if _height is not None:
-            self.lineEdit.setFixedHeight(_height)
+        set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.setPlaceholder(placeholder)
@@ -50,7 +44,7 @@ class IOWidget(QWidget):
         self.button = QToolButton(self)
         self.button.setText('...')
         self.button.setCursor(QCursor(Qt.PointingHandCursor))
-        self.button.setFixedSize(_height + 2, _height - 1)
+        self.button.setFixedSize(editsize[1] + 2, editsize[1] - 1)
 
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()
@@ -64,8 +58,10 @@ class IOWidget(QWidget):
             inner.addWidget(self.lineEdit)
             inner.addWidget(self.button)
             layout.addLayout(inner)
+
         layout.setContentsMargins(0, 4, 0, 4)
         layout.setSpacing(4)
+
         self.setLayout(layout)
 
     @classmethod
@@ -126,9 +122,9 @@ class FolderInput(IOWidget):
                  label: str = '',
                  placeholder: str = PATH_PLACEHOLDER,
                  orientation: str = HORIZONTAL,
-                 labelsize: Tuple[int] = (70, 22),
-                 editsize: Tuple[Union[int, None]] = (None, 22),
-                 parent: Union[QWidget, None] = None,
+                 labelsize: Tuple[int] = (70, 24),
+                 editsize: Tuple[Optional[int]] = (None, 24),
+                 parent: Optional[QWidget] = None,
                  *args,
                  **kwargs):
         super().__init__(label=label,
@@ -169,9 +165,9 @@ class FileInput(IOWidget):
                  label: str = '',
                  placeholder: str = PATH_PLACEHOLDER,
                  orientation: str = HORIZONTAL,
-                 labelsize: Tuple[int] = (70, 22),
-                 editsize: Tuple[Union[int, None]] = (None, 22),
-                 parent: Union[QWidget, None] = None,
+                 labelsize: Tuple[int] = (70, 24),
+                 editsize: Tuple[Optional[int]] = (None, 24),
+                 parent: Optional[QWidget] = None,
                  *args,
                  **kwargs):
         super().__init__(label=label,
@@ -211,9 +207,9 @@ class FileOutput(IOWidget):
                  label: str = '',
                  placeholder: str = PATH_PLACEHOLDER,
                  orientation: str = HORIZONTAL,
-                 labelsize: Tuple[int] = (70, 22),
-                 editsize: Tuple[Union[int, None]] = (None, 22),
-                 parent: Union[QWidget, None] = None,
+                 labelsize: Tuple[int] = (70, 24),
+                 editsize: Tuple[Optional[int]] = (None, 24),
+                 parent: Optional[QWidget] = None,
                  *args,
                  **kwargs):
         super().__init__(label=label,

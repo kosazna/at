@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-from typing import Tuple, Union
+from typing import Optional, Tuple
 
+from at.gui.utils import set_size
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor
-from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QSizePolicy,
-                             QWidget, QPushButton)
+from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QPushButton, QSizePolicy,
+                             QWidget)
 
 
 class StatusButton(QWidget):
     def __init__(self,
                  status: str = '',
-                 size: Tuple[Union[int, None]] = (None, 22),
-                 parent: Union[QWidget, None] = None,
+                 size: Tuple[Optional[int]] = (None, 22),
+                 parent: Optional[QWidget] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
@@ -28,12 +29,7 @@ class StatusButton(QWidget):
         else:
             self.disable()
 
-        _width = size[0]
-        _height = size[1]
-        if _width is not None:
-            self.button.setFixedWidth(_width)
-        if _height is not None:
-            self.button.setFixedHeight(_height)
+        set_size(widget=self.button, size=size)
 
         layout.addWidget(self.button)
         layout.setContentsMargins(0, 4, 0, 4)
@@ -77,7 +73,7 @@ class StatusLabel(QWidget):
                  status: str = '',
                  labelsize: Tuple[int] = (70, 22),
                  statussize: Tuple[int] = (100, 22),
-                 parent: Union[QWidget, None] = None,
+                 parent: Optional[QWidget] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
@@ -86,11 +82,11 @@ class StatusLabel(QWidget):
     def setupUi(self, label, status, labelsize, statussize):
         self.label = QLabel()
         self.label.setText(label)
-        self.label.setFixedSize(*labelsize)
+        set_size(widget=self.label, size=labelsize)
 
         self.status = QLabel()
         self.status.setText(status)
-        self.status.setFixedSize(*statussize)
+        set_size(widget=self.status, size=statussize)
         self.status.setObjectName('statusNeutral')
         self.status.setAlignment(Qt.AlignCenter)
 

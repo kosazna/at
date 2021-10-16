@@ -16,6 +16,14 @@ def load_sql_queries(folder: Union[str, Path]) -> Dict[str, str]:
     return queries
 
 
+def load_create_queries(folder: Union[str, Path]) -> List[QueryObject]:
+    queries = []
+    for p in Path(folder).glob('*.sql'):
+        queries.append(QueryObject(p.read_text(encoding='utf-8')))
+
+    return queries
+
+
 @dataclass
 class QueryObject:
     query: str

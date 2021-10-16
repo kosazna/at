@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import sys
 from dataclasses import dataclass
+from typing import Optional, Tuple
 
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QWidget
 
 HORIZONTAL = 'H'
 VERTICAL = 'V'
@@ -16,6 +17,25 @@ def get_dpi():
     app.quit()
 
     return int(dpi)
+
+
+def set_size(widget: QWidget,
+             size: Optional[Tuple[int]] = None,
+             width: Optional[int] = None,
+             height: Optional[int] = None):
+    if size is not None:
+        _width = size[0]
+        _height = size[1]
+        if _width is not None:
+            widget.setFixedWidth(_width)
+        if _height is not None:
+            widget.setFixedHeight(_height)
+    elif width is not None:
+        widget.setFixedWidth(width)
+    elif height is not None:
+        widget.setFixedHeight(height)
+    else:
+        raise ValueError("At least one of size parameters must be provided")
 
 
 @dataclass

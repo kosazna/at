@@ -1,23 +1,22 @@
 # -*- coding: utf-8 -*-
-from typing import Tuple, Union
+from typing import Optional, Tuple, Union
 
+from at.gui.utils import HORIZONTAL, VERTICAL, set_size
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import (QCompleter, QHBoxLayout, QLabel, QLineEdit,
                              QVBoxLayout, QWidget)
-
-from at.gui.utils import *
 
 
 class StrInput(QWidget):
     def __init__(self,
                  label: str = '',
                  orientation: str = HORIZONTAL,
-                 completer: Union[list, tuple, None] = None,
+                 completer: Optional[Union[list, tuple]] = None,
                  hidden: bool = False,
-                 labelsize: Tuple[int] = (70, 22),
-                 editsize: Tuple[Union[int, None]] = (None, 22),
-                 parent: Union[QWidget, None] = None,
+                 labelsize: Tuple[int] = (70, 24),
+                 editsize: Tuple[Optional[int]] = (None, 24),
+                 parent: Optional[QWidget] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
@@ -27,15 +26,10 @@ class StrInput(QWidget):
     def setupUi(self, label, orientation, hidden, labelsize, editsize):
         self.label = QLabel()
         self.label.setText(label)
-        self.label.setFixedSize(*labelsize)
+        set_size(widget=self.label, size=labelsize)
 
         self.lineEdit = QLineEdit()
-        _width = editsize[0]
-        _height = editsize[1]
-        if _width is not None:
-            self.lineEdit.setFixedWidth(_width)
-        if _height is not None:
-            self.lineEdit.setFixedHeight(_height)
+        set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         if hidden:
@@ -45,10 +39,13 @@ class StrInput(QWidget):
             layout = QVBoxLayout()
         else:
             layout = QHBoxLayout()
+
         layout.setContentsMargins(0, 4, 0, 4)
         layout.setSpacing(4)
+
         layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)
+
         self.setLayout(layout)
 
     def disable(self):
@@ -104,10 +101,10 @@ class IntInput(QWidget):
     def __init__(self,
                  label: str = '',
                  orientation: str = HORIZONTAL,
-                 value_range: Union[list, tuple, None] = None,
-                 labelsize: Tuple[int] = (70, 22),
-                 editsize: Tuple[Union[int, None]] = (None, 22),
-                 parent: Union[QWidget, None] = None,
+                 value_range: Optional[Union[list, tuple]] = None,
+                 labelsize: Tuple[int] = (70, 24),
+                 editsize: Tuple[Optional[int]] = (None, 24),
+                 parent: Optional[QWidget] = None,
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
@@ -116,19 +113,14 @@ class IntInput(QWidget):
     def setupUi(self, label, orientation, value_range, labelsize, editsize):
         self.label = QLabel()
         self.label.setText(label)
-        self.label.setFixedSize(*labelsize)
+        set_size(widget=self.label, size=labelsize)
 
         self.validator = QIntValidator()
         if value_range is not None:
             self.validator.setRange(*value_range)
 
         self.lineEdit = QLineEdit()
-        _width = editsize[0]
-        _height = editsize[1]
-        if _width is not None:
-            self.lineEdit.setFixedWidth(_width)
-        if _height is not None:
-            self.lineEdit.setFixedHeight(_height)
+        set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setValidator(self.validator)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
@@ -137,10 +129,13 @@ class IntInput(QWidget):
             layout = QVBoxLayout()
         else:
             layout = QHBoxLayout()
+
         layout.setContentsMargins(0, 4, 0, 4)
         layout.setSpacing(4)
+
         layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)
+
         self.setLayout(layout)
 
     def disable(self):
