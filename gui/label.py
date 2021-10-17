@@ -39,3 +39,6 @@ class Label(QWidget):
         layout.addWidget(self.statusLabel)
 
         self.setLayout(layout)
+
+    def setText(self, text: str):
+        self.statusLabel.setText(text)

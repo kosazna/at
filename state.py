@@ -95,5 +95,3 @@ class State(metaclass=Singleton):
                                        'altered': False}
             else:
                 raise ValueError("Value parameter must be provided")
-
-        self.update_db()

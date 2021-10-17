@@ -42,6 +42,9 @@ class ComboInput(QWidget):
     def getCurrentText(self):
         return self.comboEdit.currentText()
 
+    def setCurrentText(self, text):
+        self.comboEdit.setCurrentText(text)
+
     def getCurrentIndex(self):
         return self.comboEdit.currentIndex()
 
