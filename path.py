@@ -66,11 +66,6 @@ class PathEngine:
             return self._sql.joinpath("init")
         return self._sql.joinpath("init").as_posix()
 
-    def get_settings_sql(self, obj: bool = False) -> Union[str, Path]:
-        if obj:
-            return self._sql.joinpath("settings")
-        return self._sql.joinpath("settings").as_posix()
-
     def get_db(self, obj: bool = False) -> Union[str, Path]:
         if obj:
             return self._db

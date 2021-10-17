@@ -22,10 +22,3 @@ def load_init_queries(folder: Union[str, Path]) -> List[QueryObject]:
         queries.append(QueryObject(p.read_text(encoding='utf-8')))
 
     return queries
-
-
-def load_settings_queries(folder: Union[str, Path]):
-    queries = {}
-    for p in Path(folder).glob('*.sql'):
-        stem = p.stem
-        queries[stem] = p.read_text(encoding='utf-8')

@@ -28,8 +28,12 @@ class State(metaclass=Singleton):
         if self.db is not None:
             self.db.save_state(self)
 
-    def get_state(self, key: Optional[str] = None,) -> Any:
+    def get_state(self,
+                  key: Optional[str] = None,
+                  values_only: bool = False) -> Any:
         if key is None:
+            if values_only:
+                return {k: self.state[k]['value'] for k in self.state}
             return self.state
         else:
             self.state[key]
@@ -58,8 +62,6 @@ class State(metaclass=Singleton):
                                        'altered': False}
             else:
                 raise ValueError("Value parameter must be provided")
-
-        self.update_db()
 
     def __getitem__(self, key: str) -> Any:
         state_key = self.state.get(key, None)

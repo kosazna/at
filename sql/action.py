@@ -1,8 +1,20 @@
 # -*- coding: utf-8 -*-
 
+from contextlib import closing
+from sqlite3 import connect
 from sqlite3 import Connection, Cursor
+from typing import Union
 
 from at.sql.object import QueryObject
+
+
+def executescript(db, script: Union[str, QueryObject]):
+    with closing(connect(db)) as con:
+        with closing(con.cursor()) as cur:
+            if isinstance(script, QueryObject):
+                cur.executescript(script.query)
+            else:
+                cur.executescript(script)
 
 
 def select(cursor: Cursor, query_obj: QueryObject):
