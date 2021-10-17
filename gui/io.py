@@ -3,8 +3,8 @@ import os
 from typing import Optional, Tuple
 
 from at.gui.utils import HORIZONTAL, PATH_PLACEHOLDER, VERTICAL, set_size
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QCursor
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QCursor, QIcon
 from PyQt5.QtWidgets import (QFileDialog, QHBoxLayout, QLabel, QLineEdit,
                              QToolButton, QVBoxLayout, QWidget)
 
@@ -42,9 +42,12 @@ class IOWidget(QWidget):
         self.setPlaceholder(placeholder)
 
         self.button = QToolButton(self)
-        self.button.setText('...')
+        qicon = QIcon()
+        qicon.addFile(f":/bootstrap/icons/folder-symlink.svg", QSize(16, 16),
+                      QIcon.Normal, QIcon.Off)
+        self.button.setIcon(qicon)
         self.button.setCursor(QCursor(Qt.PointingHandCursor))
-        self.button.setFixedSize(editsize[1] + 2, editsize[1] - 1)
+        self.button.setFixedSize(editsize[1], editsize[1] - 2)
 
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()
@@ -133,7 +136,7 @@ class FolderInput(IOWidget):
                          orientation=orientation,
                          labelsize=labelsize,
                          editsize=editsize,
-                         * args,
+                         *args,
                          **kwargs)
 
     def browse(self):
@@ -176,7 +179,7 @@ class FileInput(IOWidget):
                          orientation=orientation,
                          labelsize=labelsize,
                          editsize=editsize,
-                         * args,
+                         *args,
                          **kwargs)
 
     def browse(self):
@@ -218,7 +221,7 @@ class FileOutput(IOWidget):
                          orientation=orientation,
                          labelsize=labelsize,
                          editsize=editsize,
-                         * args,
+                         *args,
                          **kwargs)
 
     def browse(self):
