@@ -6,9 +6,10 @@ from sqlite3 import Error, connect
 from subprocess import Popen
 from typing import List, Union
 
+from at.logger import log
 from at.sql.action import insert, select, update
 from at.sql.utils import QueryObject
-from at.logger import log
+from at.state import State
 
 
 class SQLiteEngine:
@@ -59,10 +60,8 @@ class SQLiteEngine:
         except Error as e:
             log.error(f"{str(e)} from {self.db}")
 
+    def load_state(self):
+        pass
 
-a = QueryObject("""SELECT *
-FROM user""", fetch='singlerow', cols=True)
-
-db = SQLiteEngine("C:/Users/aznavouridis.k/.ktima/ktima.db")
-result = db.select(a)
-print(dict(zip(result[0], result[1])))
+    def save_state(self, state: State):
+        pass

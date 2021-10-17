@@ -1,131 +1,78 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
-from typing import Any, Dict, Iterable, Optional, Union
+from typing import Any, Optional, Union
 
+from at.logger import log
 from at.singleton import Singleton
-from at.sql.object import QueryObject
-from at.sql.sqlite import SQLiteEngine
-
-
-class StateObject:
-
-    def __init__(self,
-                 state_name: Any,
-                 state_value: Optional[Any] = None,
-                 sql_get: Optional[QueryObject] = None,
-                 sql_set: Optional[QueryObject] = None) -> None:
-        if isinstance(state_name, dict):
-            (self.state_name, self.state_value),  = state_name.items()
-        else:
-            self.state_name = state_name
-            self.state_value = state_value
-        self.sql_get = sql_get
-        self.sql_set = sql_set
-        self.altered = False
-
-    def __str__(self):
-        return f"State({self.state_name}={self.state_value}, sql={bool(self.sql_get)}|{bool(self.sql_set)})"
-
-    def __repr__(self):
-        return f"State({self.state_name}={self.state_value}, sql={bool(self.sql_get)}|{bool(self.sql_set)})"
-
-    def __hash__(self) -> int:
-        return hash((self.state_name))
-
-    def as_dict(self):
-        return {self.state_name: self.state_value}
-
-    def update(self, value):
-        if isinstance(value, StateObject):
-            self.state_value = value.state_value
-            self.altered = True
-        elif isinstance(value, dict):
-            (state_name, state_value),  = value.items()
-            if state_name == self.state_name:
-                self.state_value = state_value
-                self.altered = True
-            else:
-                raise ValueError(
-                    f"Can't update {self.state_name} with {state_name}")
-        else:
-            self.state_value = value
-            self.altered = True
 
 
 class State(metaclass=Singleton):
     def __init__(self,
-                 states: Optional[Iterable[StateObject]],
-                 db: Optional[SQLiteEngine] = None) -> None:
-        self.state: Dict[str, StateObject] = {}
+                 initial_state: Optional[dict] = None,
+                 db: Optional[Any] = None) -> None:
+        self.state = dict() if initial_state is None else initial_state
         self.db = db
-        if states is not None:
-            for so in states:
-                self.state[so.state_name] = so
 
-    def update_db(self):
+    @classmethod
+    def from_db(cls, db) -> State:
+        db_state = db.load_state()
+        initial_state = {}
+        for k, v in db_state.items():
+            initial_state[k] = {'value': v,
+                                'origin': 'db',
+                                'altered': False}
+        return cls(initial_state, db)
+
+    def update_db(self) -> None:
         if self.db is not None:
-            for stateobj in self.state.values():
-                query = stateobj.sql_set
-                if query is not None and stateobj.altered:
-                    self.db.update(query.set(**stateobj.as_dict()))
-                    stateobj.altered = False
+            self.db.save_state(self)
 
-    def get_state(self,
-                  key: Optional[str] = None,
-                  obj=False) -> Union[Any, StateObject]:
+    def get_state(self, key: Optional[str] = None,) -> Any:
         if key is None:
             return self.state
         else:
-            stateobj = self.state.get(key, None)
-            if stateobj is not None:
-                return stateobj.state_value if not obj else stateobj
-            return stateobj
+            self.state[key]
 
     def set_state(self,
-                  key: Union[str, dict, list, tuple, StateObject],
-                  value: Optional[Any] = None):
-        if isinstance(key, StateObject):
-            if key in self.state:
-                self.state[key.state_name].update(key)
-            else:
-                self.state[key.state_name] = key
-        elif isinstance(key, dict):
+                  key: Union[str, dict],
+                  value: Optional[Any] = None,
+                  origin: str = 'app') -> None:
+        if isinstance(key, dict):
             for k, v in key.items():
-                if isinstance(v, StateObject):
-                    if k in self.state:
-                        self.state[k].update(v)
-                    else:
-                        self.state[k] = v
+                if k in self.state:
+                    self.state[k]['value'] = v
+                    self.state[k]['altered'] = True
                 else:
-                    if k in self.state:
-                        self.state[k].update(v)
-                    else:
-                        self.state[k] = StateObject(state_name=k, state_value=v)
-        elif isinstance(key, (list, tuple)):
-            for s in key:
-                if isinstance(s, StateObject):
-                    if s.state_name in self.state:
-                        self.state[s.state_name].update(s)
-                    else:
-                        self.state[s.state_name] = s
-                else:
-                    raise ValueError(
-                        "When setting state from iterable all items must be 'StateObject' items")
+                    self.state[k] = {'value': v,
+                                     'origin': origin,
+                                     'altered': False}
         else:
             if value is not None:
                 if key in self.state:
-                    self.state[key].update(value)
+                    self.state[key]['value'] = value
+                    self.state[key]['altered'] = True
                 else:
-                    self.state[key] = StateObject(
-                        state_name=key, state_value=value)
+                    self.state[key] = {'value': value,
+                                       'origin': origin,
+                                       'altered': False}
             else:
                 raise ValueError("Value parameter must be provided")
 
         self.update_db()
 
+    def __getitem__(self, key: str) -> Any:
+        state_key = self.state.get(key, None)
+        if state_key is not None:
+            state_value = state_key.get('value')
+            if state_value is not None:
+                return state_value
+            else:
+                log.warning(f"State <{key}> does not have a value")
+                return '<null>'
+        else:
+            log.warning(f"State <{key}> is not in app state")
+            return '<null>'
 
-s = State([StateObject('status', 'offline', 'dfdf'), (StateObject('web', 'on'))])
-
-s.set_state({'status': 'online', 'kostas': True})
-print(s.get_state())
+    def __setitem__(self, key: str, value: Any) -> None:
+        self.set_state(key, value)
