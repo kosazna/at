@@ -23,6 +23,17 @@ class QueryObject:
                 params[p] = None
             self.params = params
 
+    def __str__(self) -> str:
+        return f"Query(fetch={self.fetch}, cols={self.cols}, params={self.params}, query={self.query})"
+
+    def attrs(self, **kwargs: Any) -> QueryObject:
+        for param in self.__dict__:
+            value = kwargs.get(param, None)
+            if value is not None:
+                self.__dict__[param] = value
+
+        return self
+
     def set(self, **kwargs: Any) -> QueryObject:
         if 'datastream' in kwargs:
             self.data = kwargs['datastream']

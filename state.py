@@ -24,24 +24,57 @@ class State(metaclass=Singleton):
                                 'altered': False}
         return cls(initial_state, db)
 
+    def __len__(self):
+        return len(self.state)
+
+    def __iter__(self):
+        return iter(self.state)
+
+    def __contains__(self, item: str) -> bool:
+        return item in self.state
+
+    def __getitem__(self, key: str) -> Any:
+        state_key = self.state.get(key, None)
+        if state_key is not None:
+            state_value = state_key.get('value')
+            if state_value is not None:
+                return state_value
+            else:
+                log.warning(f"State <{key}> does not have a value")
+                return '<null>'
+        else:
+            log.warning(f"State <{key}> is not in app state")
+            return '<null>'
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        self.set(key, value)
+
     def update_db(self) -> None:
         if self.db is not None:
-            self.db.save_state(self)
+            db_changes = False
+            for s in self.state:
+                if self.state[s]['origin'] == 'db':
+                    if self.state[s]['altered']:
+                        db_changes = True
+                        break
 
-    def get_state(self,
-                  key: Optional[str] = None,
-                  values_only: bool = False) -> Any:
+            if db_changes:
+                self.db.save_state(self)
+
+    def get(self,
+            key: Optional[str] = None,
+            values_only: bool = False) -> Any:
         if key is None:
             if values_only:
                 return {k: self.state[k]['value'] for k in self.state}
             return self.state
         else:
-            self.state[key]
+            return self.state[key]
 
-    def set_state(self,
-                  key: Union[str, dict],
-                  value: Optional[Any] = None,
-                  origin: str = 'app') -> None:
+    def set(self,
+            key: Union[str, dict],
+            value: Optional[Any] = None,
+            origin: str = 'app') -> None:
         if isinstance(key, dict):
             for k, v in key.items():
                 if k in self.state:
@@ -63,18 +96,4 @@ class State(metaclass=Singleton):
             else:
                 raise ValueError("Value parameter must be provided")
 
-    def __getitem__(self, key: str) -> Any:
-        state_key = self.state.get(key, None)
-        if state_key is not None:
-            state_value = state_key.get('value')
-            if state_value is not None:
-                return state_value
-            else:
-                log.warning(f"State <{key}> does not have a value")
-                return '<null>'
-        else:
-            log.warning(f"State <{key}> is not in app state")
-            return '<null>'
-
-    def __setitem__(self, key: str, value: Any) -> None:
-        self.set_state(key, value)
+        self.update_db()

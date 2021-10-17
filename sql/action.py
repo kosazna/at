@@ -1,20 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from contextlib import closing
-from sqlite3 import connect
-from sqlite3 import Connection, Cursor
+from sqlite3 import Connection, Cursor, Error, connect
 from typing import Union
 
+from at.logger import log
 from at.sql.object import QueryObject
-
-
-def executescript(db, script: Union[str, QueryObject]):
-    with closing(connect(db)) as con:
-        with closing(con.cursor()) as cur:
-            if isinstance(script, QueryObject):
-                cur.executescript(script.query)
-            else:
-                cur.executescript(script)
 
 
 def select(cursor: Cursor, query_obj: QueryObject):
@@ -57,3 +48,39 @@ def insert(connection: Connection, cursor: Cursor, query_obj: QueryObject):
     else:
         cursor.execute(query_obj.query, query_obj.params)
     connection.commit()
+
+
+def db_select(db: str, query_obj: QueryObject):
+    try:
+        with closing(connect(db)) as con:
+            with closing(con.cursor()) as cur:
+                return select(cursor=cur, query_obj=query_obj)
+    except Error as e:
+        log.error(f"{str(e)} from {db}")
+
+
+def db_update(db: str, query_obj: QueryObject):
+    try:
+        with closing(connect(db)) as con:
+            with closing(con.cursor()) as cur:
+                update(connection=con, cursor=cur, query_obj=query_obj)
+    except Error as e:
+        log.error(f"{str(e)} from {db}")
+
+
+def db_insert(db: str, query_obj: QueryObject):
+    try:
+        with closing(connect(db)) as con:
+            with closing(con.cursor()) as cur:
+                insert(connection=con, cursor=cur, query_obj=query_obj)
+    except Error as e:
+        log.error(f"{str(e)} from {db}")
+
+
+def db_script(db: str, script: Union[str, QueryObject]):
+    with closing(connect(db)) as con:
+        with closing(con.cursor()) as cur:
+            if isinstance(script, QueryObject):
+                cur.executescript(script.query)
+            else:
+                cur.executescript(script)

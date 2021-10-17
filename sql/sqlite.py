@@ -1,25 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from contextlib import closing
 from pathlib import Path
-from sqlite3 import Error, connect
 from subprocess import Popen
-from typing import Dict, List, Union
+from typing import Union
 
 from at.logger import log
-from at.sql.action import insert, select, update, executescript
-from at.sql.utils import QueryObject
-from at.state import State
 from at.path import PathEngine
-
-
-def load_app_queries(folder: Union[str, Path]) -> Dict[str, str]:
-    queries = {}
-    for p in Path(folder).glob('*.sql'):
-        stem = p.stem
-        queries[stem] = p.read_text(encoding='utf-8')
-
-    return queries
+from at.sql.action import db_insert, db_script, db_select, db_update
+from at.sql.utils import QueryObject, load_app_queries
+from at.state import State
 
 
 class SQLiteEngine:
@@ -29,14 +18,14 @@ class SQLiteEngine:
         self.db = str(db)
         self.paths = app_paths
         self.init_queries = load_app_queries(self.paths.get_init_sql())
-        self._check_db_exists()
+        self._db_init()
 
-    def _check_db_exists(self):
+    def _db_init(self):
         if Path(self.db).exists():
             if self.init_queries is not None:
                 for query_name, query in self.init_queries.items():
                     if query_name.startswith('new'):
-                        executescript(self.db, query)
+                        db_script(self.db, query)
                         sql_name = f"{query_name}.sql"
                         sql_folder = self.paths.get_init_sql(True)
                         sql_file = sql_folder.joinpath(sql_name)
@@ -45,7 +34,7 @@ class SQLiteEngine:
             if self.init_queries is not None:
                 for query_name, query in self.init_queries.items():
                     if query_name.startswith('init'):
-                        executescript(self.db, query)
+                        db_script(self.db, query)
 
     def open_db(self, executable: Union[str, Path]):
         if Path(executable).exists():
@@ -54,28 +43,16 @@ class SQLiteEngine:
             log.info('Instal DB Browser (SQLite) to view database.')
 
     def update(self, query_obj: QueryObject):
-        try:
-            with closing(connect(self.db)) as con:
-                with closing(con.cursor()) as cur:
-                    update(connection=con, cursor=cur, query_obj=query_obj)
-        except Error as e:
-            log.error(f"{str(e)} from {self.db}")
+        db_update(db=self.db, query_obj=query_obj)
 
     def insert(self, query_obj: QueryObject):
-        try:
-            with closing(connect(self.db)) as con:
-                with closing(con.cursor()) as cur:
-                    insert(connection=con, cursor=cur, query_obj=query_obj)
-        except Error as e:
-            log.error(f"{str(e)} from {self.db}")
+        db_insert(db=self.db, query_obj=query_obj)
 
     def select(self, query_obj: QueryObject):
-        try:
-            with closing(connect(self.db)) as con:
-                with closing(con.cursor()) as cur:
-                    return select(cursor=cur, query_obj=query_obj)
-        except Error as e:
-            log.error(f"{str(e)} from {self.db}")
+        return db_select(db=self.db, query_obj=query_obj)
+
+    def script(self, query_obj: QueryObject):
+        db_script(db=self.db, script=query_obj)
 
     def load_state(self):
         pass
