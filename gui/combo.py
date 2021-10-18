@@ -58,7 +58,7 @@ class ComboInput(QWidget):
         self.label.setMinimumWidth(offset)
 
     def subscribe(self, func):
-        self.comboEdit.currentIndexChanged.connect(func)
+        self.comboEdit.currentTextChanged.connect(func)
 
     def setMaximumLabelWidth(self, maxw):
         self.label.setMaximumWidth(maxw)

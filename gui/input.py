@@ -24,10 +24,6 @@ class StrInput(QWidget):
         self.setCompleter(completer)
 
     def setupUi(self, label, orientation, hidden, labelsize, editsize):
-        self.label = QLabel()
-        self.label.setText(label)
-        set_size(widget=self.label, size=labelsize)
-
         self.lineEdit = QLineEdit()
         set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setClearButtonEnabled(True)
@@ -43,7 +39,11 @@ class StrInput(QWidget):
         layout.setContentsMargins(0, 4, 0, 4)
         layout.setSpacing(4)
 
-        layout.addWidget(self.label)
+        if label:
+            self.label = QLabel()
+            self.label.setText(label)
+            set_size(widget=self.label, size=labelsize)
+            layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)
 
         self.setLayout(layout)
