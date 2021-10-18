@@ -34,7 +34,7 @@ def select(cursor: Cursor, query_obj: QueryObject):
                 return query_obj.default if r is None else r
         elif query_obj.fetch == 'singlecol':
             content = [i[0] for i in r]
-            return query_obj.default if r is None else content
+            return query_obj.default if r is None else tuple(content)
 
 
 def update(connection: Connection, cursor: Cursor, query_obj: QueryObject):
