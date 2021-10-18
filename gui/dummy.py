@@ -198,7 +198,7 @@ class Dummy(QWidget):
             if progress_now is not None:
                 self.progress.setValue(progress_now)
             if progress_max is not None:
-                self.progress.setValue(progress_max)
+                self.progress.setMaximum(progress_max)
             if status is not None:
                 self.status.disable(str(status))
 
