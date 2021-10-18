@@ -90,16 +90,21 @@ class ListWidget(QWidget):
             else:
                 return dict()
 
+    def toggle(self):
+        self.checkBox.toggle()
+
     def selectAll(self):
         if self.items:
             if self.checkBox.isChecked():
                 for item in self.items:
                     self.items[item]['widget'].setCheckState(Qt.Checked)
                     self.items[item]['checked'] = self.items[item]['widget'].checkState()
+                    self.checkBox.setText('Unselect All')
             else:
                 for item in self.items:
                     self.items[item]['widget'].setCheckState(Qt.Unchecked)
                     self.items[item]['checked'] = self.items[item]['widget'].checkState()
+                    self.checkBox.setText('Select All')
 
     def addItems(self, items):
         if isinstance(items, str):
