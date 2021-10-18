@@ -103,7 +103,7 @@ class StatusLabel(QWidget):
                 self.iconLabel.setAlignment(Qt.AlignCenter)
                 layout.addWidget(self.iconLabel)
         layout.addWidget(self.status, 1, alignment=Qt.AlignLeft)
-        layout.setContentsMargins(0, 4, 0, 4)
+        layout.setContentsMargins(0, 2, 0, 2)
         layout.setSpacing(4)
 
         self.setLayout(layout)
