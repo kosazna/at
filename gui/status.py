@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 
 from at.gui.utils import set_size
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QCursor
+from PyQt5.QtGui import QCursor, QPixmap
 from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QPushButton, QSizePolicy,
                              QWidget)
 
@@ -70,6 +70,7 @@ class StatusButton(QWidget):
 class StatusLabel(QWidget):
     def __init__(self,
                  label: str = '',
+                 icon: str = '',
                  status: str = '',
                  labelsize: Tuple[int] = (70, 22),
                  statussize: Tuple[int] = (100, 22),
@@ -77,12 +78,9 @@ class StatusLabel(QWidget):
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.setupUi(label, status, labelsize, statussize)
+        self.setupUi(label, icon, status, labelsize, statussize)
 
-    def setupUi(self, label, status, labelsize, statussize):
-        self.label = QLabel()
-        self.label.setText(label)
-        set_size(widget=self.label, size=labelsize)
+    def setupUi(self, label, icon, status, labelsize, statussize):
 
         self.status = QLabel()
         self.status.setText(status)
@@ -91,7 +89,19 @@ class StatusLabel(QWidget):
         self.status.setAlignment(Qt.AlignCenter)
 
         layout = QHBoxLayout()
-        layout.addWidget(self.label)
+        if label:
+            self.label = QLabel()
+            self.label.setText(label)
+            set_size(widget=self.label, size=labelsize)
+            layout.addWidget(self.label)
+        else:
+            if icon:
+                self.iconLabel = QLabel(parent=self)
+                self.iconLabel.setFixedSize(24, 24)
+                self.iconLabel.setPixmap(
+                    QPixmap(f":/bootstrap/icons/{icon}.svg"))
+                self.iconLabel.setAlignment(Qt.AlignCenter)
+                layout.addWidget(self.iconLabel)
         layout.addWidget(self.status, 1, alignment=Qt.AlignLeft)
         layout.setContentsMargins(0, 4, 0, 4)
         layout.setSpacing(4)
