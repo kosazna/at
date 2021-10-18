@@ -51,6 +51,8 @@ def create_lic_zip(authdata: Union[str, Path],
     out_name = f"{start_date}_{periods}lic"
     zip_file(src=folder, dst=folder, save_name=out_name, file_filter='*.lic')
 
+    return Result.success('License created successfully')
+
 
 def load_lic(filepath: Union[str, Path],
              dst: Union[str, Path]):
@@ -64,7 +66,7 @@ def load_lic(filepath: Union[str, Path],
             copy_file(file_path, licfolder_path)
         return Result.success("License uploaded successfully")
     else:
-        return Result.warning("File with license data was not provided")
+        return Result.error("No file was provided")
 
 
 def check_lic(appname: str, licfolder: Union[str, Path]) -> str:
