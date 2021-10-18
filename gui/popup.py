@@ -46,6 +46,8 @@ def show_popup(appname: str = 'Dialog',
         for button in buttons:
             if button in pbutton:
                 msg.addButton(pbutton[button])
+    else:
+        msg.addButton(pbutton['close'])
 
     user_action = msg.exec_()
     msg.destroy()
@@ -82,6 +84,8 @@ class Popup(QMessageBox):
             for button in buttons:
                 if button in pbutton:
                     msg.addButton(pbutton[button])
+        else:
+            msg.addButton(pbutton['close'])
 
         user_action = msg.exec_()
         msg.destroy()
@@ -113,6 +117,8 @@ class Popup(QMessageBox):
             for button in buttons:
                 if button in pbutton:
                     msg.addButton(pbutton[button])
+        else:
+            msg.addButton(pbutton['close'])
 
         user_action = msg.exec_()
         msg.destroy()

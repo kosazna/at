@@ -7,6 +7,7 @@ from at.date import daterange, timestamp
 from at.io.copyfuncs import copy_file
 from at.io.utils import (load_json, load_pickle, unzip_file, write_pickle,
                          zip_file)
+from at.result import Result
 from at.text import create_hex_string
 
 
@@ -53,13 +54,17 @@ def create_lic_zip(authdata: Union[str, Path],
 
 def load_lic(filepath: Union[str, Path],
              dst: Union[str, Path]):
-    file_path = Path(filepath)
-    licfolder_path = Path(dst)
+    if filepath:
+        file_path = Path(filepath)
+        licfolder_path = Path(dst)
 
-    if file_path.suffix == '.zip':
-        unzip_file(file_path, licfolder_path)
+        if file_path.suffix == '.zip':
+            unzip_file(file_path, licfolder_path)
+        else:
+            copy_file(file_path, licfolder_path)
+        return Result.success("License uploaded successfully")
     else:
-        copy_file(file_path, licfolder_path)
+        return Result.warning("File with license data was not provided")
 
 
 def check_lic(appname: str, licfolder: Union[str, Path]) -> str:

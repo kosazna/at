@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-from typing import Tuple
+
+from __future__ import annotations
+
+from typing import Optional, Tuple
 
 from colorama import Fore, init
 
@@ -7,7 +10,7 @@ from at.singleton import Singleton
 
 init(autoreset=True)
 
-NORMAL = "NORMAL"
+NORMAL = 'NORMAL'
 INFO = 'INFO'
 WARNING = 'WARNING'
 ERROR = 'ERROR'
