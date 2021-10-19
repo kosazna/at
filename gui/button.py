@@ -23,7 +23,7 @@ class Button(QPushButton):
         self.setCursor(QCursor(Qt.PointingHandCursor))
         if icon is not None:
             qicon = QIcon()
-            qicon.addFile(f":/bootstrap/icons/{icon}.svg", QSize(16, 16),
+            qicon.addFile(f":/bootstrap/icons/{icon}.svg", QSize(12, 12),
                           QIcon.Normal, QIcon.Off)
             self.setIcon(qicon)
         self.setText(label)

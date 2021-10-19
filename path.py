@@ -75,3 +75,6 @@ class PathEngine:
         if obj:
             return self._settings
         return self._settings.as_posix()
+
+    def get_db_exe(self) -> str:
+        return "C:/Program Files/DB Browser for SQLite/DB Browser for SQLite.exe"

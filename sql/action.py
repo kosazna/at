@@ -17,22 +17,22 @@ def select(cursor: Cursor, query_obj: QueryObject):
     if query_obj.fetch == 'one':
         r = cursor.fetchone()
         return query_obj.default if r is None else r[0]
-    elif query_obj.fetch == 'singlerow':
+    elif query_obj.fetch == 'row':
         r = cursor.fetchone()
-        if r is not None and query_obj.cols == True:
+        if r is not None and query_obj.colname == True:
             cols = [d[0] for d in cursor.description]
             return tuple(cols), r
         else:
             return query_obj.default if r is None else r
     else:
         r = cursor.fetchall()
-        if query_obj.fetch == 'multirow':
-            if r is not None and query_obj.cols == True:
+        if query_obj.fetch == 'rows':
+            if r is not None and query_obj.colname == True:
                 cols = [d[0] for d in cursor.description]
                 return tuple(cols), r
             else:
                 return query_obj.default if r is None else r
-        elif query_obj.fetch == 'singlecol':
+        elif query_obj.fetch == 'col':
             content = [i[0] for i in r]
             return query_obj.default if r is None else tuple(content)
 

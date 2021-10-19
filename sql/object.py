@@ -9,8 +9,8 @@ from typing import Any, List, Union
 @dataclass
 class QueryObject:
     query: str
-    fetch: str = 'one'  # 'one', 'singlerow', 'multirow', 'singlecol'
-    cols: bool = False
+    fetch: str = 'one'  # 'one', 'row', 'rows', 'col'
+    colname: bool = False
     default: Any = None
     params: Union[dict, None] = None
     data: Union[List[tuple], None] = None
@@ -24,7 +24,7 @@ class QueryObject:
             self.params = params
 
     def __str__(self) -> str:
-        return f"Query(fetch={self.fetch}, cols={self.cols}, params={self.params}, query={self.query})"
+        return f"Query(fetch={self.fetch}, cols={self.colname}, params={self.params})\n{self.query}\n"
 
     def attrs(self, **kwargs: Any) -> QueryObject:
         for param in self.__dict__:

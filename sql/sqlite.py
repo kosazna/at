@@ -40,7 +40,7 @@ class SQLiteEngine:
         if Path(executable).exists():
             Popen([str(executable), self.db])
         else:
-            log.info('Instal DB Browser (SQLite) to view database.')
+            log.warning('To view database install DB Browser (SQLite) (64-bit)')
 
     def update(self, query_obj: QueryObject):
         db_update(db=self.db, query_obj=query_obj)
