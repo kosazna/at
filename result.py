@@ -13,28 +13,28 @@ class Result:
 
     def __init__(self,
                  result: Optional[str] = '',
-                 info: Optional[str] = '',
+                 msg: Optional[str] = '',
                  details: Optional[dict] = None) -> None:
         self.result = result
-        self.info = info
+        self.msg = msg
         self.details = dict() if details is None else details
 
     @classmethod
-    def info(cls, info: Optional[str] = '', details: Optional[dict] = None) -> Result:
-        log.info(info)
-        return cls(INFO, info, details)
+    def msg(cls, msg: Optional[str] = '', details: Optional[dict] = None) -> Result:
+        log.info(msg)
+        return cls(INFO, msg, details)
 
     @classmethod
-    def warning(cls, info: Optional[str] = '', details: Optional[dict] = None) -> Result:
-        log.warning(info)
-        return cls(WARNING, info, details)
+    def warning(cls, msg: Optional[str] = '', details: Optional[dict] = None) -> Result:
+        log.warning(msg)
+        return cls(WARNING, msg, details)
 
     @classmethod
-    def error(cls, info: Optional[str] = '', details: Optional[dict] = None) -> Result:
-        log.error(info)
-        return cls(ERROR, info, details)
+    def error(cls, msg: Optional[str] = '', details: Optional[dict] = None) -> Result:
+        log.error(msg)
+        return cls(ERROR, msg, details)
 
     @classmethod
-    def success(cls, info: Optional[str] = '', details: Optional[dict] = None) -> Result:
-        log.success(info)
-        return cls(SUCCESS, info, details)
+    def success(cls, msg: Optional[str] = '', details: Optional[dict] = None) -> Result:
+        log.success(msg)
+        return cls(SUCCESS, msg, details)

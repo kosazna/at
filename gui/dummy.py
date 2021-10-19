@@ -206,7 +206,7 @@ class Dummy(QWidget):
         if status is not None:
             if isinstance(status, AuthStatus):
                 if not status.authorised:
-                    self.pop.error(status.info)
+                    self.pop.error(status.msg)
             elif isinstance(status, str):
                 self.status.enable(status)
 

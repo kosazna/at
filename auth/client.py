@@ -21,7 +21,7 @@ UNAUTHORISED = "Unauthorised"
 @dataclass
 class AuthStatus:
     authorised: bool
-    info: str
+    msg: str
 
 
 class Authorize(metaclass=Singleton):
