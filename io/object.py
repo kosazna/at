@@ -25,7 +25,7 @@ class CopyObject:
             self.directory = True
         else:
             if self.src.suffix == '.shp':
-                self.shapefile == True
+                self.shapefile = True
                 self.shapefile_aux = all(
                     [self.src.with_suffix(ext).exists() for ext in SHP_EXTS])
 
@@ -52,7 +52,8 @@ class CopyObject:
                         _src = self.src.with_suffix(ext)
                         _dst = self.dst if dst_is_dir else self.dst.with_suffix(
                             ext)
-                        return copyfunc(_src, _dst)
+                        copyfunc(_src, _dst)
+                    return self.dst
                 else:
                     log.warning(f"'{str(self.src)}' missing auxiliary files")
                     return None
