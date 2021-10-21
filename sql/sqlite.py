@@ -54,7 +54,7 @@ class SQLiteEngine:
     def script(self, query_obj: QueryObject):
         db_script(db=self.db, script=query_obj)
 
-    def load_state(self):
+    def load_state(self) -> dict:
         pass
 
     def save_state(self, state: State):
