@@ -25,16 +25,16 @@ class PathSelector(QWidget):
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.mapping = mapping
-        self.setupUi(label, selectortype, mapping, orientation,
+        self.mapping = {} if mapping is None else mapping
+        self.mapping.update({"Other...": ''})
+        self.setupUi(label, selectortype, orientation,
                      labelsize, combosize, editsize)
         self.combo.subscribe(self.onComboChange)
 
-    def setupUi(self, label, selectortype, mapping, orientation, labelsize, combosize, editsize):
-        self.combo = ComboInput(items=mapping.keys(),
+    def setupUi(self, label, selectortype, orientation, labelsize, combosize, editsize):
+        self.combo = ComboInput(items=self.mapping.keys(),
                                 combosize=combosize,
                                 parent=self)
-        self.combo.addItems(['Other...'])
 
         if selectortype == 'folder_in':
             self.path = FolderInput(editsize=editsize, parent=self)
@@ -42,8 +42,6 @@ class PathSelector(QWidget):
             self.path = FileInput(editsize=editsize, parent=self)
         elif selectortype == 'file_out':
             self.path = FileOutput(editsize=editsize, parent=self)
-
-        self.combo.setCurrentText('Other...')
 
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()
@@ -79,10 +77,13 @@ class PathSelector(QWidget):
 
         if current_text == 'Other...':
             self.path.enable()
-            self.path.setText('')
         else:
             self.path.disable()
+
+        try:
             self.path.setText(self.mapping[current_text])
+        except KeyError:
+            self.path.setText('')
 
     def getCurrentText(self):
         return self.combo.currentText()
@@ -99,7 +100,7 @@ class PathSelector(QWidget):
         self.mapping.update(items)
 
     def clearItems(self):
-        self.combo.clear()
+        self.combo.clearItems()
         self.mapping = {}
 
     def getText(self):
@@ -124,25 +125,22 @@ class StrSelector(QWidget):
                  *args,
                  **kwargs):
         super().__init__(parent=parent, *args, **kwargs)
-        self.mapping = mapping
-        self.setupUi(label, mapping, orientation,
-                     labelsize, combosize, editsize)
+        self.mapping = {} if mapping is None else mapping
+        self.mapping.update({"Other...": ''})
+        self.setupUi(label, orientation, labelsize, combosize, editsize)
         self.combo.subscribe(self.onComboChange)
 
-    def setupUi(self, label, mapping, orientation, labelsize, combosize, editsize):
-        self.combo = ComboInput(items=mapping.keys(),
+    def setupUi(self, label, orientation, labelsize, combosize, editsize):
+        self.combo = ComboInput(items=self.mapping.keys(),
                                 combosize=combosize,
                                 parent=self)
-        self.combo.addItems(['Other...'])
-
-        self.input = StrInput(completer=list(mapping.values()),
+        self.input = StrInput(completer=list(self.mapping.values()),
                               editsize=editsize,
                               parent=self)
-
-        if mapping:
-            first_mapping_item = list(mapping)[0]
+        if self.mapping:
+            first_mapping_item = list(self.mapping)[0]
             self.combo.setCurrentText(first_mapping_item)
-            self.input.setText(mapping[first_mapping_item])
+            self.input.setText(self.mapping[first_mapping_item])
 
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()
@@ -178,10 +176,13 @@ class StrSelector(QWidget):
 
         if current_text == 'Other...':
             self.input.enable()
-            self.input.setText('')
         else:
             self.input.disable()
+        
+        try:
             self.input.setText(self.mapping[current_text])
+        except KeyError:
+            self.input.setText('')
 
     def getCurrentText(self):
         return self.combo.currentText()
@@ -198,7 +199,7 @@ class StrSelector(QWidget):
         self.mapping.update(items)
 
     def clearItems(self):
-        self.combo.clear()
+        self.combo.clearItems()
         self.mapping = {}
 
     def getText(self):

@@ -102,10 +102,12 @@ class IOWidget(QWidget):
 
     def disable(self):
         self.lineEdit.setEnabled(False)
+        self.button.setEnabled(False)
         self.updateStyle('off')
 
     def enable(self):
         self.lineEdit.setEnabled(True)
+        self.button.setEnabled(True)
         self.pathExists(self.lineEdit.text())
 
     def browse(self):

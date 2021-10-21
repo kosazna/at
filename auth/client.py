@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-from typing import Callable, Tuple, Union
+from typing import Callable, Optional, Tuple, Union
 from dataclasses import dataclass
 import requests
 from at.auth.utils import create_lic
@@ -45,7 +45,7 @@ class Authorize(metaclass=Singleton):
         self.auth = None
         self._reload()
 
-    def set_alias(self, alias:str):
+    def set_alias(self, alias: str):
         self.user = alias
         log.success("Alias set successfully")
 
@@ -76,11 +76,17 @@ class Authorize(metaclass=Singleton):
                 else:
                     self.auth = {}
 
-    def is_licensed(self, domain: str) -> Tuple[bool, str]:
+    def is_licensed(self, domain: str, category: Optional[str] = None) -> Tuple[bool, str]:
         if self.debug:
             return True, 'Debug Mode'
 
         if self.auth:
+            if category is not None:
+                if category in self.auth[self.user]['categories']:
+                    return True, AUTHORISED
+                else:
+                    return False, UNAUTHORISED
+
             if domain not in self.auth[self.user]['action']:
                 return False, f"'{domain}' is not in licensing info"
             else:
@@ -103,15 +109,20 @@ class Authorize(metaclass=Singleton):
 
 
 def licensed(appname: str,
-             domain: Union[str, None] = None,
+             domain: Optional[str] = None,
+             category: Optional[str] = None,
              callback: Union[Callable] = log.error):
     def decorator(function: Callable):
         def wrapper(*args, **kwargs):
             auth = Authorize(appname=appname)
-            if domain is None:
-                authorised, info = auth.is_licensed(domain=function.__name__)
+            if category is not None:
+                authorised, info = auth.is_licensed(category=category)
             else:
-                authorised, info = auth.is_licensed(domain=domain)
+                if domain is None:
+                    fname = function.__name__
+                    authorised, info = auth.is_licensed(domain=fname)
+                else:
+                    authorised, info = auth.is_licensed(domain=domain)
             if authorised:
                 result = function(*args, **kwargs)
             else:
