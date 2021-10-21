@@ -76,7 +76,9 @@ class Authorize(metaclass=Singleton):
                 else:
                     self.auth = {}
 
-    def is_licensed(self, domain: str, category: Optional[str] = None) -> Tuple[bool, str]:
+    def is_licensed(self,
+                    domain: Optional[str] = None,
+                    category: Optional[str] = None) -> Tuple[bool, str]:
         if self.debug:
             return True, 'Debug Mode'
 
