@@ -38,11 +38,12 @@ class QueryObject:
         if 'datastream' in kwargs:
             self.data = kwargs['datastream']
         else:
-            for param in self.params:
-                value = kwargs.get(param, None)
-                if value is None:
-                    raise ValueError(f"'{param}' was not given a value.")
-                else:
-                    self.params[param] = value
+            if self.params is not None:
+                for param in self.params:
+                    value = kwargs.get(param, None)
+                    if value is None:
+                        raise ValueError(f"'{param}' was not given a value.")
+                    else:
+                        self.params[param] = value
 
         return self
