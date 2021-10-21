@@ -20,8 +20,8 @@ class PathEngine:
     def _init_paths(self):
         self._app.mkdir(parents=True, exist_ok=True)
         self._static.mkdir(parents=True, exist_ok=True)
-        self._static.joinpath("init").mkdir(parents=True, exist_ok=True)
         self._sql.mkdir(parents=True, exist_ok=True)
+        self._sql.joinpath("init").mkdir(parents=True, exist_ok=True)
         self._css.mkdir(parents=True, exist_ok=True)
         self._auth.mkdir(parents=True, exist_ok=True)
 
