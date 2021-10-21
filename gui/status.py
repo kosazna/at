@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Optional, Tuple
+from typing import Callable, Optional, Tuple
 
 from at.gui.utils import set_size
 from PyQt5.QtCore import Qt
@@ -20,7 +20,7 @@ class StatusButton(QWidget):
 
     def setupUi(self, status, size):
         layout = QHBoxLayout()
-        self.button = QPushButton()
+        self.button = QPushButton(parent=self)
         self.button.setText(status)
         self.button.setEnabled(False)
         self.button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
@@ -37,34 +37,31 @@ class StatusButton(QWidget):
 
         self.setLayout(layout)
 
-    def disable(self, text=''):
+    def disable(self, text: str = ''):
         self.setText(text)
         self.button.setEnabled(False)
         self.setStyle("statusOff")
         self.setCursor(QCursor(Qt.ForbiddenCursor))
 
-    def enable(self, text):
+    def enable(self, text: str):
         if text:
             self.setText(text)
         self.button.setEnabled(True)
         self.setStyle("statusOn")
         self.setCursor(QCursor(Qt.PointingHandCursor))
 
-    def setText(self, text):
+    def setText(self, text: str):
         self.button.setText(text)
 
     def getText(self):
         return self.button.text()
 
-    def setStyle(self, object_name):
+    def setStyle(self, object_name: str):
         self.button.setObjectName(object_name)
         self.setStyleSheet(self.styleSheet())
 
-    def subscribe(self, func):
+    def subscribe(self, func: Callable):
         self.button.clicked.connect(func)
-
-    def setOffset(self, offset):
-        self.label.setFixedWidth(offset)
 
 
 class StatusLabel(QWidget):
@@ -82,7 +79,7 @@ class StatusLabel(QWidget):
 
     def setupUi(self, label, icon, status, labelsize, statussize):
 
-        self.status = QLabel()
+        self.status = QLabel(parent=self)
         self.status.setText(status)
         set_size(widget=self.status, size=statussize)
         self.status.setObjectName('statusNeutral')
@@ -90,7 +87,7 @@ class StatusLabel(QWidget):
 
         layout = QHBoxLayout()
         if label:
-            self.label = QLabel()
+            self.label = QLabel(parent=self)
             self.label.setText(label)
             set_size(widget=self.label, size=labelsize)
             layout.addWidget(self.label)
@@ -108,19 +105,19 @@ class StatusLabel(QWidget):
 
         self.setLayout(layout)
 
-    def changeStatus(self, status, object_name):
+    def changeStatus(self, status: str, object_name: str):
         self.setText(status)
         self.setStyle(object_name)
 
-    def setText(self, text):
+    def setText(self, text: str):
         self.status.setText(text)
 
     def getText(self):
         return self.status.text()
 
-    def setStyle(self, object_name):
+    def setStyle(self, object_name: str):
         self.status.setObjectName(object_name)
         self.setStyleSheet(self.styleSheet())
 
-    def setOffset(self, offset):
+    def setOffset(self, offset: str):
         self.label.setFixedWidth(offset)

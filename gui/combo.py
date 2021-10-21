@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Optional, Union
+from typing import Iterable, Optional, Union
 
 from at.gui.utils import set_size
 from PyQt5.QtCore import Qt
@@ -29,7 +29,7 @@ class ComboInput(QWidget):
         layout.setSpacing(4)
 
         if label:
-            self.label = QLabel()
+            self.label = QLabel(parent=self)
             self.label.setText(label)
             set_size(widget=self.label, size=labelsize)
             layout.addWidget(self.label)
@@ -42,26 +42,20 @@ class ComboInput(QWidget):
     def getCurrentText(self):
         return self.comboEdit.currentText()
 
-    def setCurrentText(self, text):
+    def setCurrentText(self, text: str):
         self.comboEdit.setCurrentText(text)
 
     def getCurrentIndex(self):
         return self.comboEdit.currentIndex()
 
-    def addItems(self, items):
+    def addItems(self, items: Iterable[str]):
         self.comboEdit.addItems(items)
 
     def clearItems(self):
         self.comboEdit.clear()
 
-    def setOffset(self, offset):
-        self.label.setMinimumWidth(offset)
+    def setLabel(self, text: str):
+        self.label.setText(text)
 
     def subscribe(self, func):
         self.comboEdit.currentTextChanged.connect(func)
-
-    def setMaximumLabelWidth(self, maxw):
-        self.label.setMaximumWidth(maxw)
-
-    def setMinimumLabelWidth(self, minw):
-        self.label.setMinimumWidth(minw)

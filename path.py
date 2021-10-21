@@ -18,13 +18,12 @@ class PathEngine:
         self._init_paths()
 
     def _init_paths(self):
-        if not self._app.exists():
-            self._app.mkdir(parents=True, exist_ok=True)
-        if not self._static.exists():
-            self._static.mkdir(parents=True, exist_ok=True)
-            self._static.joinpath("init").mkdir(parents=True, exist_ok=True)
-        if not self._auth.exists():
-            self._auth.mkdir(parents=True, exist_ok=True)
+        self._app.mkdir(parents=True, exist_ok=True)
+        self._static.mkdir(parents=True, exist_ok=True)
+        self._static.joinpath("init").mkdir(parents=True, exist_ok=True)
+        self._sql.mkdir(parents=True, exist_ok=True)
+        self._css.mkdir(parents=True, exist_ok=True)
+        self._auth.mkdir(parents=True, exist_ok=True)
 
     def get_home(self, obj: bool = False) -> Union[str, Path]:
         if obj:

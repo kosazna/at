@@ -58,7 +58,7 @@ def show_popup(appname: str = 'Dialog',
     return None
 
 
-class Popup(QMessageBox):
+class Popup:
     def __init__(self, appname: str = 'Dialog') -> None:
         self.appname = appname
 

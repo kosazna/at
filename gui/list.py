@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Optional, Tuple, Union
+from typing import Callable, Iterable, Optional, Tuple, Union
 
 from at.gui.button import Button
 from at.gui.check import CheckInput
@@ -31,12 +31,12 @@ class ListWidget(QWidget):
     def setupUi(self, label, items, labelsize, widgetsize):
         set_size(widget=self, size=widgetsize)
 
-        self.label = QLabel()
+        self.label = QLabel(parent=self)
         self.label.setText(label)
         set_size(widget=self.label, size=labelsize)
         self.label.setAlignment(Qt.AlignCenter)
 
-        self.listWidget = QListWidget(self)
+        self.listWidget = QListWidget(parent=self)
         self.listWidget.setSortingEnabled(True)
         self.listWidget.setAlternatingRowColors(True)
         self.listWidget.setSpacing(1)
@@ -72,7 +72,7 @@ class ListWidget(QWidget):
         self.layout.addLayout(self.layoutBottom)
         self.setLayout(self.layout)
 
-    def getCheckState(self, rtype='list'):
+    def getCheckState(self, rtype: str = 'list'):
         if self.items:
             checked = [name for name in self.items if bool(
                 self.items[name]['widget'].checkState())]
@@ -107,7 +107,7 @@ class ListWidget(QWidget):
                     self.items[item]['checked'] = self.items[item]['widget'].checkState()
             self.checkBox.setText('Select All')
 
-    def addItems(self, items):
+    def addItems(self, items: Union[str, Iterable[str]]):
         if isinstance(items, str):
             items2add = [items]
         elif isinstance(items, (list, tuple)):
@@ -123,7 +123,7 @@ class ListWidget(QWidget):
             self.items[item] = {'widget': qlistwidgetitem,
                                 'checked': qlistwidgetitem.checkState()}
 
-    def assignLoadFunc(self, func):
+    def assignLoadFunc(self, func: Callable):
         self.loadFunc = func
 
     def loadContent(self):

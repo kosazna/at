@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from typing import Optional, Tuple
+from typing import Callable, Optional, Tuple
 
 from at.gui.utils import HORIZONTAL, PATH_PLACEHOLDER, VERTICAL, set_size
 from PyQt5.QtCore import Qt, QSize
@@ -31,13 +31,13 @@ class IOWidget(QWidget):
         self.browseCallback = None
 
     def setupUi(self, label, placeholder, orientation, labelsize, editsize):
-        self.lineEdit = QLineEdit()
+        self.lineEdit = QLineEdit(parent=self)
         set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
         self.setPlaceholder(placeholder)
 
-        self.button = QToolButton(self)
+        self.button = QToolButton(parent=self)
         qicon = QIcon()
         qicon.addFile(f":/bootstrap/icons/folder-symlink.svg", QSize(16, 16),
                       QIcon.Normal, QIcon.Off)
@@ -48,7 +48,7 @@ class IOWidget(QWidget):
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()
             if label:
-                self.label = QLabel()
+                self.label = QLabel(parent=self)
                 self.label.setText(label)
                 set_size(widget=self.label, size=labelsize)
                 layout.addWidget(self.label)
@@ -58,7 +58,7 @@ class IOWidget(QWidget):
             layout = QVBoxLayout()
             inner = QHBoxLayout()
             if label:
-                self.label = QLabel()
+                self.label = QLabel(parent=self)
                 self.label.setText(label)
                 set_size(widget=self.label, size=labelsize)
                 layout.addWidget(self.label)
@@ -72,23 +72,26 @@ class IOWidget(QWidget):
         self.setLayout(layout)
 
     @classmethod
-    def setLastVisit(cls, folder):
+    def setLastVisit(cls, folder: str):
         cls.lastVisit = folder
 
-    def setBrowseCallback(self, func):
+    def setBrowseCallback(self, func: Callable):
         self.browseCallback = func
 
     def getText(self):
         return self.lineEdit.text()
 
-    def setText(self, text):
+    def setText(self, text: str):
         self.lineEdit.setText(text)
         self.lastVisit = text
 
-    def setPlaceholder(self, text):
+    def setLabel(self, text: str):
+        self.label.setText(text)
+
+    def setPlaceholder(self, text: str):
         self.lineEdit.setPlaceholderText(text)
 
-    def updateStyle(self, status):
+    def updateStyle(self, status: str):
         self.lineEdit.setObjectName(status)
         self.lineEdit.setStyleSheet(self.styleSheet())
         if status == self.ok[0]:
@@ -147,7 +150,7 @@ class FolderInput(IOWidget):
             if self.browseCallback is not None:
                 self.browseCallback()
 
-    def pathExists(self, path):
+    def pathExists(self, path: str):
         if path:
             if os.path.exists(path):
                 if os.path.isdir(path):
@@ -191,7 +194,7 @@ class FileInput(IOWidget):
             if self.browseCallback is not None:
                 self.browseCallback()
 
-    def pathExists(self, path):
+    def pathExists(self, path: str):
         if path:
             if os.path.exists(path):
                 if os.path.isfile(path):

@@ -2,7 +2,6 @@
 import os
 from pathlib import Path
 from typing import List, Tuple, Union
-from collections import Counter
 
 from at.io.utils import load_json, write_json
 from at.logger import log

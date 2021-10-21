@@ -88,7 +88,7 @@ class PathSelector(QWidget):
     def getCurrentText(self):
         return self.combo.currentText()
 
-    def setCurrentText(self, text):
+    def setCurrentText(self, text: str):
         self.combo.setCurrentText(text)
         self.onComboChange()
 
@@ -106,10 +106,10 @@ class PathSelector(QWidget):
     def getText(self):
         return self.path.getText()
 
-    def setText(self, text):
+    def setText(self, text: str):
         self.path.setText(text)
 
-    def setPlaceholder(self, text):
+    def setPlaceholder(self, text: str):
         self.path.setPlaceholder(text)
 
 
@@ -178,7 +178,7 @@ class StrSelector(QWidget):
             self.input.enable()
         else:
             self.input.disable()
-        
+
         try:
             self.input.setText(self.mapping[current_text])
         except KeyError:
@@ -187,7 +187,7 @@ class StrSelector(QWidget):
     def getCurrentText(self):
         return self.combo.currentText()
 
-    def setCurrentText(self, text):
+    def setCurrentText(self, text: str):
         self.combo.setCurrentText(text)
         self.onComboChange()
 
@@ -205,5 +205,5 @@ class StrSelector(QWidget):
     def getText(self):
         return self.input.getText()
 
-    def setText(self, text):
+    def setText(self, text: str):
         self.input.setText(text)

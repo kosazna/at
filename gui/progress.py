@@ -22,10 +22,10 @@ class ProgressBar(QProgressBar):
         set_size(widget=self, size=size)
         self.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
 
-    def setStyle(self, object_name):
+    def setStyle(self, object_name: str):
         self.setObjectName(object_name)
         self.setStyleSheet(self.styleSheet())
 
-    def setValueMaximum(self, current_value, maximum):
+    def setValueMaximum(self, current_value: int, maximum: int):
         self.setMaximum(maximum)
         self.setValue(current_value)

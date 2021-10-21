@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Optional, Tuple, Union
+from typing import Iterable, Optional, Tuple, Union
 
 from at.gui.utils import HORIZONTAL, VERTICAL, set_size
 from PyQt5.QtCore import Qt
@@ -24,7 +24,7 @@ class StrInput(QWidget):
         self.setCompleter(completer)
 
     def setupUi(self, label, orientation, hidden, labelsize, editsize):
-        self.lineEdit = QLineEdit()
+        self.lineEdit = QLineEdit(parent=self)
         set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
@@ -40,7 +40,7 @@ class StrInput(QWidget):
         layout.setSpacing(4)
 
         if label:
-            self.label = QLabel()
+            self.label = QLabel(parent=self)
             self.label.setText(label)
             set_size(widget=self.label, size=labelsize)
             layout.addWidget(self.label)
@@ -56,38 +56,23 @@ class StrInput(QWidget):
         self.lineEdit.setEnabled(True)
         self.setStyle("")
 
-    def setStyle(self, object_name):
+    def setStyle(self, object_name: str):
         self.lineEdit.setObjectName(object_name)
         self.lineEdit.setStyleSheet(self.styleSheet())
 
-    def setText(self, text):
+    def setText(self, text: str):
         self.lineEdit.setText(text)
 
-    def setLabel(self, text):
+    def setLabel(self, text: str):
         self.label.setText(text)
 
     def getText(self):
         return self.lineEdit.text()
 
-    def setPlaceholder(self, text):
+    def setPlaceholder(self, text: str):
         self.lineEdit.setPlaceholderText(text)
 
-    def setMaximumEditWidth(self, maxw):
-        self.lineEdit.setMaximumWidth(maxw)
-
-    def setMinimumEditWidth(self, minw):
-        self.lineEdit.setMinimumWidth(minw)
-
-    def setMaximumLabelWidth(self, maxw):
-        self.label.setMaximumWidth(maxw)
-
-    def setMinimumLabelWidth(self, minw):
-        self.label.setMinimumWidth(minw)
-
-    def setOffset(self, offset):
-        self.label.setFixedWidth(offset)
-
-    def setCompleter(self, items):
+    def setCompleter(self, items: Iterable[str]):
         if items is not None:
             _completer = QCompleter(items)
             _completer.setCompletionMode(QCompleter.PopupCompletion)
@@ -111,15 +96,11 @@ class IntInput(QWidget):
         self.setupUi(label, orientation, value_range, labelsize, editsize)
 
     def setupUi(self, label, orientation, value_range, labelsize, editsize):
-        self.label = QLabel()
-        self.label.setText(label)
-        set_size(widget=self.label, size=labelsize)
-
         self.validator = QIntValidator()
         if value_range is not None:
             self.validator.setRange(*value_range)
 
-        self.lineEdit = QLineEdit()
+        self.lineEdit = QLineEdit(parent=self)
         set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setValidator(self.validator)
         self.lineEdit.setClearButtonEnabled(True)
@@ -133,7 +114,11 @@ class IntInput(QWidget):
         layout.setContentsMargins(0, 4, 0, 4)
         layout.setSpacing(4)
 
-        layout.addWidget(self.label)
+        if label:
+            self.label = QLabel(parent=self)
+            self.label.setText(label)
+            set_size(widget=self.label, size=labelsize)
+            layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)
 
         self.setLayout(layout)
@@ -146,33 +131,18 @@ class IntInput(QWidget):
         self.lineEdit.setEnabled(True)
         self.setStyle("")
 
-    def setStyle(self, object_name):
+    def setStyle(self, object_name: str):
         self.lineEdit.setObjectName(object_name)
         self.lineEdit.setStyleSheet(self.styleSheet())
 
-    def setText(self, text):
+    def setText(self, text: str):
         self.lineEdit.setText(text)
 
-    def setLabel(self, text):
+    def setLabel(self, text: str):
         self.label.setText(text)
 
     def getText(self):
         return self.lineEdit.text()
 
-    def setPlaceholder(self, text):
+    def setPlaceholder(self, text: str):
         self.lineEdit.setPlaceholderText(text)
-
-    def setMaximumEditWidth(self, maxw):
-        self.lineEdit.setMaximumWidth(maxw)
-
-    def setMinimumEditWidth(self, minw):
-        self.lineEdit.setMinimumWidth(minw)
-
-    def setMaximumLabelWidth(self, maxw):
-        self.label.setMaximumWidth(maxw)
-
-    def setMinimumLabelWidth(self, minw):
-        self.label.setMinimumWidth(minw)
-
-    def setOffset(self, offset):
-        self.label.setFixedWidth(offset)

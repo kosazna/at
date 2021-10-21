@@ -21,11 +21,7 @@ class FileNameInput(QWidget):
         self.setupUi(label, placeholder, labelsize, editsize)
 
     def setupUi(self, label, placeholder, labelsize, editsize):
-        self.label = QLabel()
-        self.label.setText(label)
-        set_size(widget=self.label, size=labelsize)
-
-        self.lineEdit = QLineEdit()
+        self.lineEdit = QLineEdit(parent=self)
         set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setClearButtonEnabled(True)
         self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
@@ -37,12 +33,17 @@ class FileNameInput(QWidget):
         layout = QHBoxLayout()
         layout.setContentsMargins(0, 4, 0, 4)
         layout.setSpacing(4)
-        layout.addWidget(self.label)
+
+        if label:
+            self.label = QLabel(parent=self)
+            self.label.setText(label)
+            set_size(widget=self.label, size=labelsize)
+            layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)
 
         self.setLayout(layout)
 
-    def getText(self, suffix=None):
+    def getText(self, suffix: Optional[str] = None):
         if suffix is not None:
             _stem = self.lineEdit.text()
             _suffix = suffix if suffix.startswith('.') else f".{suffix}"
@@ -50,23 +51,11 @@ class FileNameInput(QWidget):
             return _filename
         return self.lineEdit.text()
 
-    def setText(self, text):
+    def setText(self, text: str):
         self.lineEdit.setText(text)
 
-    def setPlaceholder(self, text):
+    def setPlaceholder(self, text: str):
         self.lineEdit.setPlaceholderText(text)
 
-    def setOffset(self, offset):
-        self.label.setFixedWidth(offset)
-
-    def setMaximumEditWidth(self, maxw):
-        self.lineEdit.setMaximumWidth(maxw)
-
-    def setMinimumEditWidth(self, minw):
-        self.lineEdit.setMinimumWidth(minw)
-
-    def setMaximumLabelWidth(self, maxw):
-        self.label.setMaximumWidth(maxw)
-
-    def setMinimumLabelWidth(self, minw):
-        self.label.setMinimumWidth(minw)
+    def setLabel(self, text: str):
+        self.label.setText(text)
