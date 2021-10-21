@@ -31,10 +31,6 @@ class IOWidget(QWidget):
         self.browseCallback = None
 
     def setupUi(self, label, placeholder, orientation, labelsize, editsize):
-        self.label = QLabel()
-        self.label.setText(label)
-        set_size(widget=self.label, size=labelsize)
-
         self.lineEdit = QLineEdit()
         set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setClearButtonEnabled(True)
@@ -51,13 +47,21 @@ class IOWidget(QWidget):
 
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()
-            layout.addWidget(self.label)
+            if label:
+                self.label = QLabel()
+                self.label.setText(label)
+                set_size(widget=self.label, size=labelsize)
+                layout.addWidget(self.label)
             layout.addWidget(self.lineEdit)
             layout.addWidget(self.button)
         else:
             layout = QVBoxLayout()
             inner = QHBoxLayout()
-            layout.addWidget(self.label)
+            if label:
+                self.label = QLabel()
+                self.label.setText(label)
+                set_size(widget=self.label, size=labelsize)
+                layout.addWidget(self.label)
             inner.addWidget(self.lineEdit)
             inner.addWidget(self.button)
             layout.addLayout(inner)
@@ -84,21 +88,6 @@ class IOWidget(QWidget):
     def setPlaceholder(self, text):
         self.lineEdit.setPlaceholderText(text)
 
-    def setOffset(self, offset):
-        self.label.setFixedWidth(offset)
-
-    def setMaximumEditWidth(self, maxw):
-        self.lineEdit.setMaximumWidth(maxw)
-
-    def setMinimumEditWidth(self, minw):
-        self.lineEdit.setMinimumWidth(minw)
-
-    def setMaximumLabelWidth(self, maxw):
-        self.label.setMaximumWidth(maxw)
-
-    def setMinimumLabelWidth(self, minw):
-        self.label.setMinimumWidth(minw)
-
     def updateStyle(self, status):
         self.lineEdit.setObjectName(status)
         self.lineEdit.setStyleSheet(self.styleSheet())
@@ -110,6 +99,14 @@ class IOWidget(QWidget):
             self.lineEdit.setToolTip(self.error[1])
         else:
             self.lineEdit.setToolTip("")
+
+    def disable(self):
+        self.lineEdit.setEnabled(False)
+        self.updateStyle('off')
+
+    def enable(self):
+        self.lineEdit.setEnabled(True)
+        self.pathExists(self.lineEdit.text())
 
     def browse(self):
         pass

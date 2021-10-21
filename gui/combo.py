@@ -19,10 +19,6 @@ class ComboInput(QWidget):
         self.setupUi(label, items, labelsize, combosize)
 
     def setupUi(self, label, items, labelsize, combosize):
-        self.label = QLabel()
-        self.label.setText(label)
-        set_size(widget=self.label, size=labelsize)
-
         self.comboEdit = QComboBox()
         set_size(widget=self.comboEdit, size=combosize)
         self.comboEdit.setSizeAdjustPolicy(
@@ -32,7 +28,11 @@ class ComboInput(QWidget):
         layout.setContentsMargins(0, 4, 0, 4)
         layout.setSpacing(4)
 
-        layout.addWidget(self.label)
+        if label:
+            self.label = QLabel()
+            self.label.setText(label)
+            set_size(widget=self.label, size=labelsize)
+            layout.addWidget(self.label)
         layout.addWidget(self.comboEdit, 1, alignment=Qt.AlignLeft)
         self.setLayout(layout)
 
