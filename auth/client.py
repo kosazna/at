@@ -76,6 +76,10 @@ class Authorize(metaclass=Singleton):
                 else:
                     self.auth = {}
 
+    def change_user_auth(self, status: bool):
+        for domain in self.auth[self.user]['action']:
+            self.auth[self.user]['action'][domain] = status
+
     def is_licensed(self,
                     domain: Optional[str] = None,
                     category: Optional[str] = None) -> Tuple[bool, str]:
