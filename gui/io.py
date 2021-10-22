@@ -60,7 +60,6 @@ class IOWidget(QWidget):
             if label:
                 self.label = QLabel(parent=self)
                 self.label.setText(label)
-                set_size(widget=self.label, size=labelsize)
                 layout.addWidget(self.label)
             inner.addWidget(self.lineEdit)
             inner.addWidget(self.button)
