@@ -87,29 +87,54 @@ class Authorize(metaclass=Singleton):
             return True, 'Debug Mode'
 
         if self.auth:
-            if category is not None:
-                if category in self.auth[self.user]['categories']:
-                    return True, AUTHORISED
-                else:
+            if category is not None and domain is not None:
+                if category not in self.auth[self.user]['categories']:
                     return False, UNAUTHORISED
-
-            if domain not in self.auth[self.user]['action']:
-                return False, f"'{domain}' is not in licensing info"
-            else:
-                try:
+                if domain not in self.auth[self.user]['action']:
+                    return False, f"'{domain}' is not in licensing info"
+                else:
+                    try:
+                        if self.actions < 10:
+                            self.actions += 1
+                            _valid = self.auth[self.user]['action'][domain]
+                            _info = AUTHORISED if _valid else UNAUTHORISED
+                            return _valid, _info
+                        else:
+                            self._reload()
+                            self.actions += 1
+                            _valid = self.auth[self.user]['action'][domain]
+                            _info = AUTHORISED if _valid else UNAUTHORISED
+                            return _valid, _info
+                    except KeyError:
+                        return False, "User not authorised"
+            elif category is not None and domain is None:
+                if category in self.auth[self.user]['categories']:
                     if self.actions < 10:
                         self.actions += 1
-                        _valid = self.auth[self.user]['action'][domain]
-                        _info = AUTHORISED if _valid else UNAUTHORISED
-                        return _valid, _info
+                        return True, AUTHORISED
                     else:
                         self._reload()
                         self.actions += 1
-                        _valid = self.auth[self.user]['action'][domain]
-                        _info = AUTHORISED if _valid else UNAUTHORISED
-                        return _valid, _info
-                except KeyError:
-                    return False, "User not authorised"
+                        return True, AUTHORISED
+                return False, UNAUTHORISED
+            else:
+                if domain not in self.auth[self.user]['action']:
+                    return False, f"'{domain}' is not in licensing info"
+                else:
+                    try:
+                        if self.actions < 10:
+                            self.actions += 1
+                            _valid = self.auth[self.user]['action'][domain]
+                            _info = AUTHORISED if _valid else UNAUTHORISED
+                            return _valid, _info
+                        else:
+                            self._reload()
+                            self.actions += 1
+                            _valid = self.auth[self.user]['action'][domain]
+                            _info = AUTHORISED if _valid else UNAUTHORISED
+                            return _valid, _info
+                    except KeyError:
+                        return False, "User not authorised"
         else:
             return False, "Can't verify authentication due to internet access"
 
@@ -121,14 +146,13 @@ def licensed(appname: str,
     def decorator(function: Callable):
         def wrapper(*args, **kwargs):
             auth = Authorize(appname=appname)
-            if category is not None:
-                authorised, info = auth.is_licensed(category=category)
+            if domain is None:
+                fname = function.__name__
+                authorised, info = auth.is_licensed(domain=fname,
+                                                    category=category)
             else:
-                if domain is None:
-                    fname = function.__name__
-                    authorised, info = auth.is_licensed(domain=fname)
-                else:
-                    authorised, info = auth.is_licensed(domain=domain)
+                authorised, info = auth.is_licensed(domain=domain,
+                                                    category=category)
             if authorised:
                 result = function(*args, **kwargs)
             else:
