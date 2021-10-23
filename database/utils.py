@@ -4,7 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Dict, Union
 
-from at.sql.object import QueryObject
+from at.database.object import QueryObject
 
 
 def load_app_queries(folder: Union[str, Path]) -> Dict[str, QueryObject]:

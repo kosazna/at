@@ -5,7 +5,7 @@ from sqlite3 import Connection, Cursor, Error, connect
 from typing import Union
 
 from at.logger import log
-from at.sql.object import QueryObject
+from at.database.object import QueryObject
 
 
 def select(cursor: Cursor, query_obj: QueryObject):
