@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from typing import Callable, Iterable, Optional, Tuple, Union
 
-from at.gui.button import Button
-from at.gui.check import CheckInput
-from at.gui.popup import Popup, pbutton
+from at.gui.components.button import Button
+from at.gui.components.check import CheckInput
+from at.gui.components.popup import Popup
 from at.gui.utils import set_size
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QAbstractItemView, QAbstractScrollArea,
@@ -113,7 +113,7 @@ class ListWidget(QWidget):
         elif isinstance(items, (list, tuple)):
             items2add = items
         else:
-            Popup().info("No items were added", buttons=[pbutton['ok']])
+            Popup().info("No items were added", buttons=['ok'])
             return
 
         for item in items2add:

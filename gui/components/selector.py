@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple
 
+from at.gui.components.combo import ComboInput
+from at.gui.components.input import StrInput
+from at.gui.components.io import FileInput, FileOutput, FolderInput
 from at.gui.utils import HORIZONTAL, VERTICAL, set_size
-from at.gui.combo import ComboInput
-from at.gui.io import FolderInput, FileInput, FileOutput
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIntValidator
-from PyQt5.QtWidgets import (QCompleter, QHBoxLayout, QLabel, QLineEdit,
-                             QVBoxLayout, QWidget)
-
-from at.gui.input import StrInput
+from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 
 class PathSelector(QWidget):
