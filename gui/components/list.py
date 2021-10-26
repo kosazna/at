@@ -15,7 +15,7 @@ class ListWidget(QWidget):
     def __init__(self,
                  label: str = '',
                  items: Optional[Union[list, tuple]] = None,
-                 labelsize: tuple = (100, 24),
+                 labelsize: tuple = (120, 24),
                  widgetsize: Tuple[Optional[int]] = (None, 250),
                  parent: Optional[QWidget] = None,
                  *args,

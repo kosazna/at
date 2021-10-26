@@ -6,7 +6,7 @@ from typing import Union
 from at.date import daterange, timestamp
 from at.io.copyfuncs import copy_file
 from at.io.utils import (load_json, load_pickle, unzip_file, write_pickle,
-                         zip_file)
+                         zip_files)
 from at.result import Result
 from at.text import create_hex_string
 
@@ -49,7 +49,7 @@ def create_lic_zip(authdata: Union[str, Path],
                    folder=folder,
                    date=date)
     out_name = f"{start_date}_{periods}lic"
-    zip_file(src=folder, dst=folder, save_name=out_name, file_filter='*.lic')
+    zip_files(src=folder, dst=folder, save_name=out_name, file_filter='*.lic')
 
     return Result.success('License created successfully')
 

@@ -6,6 +6,7 @@ from pathlib import Path
 from shutil import unpack_archive
 from typing import Any, List, Tuple, Union
 from zipfile import ZipFile
+import zipfile
 
 
 def open_excel(filepath: Union[str, Path]) -> None:
@@ -35,11 +36,11 @@ def write_pickle(filepath: Union[str, Path],
         pickle.dump(data, pf, protocol=pickle.DEFAULT_PROTOCOL)
 
 
-def zip_file(src: Union[str, Path],
-             dst: Union[str, Path, None] = None,
-             save_name: Union[str, None] = None,
-             file_filter: Union[str, None] = None,
-             schema: bool = False):
+def zip_files(src: Union[str, Path],
+              dst: Union[str, Path, None] = None,
+              save_name: Union[str, None] = None,
+              file_filter: Union[str, None] = None,
+              schema: bool = False):
     src_path = Path(src)
 
     if dst is None:
@@ -58,12 +59,31 @@ def zip_file(src: Union[str, Path],
         files2zip = tuple(src_path.glob(file_filter))
 
     if files2zip:
-        with ZipFile(d, 'w') as zf:
+        with ZipFile(d, mode='w', compression=zipfile.ZIP_DEFLATED) as zf:
             for filepath in files2zip:
                 if schema:
                     zf.write(filepath)
                 else:
                     zf.write(filepath, arcname=filepath.name)
+
+
+def zip_file(src: Union[str, Path],
+             dst: Union[str, Path, None] = None,
+             save_name: Union[str, None] = None):
+    src_path = Path(src)
+
+    if dst is None:
+        dst_path = src_path.parent
+    else:
+        dst_path = Path(dst)
+
+    if save_name is None:
+        dst_zip = dst_path.joinpath(f"{src_path.stem}.zip")
+    else:
+        dst_zip = dst_path.joinpath(f"{save_name}.zip")
+
+    with ZipFile(dst_zip, mode='w', compression=zipfile.ZIP_DEFLATED) as zf:
+        zf.write(src_path, arcname=src_path.name)
 
 
 def unzip_file(zipfile: Union[str, Path], dst: Union[str, Path]):
