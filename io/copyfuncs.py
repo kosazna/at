@@ -35,7 +35,8 @@ def create_copy_obj(src: Union[str, Path],
 
     if src_is_dir:
         if save_name is None:
-            _dst_path = dst_path
+            src_name = src_path.stem
+            _dst_path = dst_path.joinpath(src_name)
         else:
             _dst_path = dst_path.joinpath(save_name)
     else:
