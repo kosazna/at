@@ -148,7 +148,7 @@ class StrSelector(QWidget):
                 set_size(widget=self.label, size=labelsize)
                 layout.addWidget(self.label)
             layout.addWidget(self.combo)
-            layout.addWidget(self.input, stretch=2)
+            layout.addWidget(self.input, stretch=1, alignment=Qt.AlignLeft)
         else:
             layout = QVBoxLayout()
             layout.setSpacing(0)
@@ -161,7 +161,7 @@ class StrSelector(QWidget):
                 set_size(widget=self.label, size=labelsize)
                 layout.addWidget(self.label)
             inner.addWidget(self.combo)
-            inner.addWidget(self.input, stretch=2)
+            inner.addWidget(self.input, stretch=1, alignment=Qt.AlignLeft)
             layout.addLayout(inner)
 
         layout.setContentsMargins(0, 0, 0, 0)
