@@ -63,24 +63,24 @@ class FilePattern(object):
                         _end = None
 
                     self.tokens[var_name] = {'start': _start,
-                                                'end': _end,
-                                                'index': None}
+                                             'end': _end,
+                                             'index': None}
                 else:
                     var_name, idx = part.split('#')
                     self.tokens[var_name] = {'start': None,
-                                                'end': None,
-                                                'index': int(idx)-1}
+                                             'end': None,
+                                             'index': int(idx)-1}
         elif self.kind == "UnderscorePattern":
             for idx, part in enumerate(parts):
                 if '#' in part:
                     var_name, idx = part.split('#')
                     self.tokens[var_name] = {'start': None,
-                                                'end': None,
-                                                'index': int(idx)-1}
+                                             'end': None,
+                                             'index': int(idx)-1}
                 else:
                     self.tokens[part] = {'start': None,
-                                            'end': None,
-                                            'index': idx}
+                                         'end': None,
+                                         'index': idx}
         elif self.kind == "PlaceholderPattern":
             atcount = pattern.count('@')
             if atcount == nparts:
@@ -99,8 +99,8 @@ class FilePattern(object):
                         _end = None
 
                     self.tokens[var_name] = {'start': _start,
-                                                'end': _end,
-                                                'index': idx}
+                                             'end': _end,
+                                             'index': idx}
             else:
                 raise ValueError(
                     f"Pattern contains {nparts} variables but {atcount} placeholders '@'")
@@ -108,8 +108,8 @@ class FilePattern(object):
             for part in parts:
                 var_name, idx = part.split('$')
                 self.tokens[var_name] = {'start': None,
-                                            'end': None,
-                                            'index': -(int(idx) + 1)}
+                                         'end': None,
+                                         'index': -(int(idx) + 1)}
 
     def match(self, text: str) -> Dict[str, str]:
         values = {}
