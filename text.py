@@ -25,3 +25,9 @@ def stringify(iterable: Union[list, tuple, set, dict],
 
 def create_hex_string(string: str) -> str:
     return sha256(string=string.encode('utf-8')).hexdigest()
+
+
+def parse_filters(text: str) -> list:
+    if '|' in text:
+        return text.split('|')
+    return [text]
