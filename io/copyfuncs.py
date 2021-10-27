@@ -6,8 +6,8 @@ from pathlib import Path
 from typing import Iterable, List, Tuple, Union
 
 from at.io.object import CopyObject
+from at.io.pattern import FilePattern
 from at.logger import log
-from at.pattern import FilePattern
 from at.text import replace_all
 
 SHP_EXTS = ('.shp', '.shx', '.dbf')

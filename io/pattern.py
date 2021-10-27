@@ -8,11 +8,11 @@ class FilePattern(object):
     def __init__(self, pattern: str) -> None:
         self.pattern, self.kind = self._assert_pattern(pattern)
         self.nparts = 0
-        self.variables = {}
+        self.tokens = {}
         self._extract_vars(pattern)
 
     def __str__(self):
-        return f"{self.kind}(parts={self.nparts}, variables={self.variables})"
+        return f"{self.kind}(parts={self.nparts}, tokens={self.tokens})"
 
     def _assert_pattern(self, pattern: str) -> str:
         langles = pattern.count("<")
@@ -62,23 +62,23 @@ class FilePattern(object):
                     else:
                         _end = None
 
-                    self.variables[var_name] = {'start': _start,
+                    self.tokens[var_name] = {'start': _start,
                                                 'end': _end,
                                                 'index': None}
                 else:
                     var_name, idx = part.split('#')
-                    self.variables[var_name] = {'start': None,
+                    self.tokens[var_name] = {'start': None,
                                                 'end': None,
                                                 'index': int(idx)-1}
         elif self.kind == "UnderscorePattern":
             for idx, part in enumerate(parts):
                 if '#' in part:
                     var_name, idx = part.split('#')
-                    self.variables[var_name] = {'start': None,
+                    self.tokens[var_name] = {'start': None,
                                                 'end': None,
                                                 'index': int(idx)-1}
                 else:
-                    self.variables[part] = {'start': None,
+                    self.tokens[part] = {'start': None,
                                             'end': None,
                                             'index': idx}
         elif self.kind == "PlaceholderPattern":
@@ -98,7 +98,7 @@ class FilePattern(object):
                     else:
                         _end = None
 
-                    self.variables[var_name] = {'start': _start,
+                    self.tokens[var_name] = {'start': _start,
                                                 'end': _end,
                                                 'index': idx}
             else:
@@ -107,7 +107,7 @@ class FilePattern(object):
         elif self.kind == "FolderPattern":
             for part in parts:
                 var_name, idx = part.split('$')
-                self.variables[var_name] = {'start': None,
+                self.tokens[var_name] = {'start': None,
                                             'end': None,
                                             'index': -(int(idx) + 1)}
 
@@ -116,24 +116,24 @@ class FilePattern(object):
 
         if self.kind == "MixedPattern":
             splitted = text.split('_')
-            for var in self.variables:
-                if self.variables[var]['index'] is not None:
-                    values[var] = splitted[self.variables[var]['index']]
+            for var in self.tokens:
+                if self.tokens[var]['index'] is not None:
+                    values[var] = splitted[self.tokens[var]['index']]
                 else:
-                    s = self.variables[var]['start']
-                    e = self.variables[var]['end']
+                    s = self.tokens[var]['start']
+                    e = self.tokens[var]['end']
                     if e is None:
                         values[var] = text[s:]
                     else:
                         values[var] = text[s:e]
         elif self.kind == "UnderscorePattern":
             splitted = text.split('_')
-            for var in self.variables:
-                values[var] = splitted[self.variables[var]['index']]
+            for var in self.tokens:
+                values[var] = splitted[self.tokens[var]['index']]
         elif self.kind == "PlaceholderPattern":
-            for var in self.variables:
-                s = self.variables[var]['start']
-                e = self.variables[var]['end']
+            for var in self.tokens:
+                s = self.tokens[var]['start']
+                e = self.tokens[var]['end']
                 if e is None:
                     values[var] = text[s:]
                 else:
@@ -145,7 +145,7 @@ class FilePattern(object):
         values = {}
         path_parts = path.parts
 
-        for var in self.variables:
-            values[var] = path_parts[self.variables[var]['index']]
+        for var in self.tokens:
+            values[var] = path_parts[self.tokens[var]['index']]
 
         return values
