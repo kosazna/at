@@ -76,64 +76,6 @@ def batch_copy_file(files: Iterable[CopyObject],
     log.info(f"Copied files: [{len(files)}]")
 
 
-def copy_file_legacy(src: Union[str, Path],
-                     dst: Union[str, Path],
-                     save_name: Union[str, None] = None):
-    src_path = Path(src)
-    dst_path = Path(dst)
-
-    if not src_path.exists():
-        log.error(f"File '{str(src_path)}' does not exist.")
-        return
-
-    src_is_dir = src_path.is_dir()
-    dst_is_dir = not bool(dst_path.suffix)
-
-    if dst_is_dir:
-        if not dst_path.exists():
-            dst_path.mkdir(parents=True, exist_ok=True)
-    else:
-        if not dst.parent.exists():
-            dst_path.parent.mkdir(parents=True, exist_ok=True)
-
-    if src_is_dir:
-        if save_name is None:
-            shutil.copytree(src_path, dst_path, dirs_exist_ok=True)
-        else:
-            shutil.copytree(src_path, dst_path.joinpath(save_name),
-                            dirs_exist_ok=True)
-    else:
-        src_suffix = src_path.suffix
-
-        if src_suffix not in SHP_EXTS:
-            if save_name is None:
-                shutil.copy2(src_path, dst_path)
-            else:
-                if dst_is_dir:
-                    d = dst_path.joinpath(f"{save_name}{src_suffix}")
-                else:
-                    d = dst_path.with_name(save_name).with_suffix(src_suffix)
-
-                shutil.copy2(src_path, d)
-        else:
-            all_exist = all([src_path.with_suffix(ext).exists()
-                            for ext in SHP_EXTS])
-
-            if all_exist:
-                for ext in SHP_EXTS:
-                    if save_name is None:
-                        shutil.copy2(src_path.with_suffix(ext), dst_path)
-                    else:
-                        if dst_is_dir:
-                            d = dst_path.joinpath(f"{save_name}{ext}")
-                        else:
-                            d = dst_path.with_name(save_name).with_suffix(ext)
-
-                        shutil.copy2(src_path.with_suffix(ext), d)
-            else:
-                log.warning(f"'{str(src)}' missing auxiliary shapefile files.")
-
-
 def copy_pattern(src: Union[str, Path],
                  dst: Union[str, Path],
                  filters: Union[str, List[str], Tuple[str]],
