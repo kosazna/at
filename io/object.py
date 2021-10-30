@@ -3,7 +3,7 @@ from __future__ import annotations
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Union
+from typing import Iterable, List, Optional, Union
 
 from at.logger import log
 from at.text import parse_filters
@@ -67,34 +67,18 @@ class FilterObject:
     def __init__(self,
                  filters: Union[str, Iterable[str]],
                  recursive: bool = False) -> None:
-        self.filters = filters
-        self.recursive = recursive
-        self._post_init()
+        self.filters = self._parse_filters(filters, recursive)
 
-
-    def _post_init(self):
-        filters = []
-        _filters = FilterObject._parse(self.filters)
-        print(_filters)
-        for f in _filters:
-            if self.recursive:
-                filters.append(f"**/{f}")
-            else:
-                filters.append(f)
-
-        self.filters = filters
-
-    @classmethod
-    def contains(cls,
-                 filters: Union[str, Iterable[str]],
-                 recursive: bool = False) -> FilterObject:
+    def _parse_filters(self, filters, recursive):
         _filters = []
         __filters = FilterObject._parse(filters)
-
         for f in __filters:
-            _filters.append(f"*{f}*")
+            if recursive:
+                _filters.append(f"**/{f}")
+            else:
+                _filters.append(f)
 
-        return cls(filters=_filters, recursive=recursive)
+        return _filters
 
     @staticmethod
     def _parse(_filters: Union[str, Iterable[str]]) -> list:
@@ -111,6 +95,51 @@ class FilterObject:
     def __len__(self):
         return len(self.filters)
 
-a = FilterObject.contains("22003|22022", recursive=True)
-for i in a:
-    print(i)
+    @classmethod
+    def contains(cls,
+                 filters: Union[str, Iterable[str]],
+                 recursive: bool = False) -> FilterObject:
+        _filters = []
+        __filters = FilterObject._parse(filters)
+
+        for f in __filters:
+            _filters.append(f"*{f}*")
+
+        return cls(filters=_filters, recursive=recursive)
+
+    @classmethod
+    def startswith(cls,
+                   filters: Union[str, Iterable[str]],
+                   recursive: bool = False) -> FilterObject:
+        _filters = []
+        __filters = FilterObject._parse(filters)
+
+        for f in __filters:
+            _filters.append(f"{f}*")
+
+        return cls(filters=_filters, recursive=recursive)
+
+    @classmethod
+    def endswith(cls,
+                 filters: Union[str, Iterable[str]],
+                 recursive: bool = False) -> FilterObject:
+        _filters = []
+        __filters = FilterObject._parse(filters)
+
+        for f in __filters:
+            _filters.append(f"*{f}")
+
+        return cls(filters=_filters, recursive=recursive)
+
+    def search(self, directory: Union[str, Path], keep: Optional[str] = None):
+        dir_path = Path(directory)
+        files: List[Path] = []
+        for f in self.filters:
+            files.extend(list(dir_path.glob(f)))
+
+        if keep == 'files':
+            return [p for p in files if p.is_file()]
+        elif keep == 'dirs':
+            return [p for p in files if p.is_dir()]
+        else:
+            return files
