@@ -45,7 +45,7 @@ def create_copy_obj(src: Union[str, Path],
         src_suffix = src_path.suffix
 
         if save_name is None:
-            _dst_path = dst_path
+            _dst_path = dst_path.joinpath(src_path.name)
         else:
             if dst_is_dir:
                 _dst_path = dst_path.joinpath(f"{save_name}{src_suffix}")
@@ -188,16 +188,6 @@ def copy_pattern_from_files(files: Iterable[Path],
     else:
         if copyobjs:
             for copy_obj in copyobjs:
-                log.info(str(copy_obj.src))
-                log.info(f"{str(copy_obj.dst)}\n")
+                log.info(f"{str(copy_obj.src)} -> {str(copy_obj.dst)}")
         else:
             log.warning("Nothing matched")
-
-
-_files = FilterObject("SN*.pdf")
-all_files = _files.search("D:/.temp/Anartisi/Apospasmata", keep='files')
-
-copy_pattern_from_files(all_files, "D:/.temp/Anartisi/Organised",
-                        read_pattern="<cat@1:2>",
-                        save_pattern='FILES/<cat>',
-                        mode='test')
