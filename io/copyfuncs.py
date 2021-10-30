@@ -137,8 +137,7 @@ def copy_pattern(src: Union[str, Path],
     else:
         if copyobjs:
             for copy_obj in copyobjs:
-                log.info(str(copy_obj.src))
-                log.info(f"{str(copy_obj.dst)}\n")
+                log.info(f"{str(copy_obj.src)} -> {str(copy_obj.dst)}")
         else:
             log.warning("Nothing matched")
 
