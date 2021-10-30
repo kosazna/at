@@ -33,17 +33,26 @@ class CopyObject:
     def __hash__(self) -> int:
         return hash((self.src, self.dst, self.srctype))
 
-    def copy(self, copymode: str = 'normal'):
+    def copy(self,
+             copymode: str = 'normal',
+             ignore: Optional[Iterable[str]] = None):
         if copymode == 'normal':
             copyfunc = shutil.copy2
         else:
             copyfunc = shutil.copy
 
         if self.directory:
-            return shutil.copytree(self.src,
-                                   self.dst,
-                                   copy_function=copyfunc,
-                                   dirs_exist_ok=True)
+            if ignore is not None:
+                return shutil.copytree(self.src,
+                                       self.dst,
+                                       copy_function=copyfunc,
+                                       ignore=shutil.ignore_patterns(*ignore),
+                                       dirs_exist_ok=True)
+            else:
+                return shutil.copytree(self.src,
+                                       self.dst,
+                                       copy_function=copyfunc,
+                                       dirs_exist_ok=True)
         else:
             if self.shapefile:
                 if self.shapefile_aux:
@@ -143,3 +152,7 @@ class FilterObject:
             return [p for p in files if p.is_dir()]
         else:
             return files
+
+
+a = FilterObject.startswith(filters=['22003', '22022', '22057'])
+print(a.filters)

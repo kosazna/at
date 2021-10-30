@@ -3,7 +3,7 @@
 import shutil
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from typing import Iterable, List, Tuple, Union
+from typing import Iterable, List, Optional, Tuple, Union
 
 from at.io.object import CopyObject, FilterObject
 from at.io.pattern import FilePattern
@@ -59,11 +59,12 @@ def create_copy_obj(src: Union[str, Path],
 def copy_file(src: Union[str, Path],
               dst: Union[str, Path],
               save_name: Union[str, None] = None,
-              copymode: str = 'normal') -> str:
+              copymode: str = 'normal',
+              ignore: Optional[Iterable[str]] = None) -> str:
     copyobj = create_copy_obj(src=src, dst=dst, save_name=save_name)
 
     if copyobj is not None:
-        return copyobj.copy(copymode=copymode)
+        return copyobj.copy(copymode=copymode, ignore=ignore)
     return ''
 
 
