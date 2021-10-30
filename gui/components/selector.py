@@ -4,7 +4,9 @@ from typing import Optional, Tuple
 from at.gui.components.combo import ComboInput
 from at.gui.components.input import StrInput
 from at.gui.components.io import FileInput, FileOutput, FolderInput
+from at.gui.components.check import CheckInput
 from at.gui.utils import HORIZONTAL, VERTICAL, set_size
+from at.io.object import FilterObject
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
@@ -83,14 +85,14 @@ class PathSelector(QWidget):
             self.path.setText('')
 
     def getCurrentText(self):
-        return self.combo.currentText()
+        return self.combo.getCurrentText()
 
     def setCurrentText(self, text: str):
         self.combo.setCurrentText(text)
         self.onComboChange()
 
     def getCurrentIndex(self):
-        return self.combo.currentIndex()
+        return self.combo.getCurrentIndex()
 
     def addItems(self, items: dict):
         self.combo.addItems(items.keys())
@@ -182,14 +184,14 @@ class StrSelector(QWidget):
             self.input.setText('')
 
     def getCurrentText(self):
-        return self.combo.currentText()
+        return self.combo.getCurrentText()
 
     def setCurrentText(self, text: str):
         self.combo.setCurrentText(text)
         self.onComboChange()
 
     def getCurrentIndex(self):
-        return self.combo.currentIndex()
+        return self.combo.getCurrentIndex()
 
     def addItems(self, items: dict):
         self.combo.addItems(items.keys())
@@ -204,3 +206,91 @@ class StrSelector(QWidget):
 
     def setText(self, text: str):
         self.input.setText(text)
+
+
+class FilterFileSelector(QWidget):
+    def __init__(self,
+                 label: str = '',
+                 orientation: str = HORIZONTAL,
+                 labelsize: Tuple[int] = (70, 24),
+                 combosize: tuple = (100, 24),
+                 editsize: Tuple[Optional[int]] = (None, 24),
+                 parent: Optional[QWidget] = None,
+                 *args,
+                 **kwargs):
+        super().__init__(parent=parent, *args, **kwargs)
+        self.mapping = {'exact': FilterObject,
+                        'startwith': FilterObject.startswith,
+                        'endwith': FilterObject.endswith,
+                        'contain': FilterObject.contains}
+        self.keep = ('all', 'files', 'dirs')
+        self.setupUi(label, orientation, labelsize, combosize, editsize)
+
+    def setupUi(self, label, orientation, labelsize, combosize, editsize):
+        self.combo = ComboInput(items=self.mapping.keys(),
+                                combosize=combosize,
+                                parent=self)
+        self.keepCombo = ComboInput(items=self.keep,
+                                    combosize=(60, 24),
+                                    parent=self)
+        self.input = StrInput(editsize=editsize,
+                              parent=self)
+        self.recursive = CheckInput("recursive")
+
+        if self.mapping:
+            first_mapping_item = list(self.mapping)[0]
+            self.combo.setCurrentText(first_mapping_item)
+
+        self.keepCombo.setCurrentText(self.keep[0])
+
+        if orientation == HORIZONTAL:
+            layout = QHBoxLayout()
+            layout.setSpacing(4)
+            if label:
+                self.label = QLabel(parent=self)
+                self.label.setText(label)
+                set_size(widget=self.label, size=labelsize)
+                layout.addWidget(self.label)
+            layout.addWidget(self.keepCombo)
+            layout.addWidget(self.combo)
+            layout.addWidget(self.input, stretch=2)
+            layout.addWidget(self.recursive)
+        else:
+            layout = QVBoxLayout()
+            layout.setSpacing(0)
+            inner = QHBoxLayout()
+            inner.setContentsMargins(0, 0, 0, 0)
+            inner.setSpacing(4)
+            if label:
+                self.label = QLabel(parent=self)
+                self.label.setText(label)
+                set_size(widget=self.label, size=labelsize)
+                layout.addWidget(self.label)
+            layout.addWidget(self.keepCombo)
+            inner.addWidget(self.combo)
+            inner.addWidget(self.input, stretch=2)
+            inner.addWidget(self.recursive)
+            layout.addLayout(inner)
+
+        layout.setContentsMargins(0, 0, 0, 0)
+
+        self.setLayout(layout)
+
+    def getCurrentText(self):
+        return self.combo.getCurrentText()
+
+    def getCurrentIndex(self):
+        return self.combo.getCurrentIndex()
+
+    def getText(self):
+        return self.input.getText()
+
+    def getKeepValue(self):
+        return self.keepCombo.getCurrentText()
+
+    def getFilterObject(self) -> FilterObject:
+        filter_type = self.getCurrentText()
+        filters = self.getText()
+        recursive = self.recursive.isChecked()
+
+        return self.mapping[filter_type](filters, recursive)

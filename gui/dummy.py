@@ -142,6 +142,7 @@ class Dummy(QWidget):
         self.customLabel3 = Label(icon='bar-chart-fill',
                                   label='2829',
                                   parent=self)
+        self.filter = FilterFileSelector('Φιλτρα', parent=self)
 
         self.listWidget.assignLoadFunc(self.load_content)
 
@@ -160,6 +161,7 @@ class Dummy(QWidget):
         self.layoutGeneral.addLayout(self.layoutComboCheck)
         self.layoutGeneral.addWidget(self.statusSmall)
         self.layoutGeneral.addWidget(self.listWidget)
+        self.layoutGeneral.addWidget(self.filter)
 
         self.layoutButtons.addWidget(self.button1)
         self.layoutButtons.addWidget(self.button2)
