@@ -152,7 +152,3 @@ class FilterObject:
             return [p for p in files if p.is_dir()]
         else:
             return files
-
-
-a = FilterObject.startswith(filters=['22003', '22022', '22057'])
-print(a.filters)

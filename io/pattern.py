@@ -111,6 +111,20 @@ class FilePattern(object):
                                          'end': None,
                                          'index': -(int(idx) + 1)}
 
+    @staticmethod
+    def replace(text: str,
+                replacements: dict,
+                accept_none: bool = False) -> str:
+        for key, val in replacements.items():
+            if val is not None:
+                text = text.replace(f"<{key}>", val)
+            elif val is None and accept_none:
+                text = text.replace(f"<{key}>", '')
+            else:
+                _val = replacements['%name%']
+                text = text.replace(f"<{key}>", _val)
+        return text
+
     def match(self, text: str) -> Dict[str, str]:
         values = {}
 
@@ -127,9 +141,12 @@ class FilePattern(object):
                     else:
                         values[var] = text[s:e]
         elif self.kind == "UnderscorePattern":
-            splitted = text.split('_')
+            splitted = text.split('_', maxsplit=len(self.tokens) - 1)
             for var in self.tokens:
-                values[var] = splitted[self.tokens[var]['index']]
+                try:
+                    values[var] = splitted[self.tokens[var]['index']]
+                except IndexError:
+                    values[var] = None
         elif self.kind == "PlaceholderPattern":
             for var in self.tokens:
                 s = self.tokens[var]['start']

@@ -76,7 +76,7 @@ def batch_copy_file(files: Iterable[CopyObject],
             future = executor.submit(file2copy.copy, copymode)
             if verbose:
                 log.info(f"{idx:5d} - {future.result()}")
-    log.info(f"Copied files: [{len(files)}]")
+    log.success(f"Copied files: [{len(files)}]")
 
 
 def copy_pattern(src: Union[str, Path],
@@ -166,13 +166,13 @@ def copy_pattern_from_files(files: Iterable[Path],
         if save_name is None:
             name = save_name
         else:
-            name = replace_all(save_name, parts)
+            name = pattern.replace(save_name, parts)
 
         if save_pattern is None:
             d = dst_path.joinpath(
                 p.stem) if pattern.kind == 'FolderPattern' else dst_path
         else:
-            sub_dst = replace_all(save_pattern, parts)
+            sub_dst = pattern.replace(save_pattern, parts, accept_none=True)
             d = dst_path.joinpath(sub_dst)
 
         if mode == 'execute':
