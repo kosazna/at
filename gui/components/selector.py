@@ -97,6 +97,8 @@ class PathSelector(QWidget):
     def addItems(self, items: dict):
         self.combo.addItems(items.keys())
         self.mapping.update(items)
+        first_mapping_item = list(items)[0]
+        self.setCurrentText(first_mapping_item)
 
     def clearItems(self):
         self.combo.clearItems()
@@ -196,6 +198,8 @@ class StrSelector(QWidget):
     def addItems(self, items: dict):
         self.combo.addItems(items.keys())
         self.mapping.update(items)
+        first_mapping_item = list(items)[0]
+        self.setCurrentText(first_mapping_item)
 
     def clearItems(self):
         self.combo.clearItems()
@@ -236,6 +240,7 @@ class FilterFileSelector(QWidget):
         self.input = StrInput(editsize=editsize,
                               parent=self)
         self.recursive = CheckInput("recursive")
+        self.recursive.toggle()
 
         if self.mapping:
             first_mapping_item = list(self.mapping)[0]
