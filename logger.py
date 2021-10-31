@@ -17,7 +17,7 @@ ERROR = 'ERROR'
 SUCCESS = 'SUCCESS'
 
 color = {NORMAL: '#f8f8f8',
-         INFO: '#0D6EFD',
+         INFO: '#258DEE',
          WARNING: '#E7AF06',
          ERROR: '#EF3E4F',
          SUCCESS: '#19CB5C'}
@@ -41,12 +41,19 @@ def parse_newlines(string: str) -> Tuple[str]:
 def strfwarning(string: str) -> str: return f"{Fore.LIGHTYELLOW_EX}{string}"
 def strferror(string: str) -> str: return f"{Fore.LIGHTRED_EX}{string}"
 def strfsuccess(string: str) -> str: return f"{Fore.LIGHTGREEN_EX}{string}"
+def strfhighlight(string: str) -> str: return f"{Fore.LIGHTCYAN_EX}{string}"
 
 
 def guinormal(string: str) -> str:
     if isinstance(string, str):
         prefix, suffix = parse_newlines(string)
         return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[NORMAL]};">{string.strip()}</span></p>{suffix}'
+
+
+def guihighlight(string: str) -> str:
+    if isinstance(string, str):
+        prefix, suffix = parse_newlines(string)
+        return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[INFO]};font-weight:bold;">{string.strip()}</span></p>{suffix}'
 
 
 def guiwarning(string: str) -> str:
@@ -83,6 +90,12 @@ class Logger(metaclass=Singleton):
             print(guinormal(content))
         else:
             print(content)
+
+    def highlight(self, content: str):
+        if self.mode == 'GUI':
+            print(guihighlight(content))
+        else:
+            print(strfhighlight(content))
 
     def warning(self, content: str):
         if self.mode == 'GUI':

@@ -188,6 +188,7 @@ def copy_pattern_from_files(files: Iterable[Path],
     else:
         if copyobjs:
             for copy_obj in copyobjs:
-                log.info(f"{str(copy_obj.src)} -> {str(copy_obj.dst)}")
+                log.info(f"-- {str(copy_obj.src)}")
+                log.highlight(f"-- {str(copy_obj.dst)}\n")
         else:
             log.warning("Nothing matched")
