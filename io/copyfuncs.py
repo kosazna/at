@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import shutil
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Iterable, List, Optional, Tuple, Union
 
-from at.io.object import CopyObject, FilterObject
+from at.io.object import CopyObject
 from at.io.pattern import FilePattern
 from at.logger import log
 from at.text import replace_all
