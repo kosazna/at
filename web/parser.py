@@ -44,9 +44,12 @@ def multi_parse_soup(soup: BeautifulSoup,
         content = None
 
     if content is not None:
+        elements = []
         if element.SUB is not None:
-            return [parse_soup(soup=i,
-                               element=element.SUB) for i in content]
+            for subcontent in content:
+                elements.extend(multi_parse_soup(soup=subcontent,
+                                                 element=element.SUB))
+            return elements
         else:
             if element.ATTRIBUTE is not None:
                 return [i.get(element.ATTRIBUTE) for i in content]
