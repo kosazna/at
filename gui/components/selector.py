@@ -42,6 +42,12 @@ class PathSelector(QWidget):
         elif selectortype == 'file_out':
             self.path = FileOutput(editsize=editsize, parent=self)
 
+        if self.mapping:
+            first_mapping_item = list(self.mapping)[0]
+            self.combo.setCurrentText(first_mapping_item)
+        
+        self.onComboChange()
+
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()
             layout.setSpacing(4)
@@ -113,6 +119,9 @@ class PathSelector(QWidget):
     def setPlaceholder(self, text: str):
         self.path.setPlaceholder(text)
 
+    def subscribe(self, func):
+        self.combo.subscribe(func)
+
 
 class StrSelector(QWidget):
     def __init__(self,
@@ -141,7 +150,8 @@ class StrSelector(QWidget):
         if self.mapping:
             first_mapping_item = list(self.mapping)[0]
             self.combo.setCurrentText(first_mapping_item)
-            self.input.setText(self.mapping[first_mapping_item])
+
+        self.onComboChange()
 
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()
@@ -211,6 +221,9 @@ class StrSelector(QWidget):
     def setText(self, text: str):
         self.input.setText(text)
 
+    def subscribe(self, func):
+        self.combo.subscribe(func)
+
 
 class FilterFileSelector(QWidget):
     def __init__(self,
@@ -243,10 +256,10 @@ class FilterFileSelector(QWidget):
         self.recursive.toggle()
 
         if self.mapping:
-            first_mapping_item = list(self.mapping)[0]
+            first_mapping_item = list(self.mapping)[2]
             self.combo.setCurrentText(first_mapping_item)
 
-        self.keepCombo.setCurrentText(self.keep[0])
+        self.keepCombo.setCurrentText(self.keep[1])
 
         if orientation == HORIZONTAL:
             layout = QHBoxLayout()
@@ -280,6 +293,17 @@ class FilterFileSelector(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
 
         self.setLayout(layout)
+
+    def setText(self,
+                combo1: Optional[str] = None,
+                combo2: Optional[str] = None,
+                text: Optional[str] = None):
+        if combo1 is not None:
+            self.combo.setCurrentText(combo1)
+        if combo2 is not None:
+            self.keepCombo.setCurrentText(combo2)
+        if text is not None:
+            self.input.setText(text)
 
     def getCurrentText(self):
         return self.combo.getCurrentText()

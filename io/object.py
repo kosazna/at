@@ -96,7 +96,7 @@ class FilterObject:
         else:
             __filters = _filters
 
-        return __filters
+        return __filters if __filters is not None else list()
 
     def __iter__(self):
         return iter(self.filters)
@@ -143,8 +143,12 @@ class FilterObject:
     def search(self, directory: Union[str, Path], keep: Optional[str] = None):
         dir_path = Path(directory)
         files: List[Path] = []
-        for f in self.filters:
-            files.extend(list(dir_path.glob(f)))
+
+        if self.filters:
+            for f in self.filters:
+                files.extend(list(dir_path.glob(f)))
+        else:
+            files.extend(list(dir_path.iterdir()))
 
         if keep == 'files':
             return [p for p in files if p.is_file()]

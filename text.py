@@ -28,6 +28,8 @@ def create_hex_string(string: str) -> str:
 
 
 def parse_filters(text: str) -> list:
-    if '|' in text:
-        return text.split('|')
-    return [text]
+    if text:
+        if '|' in text:
+            return text.split('|')
+        return [text]
+    return None
