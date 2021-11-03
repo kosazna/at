@@ -45,6 +45,8 @@ def zip_files(src: Union[str, Path],
 
     if dst is None:
         dst_path = src_path
+    elif dst == '':
+        dst_path = Path.cwd()
     else:
         dst_path = Path(dst)
 

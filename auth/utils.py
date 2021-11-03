@@ -48,8 +48,12 @@ def create_lic_zip(authdata: Union[str, Path],
                    appname=appname,
                    folder=folder,
                    date=date)
+
     out_name = f"{start_date}_{periods}lic"
     zip_files(src=folder, dst=folder, save_name=out_name, file_filter='*.lic')
+
+    for p in Path(folder).glob('*.lic'):
+        p.unlink()
 
     return Result.success('License created successfully')
 
