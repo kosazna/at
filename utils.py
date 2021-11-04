@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import List, Optional, Tuple, Union
+from win32com.client import Dispatch
 
 from at.io.utils import load_json, write_json
 from at.logger import log
@@ -9,6 +10,24 @@ from at.logger import log
 
 def user() -> str:
     return os.environ.get('USERNAME')
+
+
+def make_shortcut(src: Union[str, Path],
+                  dst: Union[str, Path],
+                  shortcut_name: Optional[str] = None):
+    src_path = Path(src)
+    dst_path = Path(dst)
+
+    if shortcut_name is None:
+        shortcut_path = dst_path.joinpath(f"{src_path.stem}.lnk")
+    else:
+        shortcut_path = dst_path.joinpath(f"{shortcut_name}.lnk")
+
+    shell = Dispatch("WScript.Shell")
+    shortcut = shell.CreateShortCut(str(shortcut_path))
+    shortcut.Targetpath = str(src_path)
+    shortcut.WindowStyle = 1
+    shortcut.save()
 
 
 def parse_xlsx_filepath(text: str) -> Tuple[str, Union[str, int]]:
