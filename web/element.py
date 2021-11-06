@@ -1,28 +1,32 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Union
+from typing import Optional
 
 
 @dataclass
 class Element:
-    NAME: Union[str, None] = None
-    TAG: Union[str, None] = None
-    CLASS: Union[str, None] = None
-    ID: Union[str, None] = None
-    XPATH: Union[str, None] = None
-    TEXT: bool = True
-    ATTRIBUTE: Union[str, None] = None
-    SUB: Union[Element, None] = None
-    LOC: Union[int, None] = None
-    DEFAULT: Union[str, None] = None
+    name: Optional[str] = None
+    tag: Optional[str] = None
+    _class: Optional[str] = None
+    _id: Optional[str] = None
+    _xpath: Optional[str] = None
+    attribute: Optional[str] = None
+    return_text: bool = True
+    loc: Optional[int] = None
+    default: Optional[str] = None
+    child: Optional[Element] = None
+    parent: Optional[Element] = None
 
     @property
-    def attrs(self):
+    def props(self):
         _attrs = {}
-        if self.CLASS is not None:
-            _attrs['class'] = self.CLASS
-        if self.ID is not None:
-            _attrs['id'] = self.ID
+        if self._class is not None:
+            _attrs['class'] = self._class
+        if self._id is not None:
+            _attrs['id'] = self._id
 
         return _attrs
+
+    def has_children(self):
+        return False if self.child is None else True

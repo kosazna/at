@@ -9,23 +9,23 @@ from bs4 import BeautifulSoup
 def parse_soup(soup: BeautifulSoup,
                element: Element) -> Union[str, BeautifulSoup, None]:
     try:
-        attrs = element.attrs
+        attrs = element.props
 
         if attrs:
-            content = soup.find(element.TAG, element.attrs)
+            content = soup.find(element.tag, element.props)
         else:
-            content = soup.find(element.TAG)
+            content = soup.find(element.tag)
     except KeyError:
         content = None
 
     if content is not None:
-        if element.SUB is not None:
+        if element.has_children():
             return parse_soup(soup=content,
-                              element=element.SUB)
+                              element=element.child)
         else:
-            if element.ATTRIBUTE is not None:
-                return content.get(element.ATTRIBUTE)
-            return content.text if element.TEXT else content
+            if element.attribute is not None:
+                return content.get(element.attribute)
+            return content.text if element.return_text else content
     return None
 
 
@@ -34,24 +34,24 @@ def multi_parse_soup(soup: BeautifulSoup,
                                                 List[BeautifulSoup],
                                                 list]:
     try:
-        attrs = element.attrs
+        attrs = element.props
 
         if attrs:
-            content = soup.find_all(element.TAG, element.attrs)
+            content = soup.find_all(element.tag, element.props)
         else:
-            content = soup.find_all(element.TAG)
+            content = soup.find_all(element.tag)
     except KeyError:
         content = None
 
     if content is not None:
         elements = []
-        if element.SUB is not None:
+        if element.has_children():
             for subcontent in content:
                 elements.extend(multi_parse_soup(soup=subcontent,
-                                                 element=element.SUB))
+                                                 element=element.child))
             return elements
         else:
-            if element.ATTRIBUTE is not None:
-                return [i.get(element.ATTRIBUTE) for i in content]
-            return [i.text for i in content] if element.TEXT else content
+            if element.attribute is not None:
+                return [i.get(element.attribute) for i in content]
+            return [i.text for i in content] if element.return_text else content
     return list()
