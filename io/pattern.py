@@ -37,6 +37,9 @@ class FilePattern(object):
         elif '$' in pattern:
             kind = "FolderPattern"  # "<ota$2><shapefile$1>"
             return pattern, kind
+        elif '-' in pattern:
+            kind = "HyphenPattern"
+            return pattern, kind
         else:
             raise ValueError("At least one of '@' or '_' should be in pattern")
 
@@ -81,6 +84,11 @@ class FilePattern(object):
                     self.tokens[part] = {'start': None,
                                          'end': None,
                                          'index': idx}
+        elif self.kind == "HyphenPattern":
+            for idx, part in enumerate(parts):
+                self.tokens[part] = {'start': None,
+                                     'end': None,
+                                     'index': idx}
         elif self.kind == "PlaceholderPattern":
             atcount = pattern.count('@')
             if atcount == nparts:
@@ -142,6 +150,13 @@ class FilePattern(object):
                         values[var] = text[s:e]
         elif self.kind == "UnderscorePattern":
             splitted = text.split('_', maxsplit=len(self.tokens) - 1)
+            for var in self.tokens:
+                try:
+                    values[var] = splitted[self.tokens[var]['index']]
+                except IndexError:
+                    values[var] = None
+        elif self.kind == "HyphenPattern":
+            splitted = text.split('-', maxsplit=len(self.tokens) - 1)
             for var in self.tokens:
                 try:
                     values[var] = splitted[self.tokens[var]['index']]
