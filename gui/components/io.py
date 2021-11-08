@@ -93,12 +93,13 @@ class IOWidget(QWidget):
     def updateStyle(self, status: str):
         self.lineEdit.setObjectName(status)
         self.lineEdit.setStyleSheet(self.styleSheet())
+        current_text = self.lineEdit.text()
         if status == self.ok[0]:
-            self.lineEdit.setToolTip(self.ok[1])
+            self.lineEdit.setToolTip(f"{self.ok[1]} - {current_text}")
         elif status == self.warning[0]:
-            self.lineEdit.setToolTip(self.warning[1])
+            self.lineEdit.setToolTip(f"{self.warning[1]} - {current_text}")
         elif status == self.error[0]:
-            self.lineEdit.setToolTip(self.error[1])
+            self.lineEdit.setToolTip(f"{self.error[1]} - {current_text}")
         else:
             self.lineEdit.setToolTip("")
 
