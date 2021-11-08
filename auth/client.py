@@ -49,6 +49,11 @@ class Authorize(metaclass=Singleton):
         self.user = alias
         log.success("Alias set successfully")
 
+    def get_categories(self) -> list:
+        if self.auth:
+            return self.auth[self.user]['categories']
+        return list()
+
     def _reload(self) -> None:
         if not self.debug:
             try:
@@ -91,7 +96,7 @@ class Authorize(metaclass=Singleton):
                 if category not in self.auth[self.user]['categories']:
                     return False, UNAUTHORISED
                 if domain not in self.auth[self.user]['action']:
-                    return False, f"'{domain}' is not in licensing info"
+                    return False, f"License deactivated for action"
                 else:
                     try:
                         if self.actions < 10:
