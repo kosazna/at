@@ -74,6 +74,7 @@ class FilePattern(object):
                                              'end': None,
                                              'index': int(idx)-1}
         elif self.kind == "UnderscorePattern":
+            self.nparts = pattern.count('_')
             for idx, part in enumerate(parts):
                 if '#' in part:
                     var_name, idx = part.split('#')
@@ -85,6 +86,7 @@ class FilePattern(object):
                                          'end': None,
                                          'index': idx}
         elif self.kind == "HyphenPattern":
+            self.nparts = pattern.count('-')
             for idx, part in enumerate(parts):
                 self.tokens[part] = {'start': None,
                                      'end': None,
@@ -149,14 +151,14 @@ class FilePattern(object):
                     else:
                         values[var] = text[s:e]
         elif self.kind == "UnderscorePattern":
-            splitted = text.split('_', maxsplit=len(self.tokens) - 1)
+            splitted = text.split('_', maxsplit=self.nparts)
             for var in self.tokens:
                 try:
                     values[var] = splitted[self.tokens[var]['index']]
                 except IndexError:
                     values[var] = None
         elif self.kind == "HyphenPattern":
-            splitted = text.split('-', maxsplit=len(self.tokens) - 1)
+            splitted = text.split('-', maxsplit=self.nparts)
             for var in self.tokens:
                 try:
                     values[var] = splitted[self.tokens[var]['index']]
