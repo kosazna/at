@@ -124,8 +124,7 @@ def copy_pattern(src: Union[str, Path],
                 name = replace_all(save_name, parts)
 
             if save_pattern is None:
-                d = dst_path.joinpath(
-                    p.stem) if pattern.kind == 'FolderPattern' else dst_path
+                d = dst_path
             else:
                 sub_dst = replace_all(save_pattern, parts)
                 d = dst_path.joinpath(sub_dst)
@@ -175,8 +174,7 @@ def copy_pattern_from_files(files: Iterable[Path],
             name = pattern.replace(save_name, parts)
 
         if save_pattern is None:
-            d = dst_path.joinpath(
-                p.stem) if pattern.kind == 'FolderPattern' else dst_path
+            d = dst_path
         else:
             sub_dst = pattern.replace(save_pattern, parts, accept_none=True)
             d = dst_path.joinpath(sub_dst)
