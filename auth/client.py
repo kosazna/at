@@ -51,7 +51,8 @@ class Authorize(metaclass=Singleton):
 
     def get_categories(self) -> list:
         if self.auth:
-            return self.auth[self.user]['categories']
+            if self.user in self.auth:
+                return self.auth[self.user]['categories']
         return list()
 
     def _reload(self) -> None:
@@ -61,10 +62,13 @@ class Authorize(metaclass=Singleton):
                 self.auth = json.loads(self.r.text)
 
                 if self.auth_loc is not None:
-                    if self.auth[self.user]['templic']:
-                        create_lic(authdata=self.auth,
-                                   appname=self.appname,
-                                   folder=self.auth_loc)
+                    try:
+                        if self.auth[self.user]['templic']:
+                            create_lic(authdata=self.auth,
+                                       appname=self.appname,
+                                       folder=self.auth_loc)
+                    except KeyError:
+                        log.info("Can't create temporary authentication")
             except ConnectionError:
                 if self.auth_loc is not None:
                     date_str = timestamp(time=False)
@@ -82,8 +86,9 @@ class Authorize(metaclass=Singleton):
                     self.auth = {}
 
     def change_user_auth(self, status: bool):
-        for domain in self.auth[self.user]['action']:
-            self.auth[self.user]['action'][domain] = status
+        if self.user in self.auth:
+            for domain in self.auth[self.user]['action']:
+                self.auth[self.user]['action'][domain] = status
 
     def is_licensed(self,
                     domain: Optional[str] = None,
@@ -92,41 +97,13 @@ class Authorize(metaclass=Singleton):
             return True, 'Debug Mode'
 
         if self.auth:
-            if category is not None and domain is not None:
-                if category not in self.auth[self.user]['categories']:
-                    return False, UNAUTHORISED
-                if domain not in self.auth[self.user]['action']:
-                    return False, f"License deactivated for action"
-                else:
-                    try:
-                        if self.actions < 10:
-                            self.actions += 1
-                            _valid = self.auth[self.user]['action'][domain]
-                            _info = AUTHORISED if _valid else UNAUTHORISED
-                            return _valid, _info
-                        else:
-                            self._reload()
-                            self.actions += 1
-                            _valid = self.auth[self.user]['action'][domain]
-                            _info = AUTHORISED if _valid else UNAUTHORISED
-                            return _valid, _info
-                    except KeyError:
-                        return False, "User not authorised"
-            elif category is not None and domain is None:
-                if category in self.auth[self.user]['categories']:
-                    if self.actions < 10:
-                        self.actions += 1
-                        return True, AUTHORISED
+            try:
+                if category is not None and domain is not None:
+                    if category not in self.auth[self.user]['categories']:
+                        return False, UNAUTHORISED
+                    if domain not in self.auth[self.user]['action']:
+                        return False, f"License deactivated for action"
                     else:
-                        self._reload()
-                        self.actions += 1
-                        return True, AUTHORISED
-                return False, UNAUTHORISED
-            else:
-                if domain not in self.auth[self.user]['action']:
-                    return False, f"'{domain}' is not in licensing info"
-                else:
-                    try:
                         if self.actions < 10:
                             self.actions += 1
                             _valid = self.auth[self.user]['action'][domain]
@@ -138,8 +115,33 @@ class Authorize(metaclass=Singleton):
                             _valid = self.auth[self.user]['action'][domain]
                             _info = AUTHORISED if _valid else UNAUTHORISED
                             return _valid, _info
-                    except KeyError:
-                        return False, "User not authorised"
+                elif category is not None and domain is None:
+                    if category in self.auth[self.user]['categories']:
+                        if self.actions < 10:
+                            self.actions += 1
+                            return True, AUTHORISED
+                        else:
+                            self._reload()
+                            self.actions += 1
+                            return True, AUTHORISED
+                    return False, UNAUTHORISED
+                else:
+                    if domain not in self.auth[self.user]['action']:
+                        return False, f"'{domain}' is not in licensing info"
+                    else:
+                        if self.actions < 10:
+                            self.actions += 1
+                            _valid = self.auth[self.user]['action'][domain]
+                            _info = AUTHORISED if _valid else UNAUTHORISED
+                            return _valid, _info
+                        else:
+                            self._reload()
+                            self.actions += 1
+                            _valid = self.auth[self.user]['action'][domain]
+                            _info = AUTHORISED if _valid else UNAUTHORISED
+                            return _valid, _info
+            except KeyError:
+                return False, "User not authorised"
         else:
             return False, "Can't verify authentication due to internet access"
 
