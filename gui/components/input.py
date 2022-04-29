@@ -144,5 +144,8 @@ class IntInput(QWidget):
     def getText(self):
         return self.lineEdit.text()
 
+    def getInt(self):
+        return int(self.lineEdit.text())
+
     def setPlaceholder(self, text: str):
         self.lineEdit.setPlaceholderText(text)
