@@ -10,7 +10,7 @@ from at.gui.components.input import IntInput, StrInput
 from at.gui.components.io import FileInput, FileOutput, FolderInput
 from at.gui.components.label import Label
 from at.gui.components.line import HLine
-from at.gui.components.check import ListWidget
+from at.gui.components.checklist import ListWidget
 from at.gui.components.popup import Popup, show_popup
 from at.gui.components.progress import ProgressBar
 from at.gui.components.selector import (FilterFileSelector, PathSelector,
