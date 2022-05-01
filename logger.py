@@ -48,30 +48,40 @@ def guinormal(string: str) -> str:
     if isinstance(string, str):
         prefix, suffix = parse_newlines(string)
         return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[NORMAL]};">{string.strip()}</span></p>{suffix}'
+    else:
+        return f'{GUI_EMPTY}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[NORMAL]};">{repr(string)}</span></p>{GUI_EMPTY}'
 
 
 def guihighlight(string: str) -> str:
     if isinstance(string, str):
         prefix, suffix = parse_newlines(string)
         return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[INFO]};font-weight:bold;">{string.strip()}</span></p>{suffix}'
+    else:
+        return f'{GUI_EMPTY}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[INFO]};">{repr(string)}</span></p>{GUI_EMPTY}'
 
 
 def guiwarning(string: str) -> str:
     if isinstance(string, str):
         prefix, suffix = parse_newlines(string)
         return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[WARNING]};font-weight:bold;">{string.strip()}</span></p>{suffix}'
+    else:
+        return f'{GUI_EMPTY}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[WARNING]};">{repr(string)}</span></p>{GUI_EMPTY}'
 
 
 def guierror(string: str) -> str:
     if isinstance(string, str):
         prefix, suffix = parse_newlines(string)
         return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[ERROR]};font-weight:bold;">{string.strip()}</span></p>{suffix}'
+    else:
+        return f'{GUI_EMPTY}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[ERROR]};">{repr(string)}</span></p>{GUI_EMPTY}'
 
 
 def guisuccess(string: str) -> str:
     if isinstance(string, str):
         prefix, suffix = parse_newlines(string)
         return f'{prefix}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[SUCCESS]};font-weight:bold;">{string.strip()}</span></p>{suffix}'
+    else:
+        return f'{GUI_EMPTY}<p style="margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style="color:{color[SUCCESS]};">{repr(string)}</span></p>{GUI_EMPTY}'
 
 
 class Logger(metaclass=Singleton):
