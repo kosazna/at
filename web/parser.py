@@ -4,10 +4,11 @@ from typing import List, Union
 
 from at.web.element import Element
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 
 
 def parse_soup(soup: BeautifulSoup,
-               element: Element) -> Union[str, BeautifulSoup, None]:
+               element: Element) -> Union[str, Tag, None]:
     try:
         content = soup.find(**element.bs4_props())
     except KeyError:
@@ -29,8 +30,8 @@ def parse_soup(soup: BeautifulSoup,
 
 def multi_parse_soup(soup: BeautifulSoup,
                      element: Element) -> Union[List[str],
-                                                List[BeautifulSoup],
-                                                list]:
+                                                List[Tag],
+                                                None]:
     try:
         content = soup.find_all(**element.bs4_props())
     except KeyError:
