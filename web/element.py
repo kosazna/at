@@ -74,7 +74,7 @@ class Element:
 
         if self.class_name is not None:
             _attrs['class'] = self.class_name
-        if self._id is not None:
+        if self.id is not None:
             _attrs['id'] = self.id
 
         if self.tag is not None:
