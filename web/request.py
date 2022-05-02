@@ -15,7 +15,7 @@ ua = UserAgent()
 
 
 def get_headers(browser):
-    if browser == 'firefox':
+    if browser == 'Firefox':
         headers = {
             "User-Agent": f"{ua.firefox}",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -43,10 +43,10 @@ def get_headers(browser):
 
 
 def get_user_agent(browser):
-    return ua.firefox if browser == 'firefox' else ua.chrome
+    return ua.firefox if browser == 'Firefox' else ua.chrome
 
 
-def request_soup(url, browser='firefox'):
+def request_soup(url, browser='Firefox'):
     headers = get_headers(browser)
 
     r = requests.get(url, headers=headers)

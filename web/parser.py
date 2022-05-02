@@ -9,12 +9,7 @@ from bs4 import BeautifulSoup
 def parse_soup(soup: BeautifulSoup,
                element: Element) -> Union[str, BeautifulSoup, None]:
     try:
-        attrs = element.props
-
-        if attrs:
-            content = soup.find(element.tag, element.props)
-        else:
-            content = soup.find(element.tag)
+        content = soup.find(**element.bs4_props())
     except KeyError:
         content = None
 
@@ -24,8 +19,11 @@ def parse_soup(soup: BeautifulSoup,
                               element=element.child)
         else:
             if element.attribute is not None:
+                if element.attribute == 'text':
+                    return content.text
                 return content.get(element.attribute)
-            return content.text if element.return_text else content
+            else:
+                return content
     return None
 
 
@@ -34,12 +32,7 @@ def multi_parse_soup(soup: BeautifulSoup,
                                                 List[BeautifulSoup],
                                                 list]:
     try:
-        attrs = element.props
-
-        if attrs:
-            content = soup.find_all(element.tag, element.props)
-        else:
-            content = soup.find_all(element.tag)
+        content = soup.find_all(**element.bs4_props())
     except KeyError:
         content = None
 
@@ -47,11 +40,14 @@ def multi_parse_soup(soup: BeautifulSoup,
         elements = []
         if element.has_children():
             for subcontent in content:
-                elements.extend(multi_parse_soup(soup=subcontent,
-                                                 element=element.child))
+                elements.extend(parse_soup(soup=subcontent,
+                                           element=element.child))
             return elements
         else:
             if element.attribute is not None:
+                if element.attribute == 'text':
+                    return [i.text for i in content]
                 return [i.get(element.attribute) for i in content]
-            return [i.text for i in content] if element.return_text else content
-    return list()
+            else:
+                return content
+    return None
