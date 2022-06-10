@@ -1,26 +1,12 @@
-import random
+from pathlib import Path
+import re
+from at.database.object import QueryObject
+from at.database.sqlite import SQLiteEngine
+text = Path("C:/Users/aznavouridis.k/.ktima/static/sql/select_ota_from_meleti.sql").read_text('utf-8')
+data = Path("C:/Users/aznavouridis.k/.ktima/ktima.db")
+# print(eval(re.search(r'{.*}', text).group()))
+# print(re.sub(r'--{.*}', '', text).strip())
 
-random.seed(1994)
-num1 = input("Give number:\n")
-num2 = str(random.randint(1000, 9999))
-
-lnum1 = list(num1)
-lnum2 = list(num2)
-snum1 = set(num1)
-snum2 = set(num2)
-occurence_cnt = 0
-digit_cnt = 0
-
-for idx, i in enumerate(snum1):
-    if i in snum2:
-        occurence_cnt += 1
-
-for idx, i in enumerate(lnum1):
-    if lnum1[idx] == lnum2[idx]:
-        digit_cnt += 1
-
-print(f"\n  User: {num1}")
-print(f"Random: {num2}")
-print("-" * 12)
-print(f"+ : {digit_cnt}")
-print(f"? : {occurence_cnt}")
+a = QueryObject(text).set(meleti="KT5-14")
+dbs = SQLiteEngine(data)
+print(a)

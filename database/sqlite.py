@@ -2,7 +2,7 @@
 
 from pathlib import Path
 from subprocess import Popen
-from typing import Union
+from typing import Union, Optional
 
 from at.logger import log
 from at.path import PathEngine
@@ -14,11 +14,13 @@ from at.state import State
 class SQLiteEngine:
     def __init__(self,
                  db: Union[str, Path],
-                 app_paths: PathEngine) -> None:
+                 app_paths: Optional[PathEngine] = None) -> None:
         self.db = str(db)
-        self.paths = app_paths
-        self.init_queries = load_app_queries(self.paths.get_init_sql())
-        self._db_init()
+
+        if app_paths is not None:
+            self.paths = app_paths
+            self.init_queries = load_app_queries(self.paths.get_init_sql())
+            self._db_init()
 
     def _db_init(self):
         if Path(self.db).exists():

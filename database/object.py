@@ -16,6 +16,13 @@ class QueryObject:
     data: Union[List[tuple], None] = None
 
     def __post_init__(self):
+        result_params = re.search(r'{.*}', self.query)
+        if result_params is not None:
+            result_params_dict = eval(result_params.group())
+            if result_params_dict:
+                self.attrs(**result_params_dict)
+            self.query = re.sub(r'--{.*}', '', self.query).strip()
+
         if ':' in self.query:
             params = {}
             parameters = [p.strip(':') for p in re.findall(r':\w+', self.query)]
@@ -24,7 +31,7 @@ class QueryObject:
             self.params = params
 
     def __str__(self) -> str:
-        return f"Query(fetch={self.fetch}, cols={self.colname}, params={self.params})\n{self.query}\n"
+        return f"<Query(fetch={self.fetch}, colname={self.colname}, default={self.default}, params={self.params})>\n{self.query}\n"
 
     def attrs(self, **kwargs: Any) -> QueryObject:
         for param in self.__dict__:
