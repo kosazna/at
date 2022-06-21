@@ -13,6 +13,10 @@ from at.singleton import Singleton
 from at.text import create_hex_string
 from at.utils import user
 from requests.exceptions import ConnectionError
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 AUTHORISED = "Authorised"
 UNAUTHORISED = "Unauthorised"
@@ -25,7 +29,7 @@ class AuthStatus:
 
 
 class Authorize(metaclass=Singleton):
-    TOKEN = '33e7a243e44dc089cd52476a3baebc59db6677e2'
+    TOKEN = os.getenv("GITHUB_TOKEN")
     OWNER = 'kosazna'
     REPO = 'atauth'
 

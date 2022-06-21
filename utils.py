@@ -2,10 +2,13 @@
 import os
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
-from win32com.client import Dispatch
+import sys
 
 from at.io.utils import load_json, write_json
 from at.logger import log
+
+if sys.platform == "win32":
+    from win32com.client import Dispatch
 
 
 def user() -> str:

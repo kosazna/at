@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 import pickle
-from os import startfile
+import sys
+import subprocess
 from pathlib import Path
 from shutil import unpack_archive
 from typing import Any, List, Tuple, Union
@@ -10,7 +11,13 @@ import zipfile
 
 
 def open_excel(filepath: Union[str, Path]) -> None:
-    startfile(filepath)
+
+    if sys.platform == "win32":
+        from os import startfile
+        startfile(filepath)
+    else:
+        opener = "open" if sys.platform == "darwin" else "xdg-open"
+        subprocess.call([opener, filepath])
 
 
 def load_json(filepath: Union[str, Path]) -> dict:
