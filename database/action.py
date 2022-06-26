@@ -1,86 +1,81 @@
 # -*- coding: utf-8 -*-
 
 from contextlib import closing
-from sqlite3 import Connection, Cursor, Error, connect
 from typing import Union
 
 from at.logger import log
-from at.database.object import QueryObject
+from at.database.query import Query
 
 
-def select(cursor: Cursor, query_obj: QueryObject):
-    if query_obj.params is None:
-        cursor.execute(query_obj.query)
+def select(cursor, query: Query):
+    if query.params is None:
+        cursor.execute(query.sql)
     else:
-        cursor.execute(query_obj.query, query_obj.params)
+        cursor.execute(query.sql, query.params)
 
-    if query_obj.fetch == 'one':
+    if query.fetch == 'one':
         r = cursor.fetchone()
-        return query_obj.default if r is None else r[0]
-    elif query_obj.fetch == 'row':
+        return query.default if r is None else r[0]
+    elif query.fetch == 'row':
         r = cursor.fetchone()
-        if r is not None and query_obj.colname == True:
+        if r is not None and query.columns == True:
             cols = [d[0] for d in cursor.description]
             return tuple(cols), r
         else:
-            return query_obj.default if r is None else r
+            return query.default if r is None else r
     else:
         r = cursor.fetchall()
-        if query_obj.fetch == 'rows':
-            if r is not None and query_obj.colname == True:
+        if query.fetch == 'rows':
+            if r is not None and query.columns == True:
                 cols = [d[0] for d in cursor.description]
                 return tuple(cols), r
             else:
-                return query_obj.default if r is None else r
-        elif query_obj.fetch == 'col':
+                return query.default if r is None else r
+        elif query.fetch == 'col':
             content = [i[0] for i in r]
-            return query_obj.default if r is None else tuple(content)
+            return query.default if r is None else tuple(content)
 
 
-def update(connection: Connection, cursor: Cursor, query_obj: QueryObject):
-    cursor.execute(query_obj.query, query_obj.params)
+def update(connection, cursor, query: Query):
+    cursor.execute(query.sql, query.params)
     connection.commit()
 
 
-def insert(connection: Connection, cursor: Cursor, query_obj: QueryObject):
-    if query_obj.data is not None:
-        cursor.executemany(query_obj.query, query_obj.data)
+def insert(connection, cursor, query: Query):
+    if query.data is not None:
+        cursor.executemany(query.sql, query.data)
     else:
-        cursor.execute(query_obj.query, query_obj.params)
+        cursor.execute(query.sql, query.params)
     connection.commit()
 
 
-def db_select(db: str, query_obj: QueryObject):
+def db_select(connection, query: Query):
     try:
-        with closing(connect(db)) as con:
-            with closing(con.cursor()) as cur:
-                return select(cursor=cur, query_obj=query_obj)
-    except Error as e:
-        log.error(f"{str(e)} from {db}")
+        with closing(connection.cursor()) as cur:
+            return select(cursor=cur, query=query)
+    except Exception as e:
+        log.error(str(e))
 
 
-def db_update(db: str, query_obj: QueryObject):
+def db_update(connection, query: Query):
     try:
-        with closing(connect(db)) as con:
-            with closing(con.cursor()) as cur:
-                update(connection=con, cursor=cur, query_obj=query_obj)
-    except Error as e:
-        log.error(f"{str(e)} from {db}")
+        with closing(connection.cursor()) as cur:
+            update(connection=connection, cursor=cur, query=query)
+    except Exception as e:
+        log.error(str(e))
 
 
-def db_insert(db: str, query_obj: QueryObject):
+def db_insert(connection, query: Query):
     try:
-        with closing(connect(db)) as con:
-            with closing(con.cursor()) as cur:
-                insert(connection=con, cursor=cur, query_obj=query_obj)
-    except Error as e:
-        log.error(f"{str(e)} from {db}")
+        with closing(connection.cursor()) as cur:
+            insert(connection=connection, cursor=cur, query=query)
+    except Exception as e:
+        log.error(str(e))
 
 
-def db_script(db: str, script: Union[str, QueryObject]):
-    with closing(connect(db)) as con:
-        with closing(con.cursor()) as cur:
-            if isinstance(script, QueryObject):
-                cur.executescript(script.query)
-            else:
-                cur.executescript(script)
+def db_script(connection, script: Union[str, Query]):
+    with closing(connection.cursor()) as cur:
+        if isinstance(script, Query):
+            cur.executescript(script.sql)
+        else:
+            cur.executescript(script)

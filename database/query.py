@@ -5,35 +5,46 @@ import re
 from dataclasses import dataclass
 from typing import Any, List, Union
 
+SQLITE_PARAM_REGEX = r':\w+'
+MYSQL_PARAM_REGEX = r'\%\((\w*)\)s'
+
 
 @dataclass
-class QueryObject:
-    query: str
+class Query:
+    sql: str
     fetch: str = 'one'  # 'one', 'row', 'rows', 'col'
-    colname: bool = False
+    columns: bool = False
     default: Any = None
     params: Union[dict, None] = None
     data: Union[List[tuple], None] = None
 
     def __post_init__(self):
-        result_params = re.search(r'{.*}', self.query)
+        result_params = re.search(r'{.*}', self.sql)
         if result_params is not None:
             result_params_dict = eval(result_params.group())
             if result_params_dict:
                 self.attrs(**result_params_dict)
-            self.query = re.sub(r'--{.*}', '', self.query).strip()
+            self.sql = re.sub(r'--{.*}', '', self.sql).strip()
 
-        if ':' in self.query:
+        mysql_params = re.findall(MYSQL_PARAM_REGEX, self.sql)
+        sqlite_params = re.findall(SQLITE_PARAM_REGEX, self.sql)
+
+        if mysql_params:
             params = {}
-            parameters = [p.strip(':') for p in re.findall(r':\w+', self.query)]
+            for p in mysql_params:
+                params[p] = None
+            self.params = params
+        elif sqlite_params:
+            params = {}
+            parameters = [p.strip(':') for p in sqlite_params]
             for p in parameters:
                 params[p] = None
             self.params = params
 
     def __str__(self) -> str:
-        return f"<Query(fetch={self.fetch}, colname={self.colname}, default={self.default}, params={self.params})>\n{self.query}\n"
+        return f"<Query(fetch={self.fetch}, colname={self.columns}, default={self.default}, params={self.params})>\n{self.sql}\n"
 
-    def attrs(self, **kwargs: Any) -> QueryObject:
+    def attrs(self, **kwargs: Any) -> Query:
         for param in self.__dict__:
             value = kwargs.get(param, None)
             if value is not None:
@@ -41,7 +52,7 @@ class QueryObject:
 
         return self
 
-    def set(self, **kwargs: Any) -> QueryObject:
+    def set(self, **kwargs: Any) -> Query:
         if 'datastream' in kwargs:
             self.data = kwargs['datastream']
         else:
