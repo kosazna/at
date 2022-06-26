@@ -1,7 +1,6 @@
 from pathlib import Path
 import re
-from at.database.object import Query
-from at.database.sqlite import SQLiteEngine
+from at.database import Query, SQLiteEngine, MySQLEngine
 
 text = Path(
     "C:/Users/aznavouridis.k/.ktima/static/sql/select_ota_from_meleti.sql").read_text('utf-8')
