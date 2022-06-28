@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from contextlib import closing
-from typing import Union
+from typing import Union, Optional
 
 from at.logger import log
 from at.database.query import Query
@@ -30,10 +30,10 @@ def select(cursor, query: Query):
                 cols = [d[0] for d in cursor.description]
                 return tuple(cols), r
             else:
-                return query.default if r is None else r
+                return query.default if not r or (r is None)  else r
         elif query.fetch == 'col':
             content = [i[0] for i in r]
-            return query.default if r is None else tuple(content)
+            return query.default if not r or (r is None) else tuple(content)
 
 
 def update(connection, cursor, query: Query):
@@ -49,10 +49,15 @@ def insert(connection, cursor, query: Query):
     connection.commit()
 
 
-def db_select(connection, query: Query):
+def db_select(connection, query: Query, dictionary: Optional[bool] = None):
     try:
-        with closing(connection.cursor()) as cur:
-            return select(cursor=cur, query=query)
+        if dictionary is not None:
+            with closing(connection.cursor(dictionary=dictionary,
+                                           buffered=True)) as cur:
+                return select(cursor=cur, query=query)
+        else:
+            with closing(connection.cursor()) as cur:
+                return select(cursor=cur, query=query)
     except Exception as e:
         log.error(str(e))
 

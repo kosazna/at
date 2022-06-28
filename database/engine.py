@@ -64,8 +64,19 @@ class SQLiteEngine:
     def insert(self, query: Query):
         db_insert(connection=self.connection, query=query)
 
-    def select(self, query: Query):
-        return db_select(connection=self.connection, query=query)
+    def select(self, query: Query, dictionary: bool = True):
+        if query.fetch in ('row', 'rows'):
+            result = db_select(connection=self.connection, query=query)
+            if isinstance(result, (list, tuple)):
+                if dictionary:
+                    return [dict(r) for r in result]
+                return [tuple(r) for r in result]
+            else:
+                if dictionary:
+                    return dict(result)
+                return tuple(result)
+        else:
+            return db_select(connection=self.connection, query=query)
 
     def script(self, query: Query):
         db_script(connection=self.connection, script=query)
@@ -126,8 +137,13 @@ class MySQLEngine:
     def insert(self, query: Query):
         db_insert(connection=self.connection, query=query)
 
-    def select(self, query: Query):
-        return db_select(connection=self.connection, query=query)
+    def select(self, query: Query, dictionary: bool = True):
+        if query.fetch in ('row', 'rows'):
+            return db_select(connection=self.connection,
+                             query=query,
+                             dictionary=dictionary)
+        else:
+            return db_select(connection=self.connection, query=query)
 
     def script(self, query: Query):
         db_script(connection=self.connection, script=query)

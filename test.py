@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-from at.database import Query, SQLiteEngine, MySQLEngine
+from at.database import Query, SQLiteEngine, MySQLEngine, select
 
 text = Path(
     "C:/Users/aznavouridis.k/.ktima/static/sql/select_ota_from_meleti.sql").read_text('utf-8')
@@ -11,9 +11,15 @@ data = Path("C:/Users/aznavouridis.k/.ktima/ktima.db")
 # print(re.sub(r'--{.*}', '', text).strip())
 
 
+a = Query(text1).set(meleti="KT5-14").attrs(fetch='row')
 
-a = Query(text1).set(meleti="KT5-14")
+b = Query("""SELECT name FROM atauth.app;""", fetch='rows')
+
 dbs = SQLiteEngine(data)
+mys = MySQLEngine("atauth")
+# print(mys.select(b))
+# print(select(mys.connection.cursor(dictionary=True), b))
 
-print([dict(r) for r in dbs.select(a)])
-dbs.close_connection()
+print(dbs.select(a, dictionary=False))
+# print(dbs.select(a))
+# dbs.close_connection()
