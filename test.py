@@ -17,9 +17,9 @@ b = Query("""SELECT name FROM atauth.app;""", fetch='rows')
 
 dbs = SQLiteEngine(data)
 mys = MySQLEngine("atauth")
-# print(mys.select(b))
+print(mys.select(b))
 # print(select(mys.connection.cursor(dictionary=True), b))
 
-print(dbs.select(a, dictionary=False))
+# print(dbs.select(a, dictionary=False))
 # print(dbs.select(a))
 # dbs.close_connection()

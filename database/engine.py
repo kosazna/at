@@ -98,13 +98,7 @@ class MySQLEngine:
                  database: str,
                  app_paths: Optional[PathEngine] = None,
                  config: Optional[dict] = None) -> None:
-
-        if config is not None:
-            self.connection: MySQLConnection = mysql_connect(**config,
-                                                             database=database)
-        else:
-            self.connection: MySQLConnection = mysql_connect(**self.CONFIG,
-                                                             database=database)
+        self.open_connection(database=database, config=config)
 
         if app_paths is not None:
             self.paths = app_paths
@@ -127,9 +121,20 @@ class MySQLEngine:
         else:
             log.warning('To view database install DB Browser (SQLite) (64-bit)')
 
+    def open_connection(self, database: str, config: Optional[dict]):
+        if config is not None:
+            self.connection: MySQLConnection = mysql_connect(**config,
+                                                             database=database)
+        else:
+            self.connection: MySQLConnection = mysql_connect(**self.CONFIG,
+                                                             database=database)
+
+        log.success("Connected to database.")
+
     def close_connection(self):
-        self.connection.close()
-        log.highlight("Connection to database closed.")
+        if self.connection is not None and self.connection.is_connected():
+            self.connection.close()
+            log.highlight("Connection to database closed.")
 
     def update(self, query: Query):
         db_update(connection=self.connection, query=query)
