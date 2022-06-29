@@ -2,11 +2,18 @@
 import re
 from typing import Union, Type
 from at.logger import log
+from decimal import Decimal
 
 
 def text2num(text: str):
     pattern = r'[-+]?[.]?[\d]+(?:,\d\d\d)*[\.]?\d*(?:[eE][-+]?\d+)?'
     return re.findall(pattern, text)
+
+
+def decimal2float(decimal: Decimal) -> float:
+    if decimal is None:
+        return None
+    return float(decimal)
 
 
 def intify(iterable: Union[list, tuple, set, dict, str],
