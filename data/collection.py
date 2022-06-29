@@ -9,8 +9,14 @@ from at.data.item import Item
 class ItemCollection:
     def __init__(self, items: Union[List[Item], None] = None) -> None:
         self.items: list = items if items else list()
-        self.types: Union[dict, None] = items[0].types() if items else None
+        # self.types: Union[dict, None] = items[0].types() if items else None
         self.nitems: int = len(self.items) if items else 0
+
+    @classmethod
+    def from_dicts(cls, base:Item, dicts:List[dict]):
+        _items = list(map(lambda dict_data: base(**dict_data), dicts))
+
+        return cls(items=_items)
 
     def __str__(self) -> str:
         return f"Collection(items={self.nitems})"

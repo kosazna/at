@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from dataclasses import asdict, astuple, dataclass
-from typing import Union
+from dataclasses import asdict, astuple, dataclass, make_dataclass, field
+from typing import Union, Optional
 
 
 def _get_types_from_template(dc_template) -> Union[dict, None]:
@@ -32,6 +32,17 @@ class Item:
 
     def types(self) -> Union[dict, None]:
         return _get_types_from_template(self)
+
+
+def item_factory(cls_name: str, fields: dict):
+    _fields = []
+    for _name, _specs in fields.items():
+        _type = _specs.get('type')
+        _default = _specs.get('default')
+
+        _fields.append((_name, _type, field(default=_default)))
+
+    return make_dataclass(cls_name=cls_name, fields=_fields, bases=(Item,))
 
 
 @dataclass
