@@ -21,15 +21,24 @@ def parse_soup(soup: BeautifulSoup,
     if content is not None:
         if element.has_children():
             if isinstance(element.children, (list, tuple)):
-                return dict(ChainMap(*[parse_soup(soup=content, element=child) for child in element.children]))
+                return dict(ChainMap(*[parse_soup(soup=content,
+                                                  element=child)
+                                       for child in element.children]))
             else:
                 return parse_soup(soup=content,
                                   element=element.children)
         else:
             if element.attribute is not None:
                 if element.attribute == 'text':
-                    return {element.name: content.text}
-                return {element.name: content.get(element.attribute)}
+                    _text = content.text
+                    if _text:
+                        return {element.name: _text}
+                    return {element.name: element.default}
+                else:
+                    _attr = content.get(element.attribute)
+                    if _attr:
+                        return {element.name: _attr}
+                    return {element.name: element.default}
             else:
                 return content
     return None
@@ -52,8 +61,9 @@ def multi_parse_soup(soup: BeautifulSoup,
         if element.has_children():
             if isinstance(element.children, (list, tuple)):
                 for subcontent in content:
-                    elements.append(dict(ChainMap(
-                        *[parse_soup(soup=subcontent, element=child) for child in element.children])))
+                    elements.append(dict(ChainMap(*[parse_soup(soup=subcontent,
+                                                               element=child)
+                                                    for child in element.children])))
             else:
                 for subcontent in content:
                     elements.append(parse_soup(soup=subcontent,
