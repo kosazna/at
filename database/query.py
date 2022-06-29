@@ -4,6 +4,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from typing import Any, List, Union
+from pathlib import Path
 
 SQLITE_PARAM_REGEX = r':\w+'
 MYSQL_PARAM_REGEX = r'\%\((\w*)\)s'
@@ -17,6 +18,13 @@ class Query:
     default: Any = None
     params: Union[dict, None] = None
     data: Union[List[tuple], None] = None
+
+    @classmethod
+    def from_file(cls, filepath: Union[str, Path]):
+        _path = Path(filepath)
+        _query = _path.read_text(encoding='utf-8')
+
+        return cls(_query)
 
     def __post_init__(self):
         result_params = re.search(r'{.*}', self.sql)

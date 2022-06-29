@@ -24,8 +24,7 @@ class SQLiteEngine:
                  db: Union[str, Path],
                  app_paths: Optional[PathEngine] = None) -> None:
         self.db = str(db)
-        self.connection: Connection = sqlite_connect(self.db)
-        self.connection.row_factory = Row
+        self.open_connection()
 
         if app_paths is not None:
             self.paths = app_paths
@@ -53,6 +52,12 @@ class SQLiteEngine:
             Popen([str(executable), self.db])
         else:
             log.warning('To view database install DB Browser (SQLite) (64-bit)')
+
+    def open_connection(self):
+        self.connection: Connection = sqlite_connect(self.db)
+        self.connection.row_factory = Row
+
+        log.success("Connected to database.")
 
     def close_connection(self):
         self.connection.close()
