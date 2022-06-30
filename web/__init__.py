@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from at.web.element import Element
+from at.web.element import Element, ElementStore
 from at.web.request import make_request, request_soup
 from at.web.parser import parse_soup, multi_parse_soup
 from at.web.utils import get_headers, get_user_agent, download_image

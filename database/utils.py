@@ -11,6 +11,6 @@ def load_app_queries(folder: Union[str, Path]) -> Dict[str, Query]:
     queries = {}
 
     for p in Path(folder).glob('*.sql'):
-        queries[p.stem] = Query(p.read_text(encoding='utf-8'))
+        queries[p.stem] = Query.from_file(p)
 
     return queries

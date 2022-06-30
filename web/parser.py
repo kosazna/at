@@ -41,7 +41,7 @@ def parse_soup(soup: BeautifulSoup,
                     return {element.name: element.default}
             else:
                 return content
-    return None
+    return {element.name: element.default}
 
 
 def multi_parse_soup(soup: BeautifulSoup,

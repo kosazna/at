@@ -117,17 +117,17 @@ class ElementStore:
     data: Optional[Element] = None
 
     @classmethod
-    def from_json_config(cls, json_config_data: dict) -> ElementStore:
-        if 'interaction' in json_config_data:
-            interaction = json_config_data.pop('interaction')
+    def from_json_config(cls, json_config_elements: dict) -> ElementStore:
+        if 'interaction' in json_config_elements:
+            interaction = json_config_elements.pop('interaction')
             if 'cookies' in interaction:
                 cookies = interaction.pop('cookies')
                 _cookies = Element.from_dict(cookies)
             if 'paginator' in interaction:
                 paginator = interaction.pop('paginator')
                 _paginator = Element.from_dict(paginator)
-        if 'data' in json_config_data:
-            data_elems = json_config_data.pop('data')
+        if 'data' in json_config_elements:
+            data_elems = json_config_elements.pop('data')
             _data = Element.from_dict(data_elems)
 
         return cls(_cookies, _paginator, _data)

@@ -15,15 +15,15 @@ skroutz = "C:/Users/aznavouridis.k/Desktop/skroutz.sql"
 data = Path("C:/Users/aznavouridis.k/Desktop/terpos.db")
 
 datas = [{'link': '/s/30475704/Sony-Xperia-1-III-5G-Single-SIM-12GB-256GB-Frosted-Black.html?from=featured&product_id=85046151',
-  'image': None,
-  'price': '999,00 €',
-  'specs': 'Μοντέλο: 2021,  Οθόνη: OLED 6.5", Μπαταρία: 4500mAh',
-  'title': 'Sony Xperia 1 III 5G Single SIM (12GB/256GB) Frosted Black'},
- {'link': '/s/30662995/Samsung-Galaxy-A52s-5G-Dual-SIM-6GB-128GB-Awesome-Black.html',
-  'image': '//c.scdn.gr/images/sku_main_images/030662/30662995/large_20210830101603_samsung_galaxy_a52s_128gb_awesome_black.jpeg',
-  'price': 'από271,88 €',
-  'specs': 'Μοντέλο: 2021,  Οθόνη: Super AMOLED 6.5", Μπαταρία: 4500mAh',
-  'title': 'Samsung Galaxy A52s 5G Dual SIM (6GB/128GB) Awesome Black'}]
+          'image': None,
+          'price': '999,00 €',
+          'specs': 'Μοντέλο: 2021,  Οθόνη: OLED 6.5", Μπαταρία: 4500mAh',
+          'title': 'Sony Xperia 1 III 5G Single SIM (12GB/256GB) Frosted Black'},
+         {'link': '/s/30662995/Samsung-Galaxy-A52s-5G-Dual-SIM-6GB-128GB-Awesome-Black.html',
+          'image': '//c.scdn.gr/images/sku_main_images/030662/30662995/large_20210830101603_samsung_galaxy_a52s_128gb_awesome_black.jpeg',
+          'price': 'από271,88 €',
+          'specs': 'Μοντέλο: 2021,  Οθόνη: Super AMOLED 6.5", Μπαταρία: 4500mAh',
+          'title': 'Samsung Galaxy A52s 5G Dual SIM (6GB/128GB) Awesome Black'}]
 
 json_config = load_json("D:/.temp/.dev/.aztool/atparser/skroutz.config.json")
 SkroutzItem = item_factory("SkroutzItem", json_config['config']['fields'])
