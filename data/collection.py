@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import annotations
 import operator
-from typing import List, Union
+from typing import Iterable, List, Union
 
 from at.data.item import Item
 
@@ -9,7 +9,6 @@ from at.data.item import Item
 class ItemCollection:
     def __init__(self, items: Union[List[Item], None] = None) -> None:
         self.items: list = items if items else list()
-        # self.types: Union[dict, None] = items[0].types() if items else None
         self.nitems: int = len(self.items) if items else 0
 
     @classmethod
@@ -21,11 +20,18 @@ class ItemCollection:
     def __str__(self) -> str:
         return f"Collection(items={self.nitems})"
 
-    def add(self, item: Item) -> None:
-        self.items.append(item)
-        self.nitems += 1
-        if self.types is None:
-            self.types = item.types()
+    def add(self, item: Union[Item, Iterable[Item], ItemCollection]) -> None:
+        if isinstance(item, (list, tuple, set)):
+            for _item in item:
+                self.items.append(_item)
+                self.nitems += 1
+        elif isinstance(item, ItemCollection):
+            for _item in item.items:
+                self.items.append(_item)
+                self.nitems += 1
+        else:
+            self.items.append(item)
+            self.nitems += 1
 
     def clear(self) -> None:
         self.items = []

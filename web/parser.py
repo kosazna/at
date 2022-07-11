@@ -25,8 +25,13 @@ def parse_soup(soup: BeautifulSoup,
                                                   element=child)
                                        for child in element.children]))
             else:
-                return parse_soup(soup=content,
-                                  element=element.children)
+                if element.children.many:
+                    return multi_parse_soup(soup=content,
+                                            element=element.children,
+                                            orient='array')
+                else:
+                    return parse_soup(soup=content,
+                                      element=element.children)
         else:
             if element.attribute is not None:
                 if element.attribute == 'text':
@@ -45,9 +50,10 @@ def parse_soup(soup: BeautifulSoup,
 
 
 def multi_parse_soup(soup: BeautifulSoup,
-                     element: Element) -> Union[List[str],
-                                                List[Tag],
-                                                None]:
+                     element: Element,
+                     orient: str = 'dicts') -> Union[List[str],
+                                                     List[Tag],
+                                                     None]:
     try:
         if element.css_selector is not None:
             content = soup.select(element.css_selector)
@@ -72,8 +78,15 @@ def multi_parse_soup(soup: BeautifulSoup,
         else:
             if element.attribute is not None:
                 if element.attribute == 'text':
-                    return [{element.name: i.text} for i in content]
-                return [{element.name: i.get(element.attribute)} for i in content]
+                    if orient == 'dicts':
+                        return [{element.name: i.text} for i in content]
+                    elif orient == 'array':
+                        return {element.name: [i.text for i in content]}
+                else:
+                    if orient == 'dicts':
+                        return [{element.name: i.get(element.attribute)} for i in content]
+                    elif orient == 'array':
+                        return {element.name: [i.get(element.attribute) for i in content]}     
             else:
                 return content
     return None

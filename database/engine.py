@@ -51,7 +51,7 @@ class SQLiteEngine:
             log.warning('To view database install DB Browser (SQLite) (64-bit)')
 
     def open_connection(self):
-        self.connection: Connection = sqlite_connect(self.db)
+        self.connection: Connection = sqlite_connect(self.db, check_same_thread=False)
         self.connection.row_factory = Row
 
         log.success("Connected to database.")
@@ -69,6 +69,10 @@ class SQLiteEngine:
     def select(self, query: Query, dictionary: bool = True):
         if query.fetch in ('row', 'rows'):
             result = db_select(connection=self.connection, query=query)
+            
+            if result is None:
+                return dict() if dictionary else tuple()
+
             if isinstance(result, (list, tuple)):
                 if dictionary:
                     return [dict(r) for r in result]

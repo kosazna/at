@@ -30,9 +30,6 @@ class Item:
     def astuple(self) -> tuple:
         return astuple(self)
 
-    def types(self) -> Union[dict, None]:
-        return _get_types_from_template(self)
-
 
 def item_factory(cls_name: str, fields: dict):
     _fields = []

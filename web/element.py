@@ -15,6 +15,7 @@ class Element:
     partial_link_text: Optional[str] = None
     link_text: Optional[str] = None
     attribute: Optional[str] = None
+    many: bool = False
     loc: Optional[int] = None
     default: Optional[Any] = None
     children: Optional[Union[Element, Iterable[Element]]] = None
@@ -115,6 +116,7 @@ class ElementStore:
     cookies: Optional[Element] = None
     paginator: Optional[Element] = None
     data: Optional[Element] = None
+    filters: Optional[Element] = None
 
     @classmethod
     def from_json_config(cls, json_config_elements: dict) -> ElementStore:
@@ -129,5 +131,8 @@ class ElementStore:
         if 'data' in json_config_elements:
             data_elems = json_config_elements.pop('data')
             _data = Element.from_dict(data_elems)
+        if 'filters' in json_config_elements:
+            filter_elems = json_config_elements.pop('filters')
+            _filters = Element.from_dict(filter_elems)
 
-        return cls(_cookies, _paginator, _data)
+        return cls(_cookies, _paginator, _data, _filters)
