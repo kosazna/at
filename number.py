@@ -5,9 +5,19 @@ from at.logger import log
 from decimal import Decimal
 
 
-def text2num(text: str):
+def text2num(text: str) -> list:
     pattern = r'[-+]?[.]?[\d]+(?:,\d\d\d)*[\.]?\d*(?:[eE][-+]?\d+)?'
     return re.findall(pattern, text)
+
+def fmtnumber(number: list) -> str:
+    if not number:
+        return '0'
+
+    if len(number) > 1:
+        nums = [num.replace('.', '').replace(',', '') for num in number]
+        return '.'.join(nums)
+    else:
+        return number[0].replace('.', '').replace(',', '')
 
 
 def decimal2float(decimal: Decimal) -> float:
