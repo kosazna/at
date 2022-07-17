@@ -40,7 +40,7 @@ class Authorize(metaclass=Singleton):
                  appname: str,
                  auth_loc: Union[str, None] = None,
                  debug: bool = False):
-        self.__url = f"https://api.github.com/repos/{self.OWNER}/{self.REPO}/contents/{appname}.json"
+        self.__url = f"https://raw.githubusercontent.com/{self.OWNER}/{self.REPO}/main/{appname}.json"
         self.appname = appname
         self.auth_loc = Path(auth_loc) if auth_loc is not None else auth_loc
         self.debug = debug
@@ -63,6 +63,7 @@ class Authorize(metaclass=Singleton):
         if not self.debug:
             try:
                 self.r = requests.get(self.__url, headers=Authorize.HEADERS)
+                print(self.r.content)
                 self.auth = json.loads(self.r.text)
 
                 if self.auth_loc is not None:

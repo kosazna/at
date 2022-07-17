@@ -32,3 +32,6 @@ class CheckInput(QCheckBox):
 
     def subscribe(self, func):
         self.stateChanged.connect(func)
+
+    def setLabel(self, text:str):
+        self.setText(text)

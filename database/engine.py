@@ -5,8 +5,6 @@ from subprocess import Popen
 from typing import Union, Optional
 from sqlite3 import Connection, Row
 from sqlite3 import connect as sqlite_connect
-from mysql.connector import MySQLConnection
-from mysql.connector import connect as mysql_connect
 import os
 from dotenv import load_dotenv
 
@@ -15,6 +13,7 @@ from at.path import PathEngine
 from at.database.action import db_insert, db_script, db_select, db_update
 from at.database.utils import Query, load_app_queries
 from at.state import State
+
 
 load_dotenv()
 
@@ -43,7 +42,6 @@ class SQLiteEngine:
                     sql_file = sql_folder.joinpath(sql_name)
                     sql_file.unlink(missing_ok=True)
 
-
     def open_db(self, executable: Union[str, Path]):
         if Path(executable).exists():
             Popen([str(executable), self.db])
@@ -51,10 +49,11 @@ class SQLiteEngine:
             log.warning('To view database install DB Browser (SQLite) (64-bit)')
 
     def open_connection(self):
-        self.connection: Connection = sqlite_connect(self.db, check_same_thread=False)
+        self.connection: Connection = sqlite_connect(
+            self.db, check_same_thread=False)
         self.connection.row_factory = Row
 
-        log.success("Connected to database.")
+        log.success("Connected to SQLite database.")
 
     def close_connection(self):
         self.connection.close()
@@ -69,7 +68,7 @@ class SQLiteEngine:
     def select(self, query: Query, dictionary: bool = True):
         if query.fetch in ('row', 'rows'):
             result = db_select(connection=self.connection, query=query)
-            
+
             if result is None:
                 return dict() if dictionary else tuple()
 
@@ -128,14 +127,19 @@ class MySQLEngine:
             log.warning('To view database install DB Browser (SQLite) (64-bit)')
 
     def open_connection(self, database: str, config: Optional[dict]):
-        if config is not None:
-            self.connection: MySQLConnection = mysql_connect(**config,
-                                                             database=database)
-        else:
-            self.connection: MySQLConnection = mysql_connect(**self.CONFIG,
-                                                             database=database)
+        try:
+            from mysql.connector import MySQLConnection
+            from mysql.connector import connect as mysql_connect
 
-        log.success("Connected to database.")
+            if config is not None:
+                self.connection: MySQLConnection = mysql_connect(**config,
+                                                                 database=database)
+            else:
+                self.connection: MySQLConnection = mysql_connect(**self.CONFIG,
+                                                                 database=database)
+            log.success("Connected to MySQL database.")
+        except ModuleNotFoundError:
+            log.error("MySQL connector not installed.")
 
     def close_connection(self):
         if self.connection is not None and self.connection.is_connected():
