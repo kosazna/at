@@ -9,6 +9,7 @@ def text2num(text: str) -> list:
     pattern = r'[-+]?[.]?[\d]+(?:,\d\d\d)*[\.]?\d*(?:[eE][-+]?\d+)?'
     return re.findall(pattern, text)
 
+
 def fmtnumber(number: list) -> str:
     if not number:
         return '0'
@@ -18,6 +19,13 @@ def fmtnumber(number: list) -> str:
         return '.'.join(nums)
     else:
         return number[0].replace('.', '').replace(',', '')
+
+
+def num_extract(text: str) -> str:
+    list_of_nums = text2num(str(text))
+    num = fmtnumber(list_of_nums)
+
+    return num
 
 
 def decimal2float(decimal: Decimal) -> float:
