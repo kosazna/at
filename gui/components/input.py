@@ -42,7 +42,8 @@ class StrInput(QWidget):
         if label:
             self.label = QLabel(parent=self)
             self.label.setText(label)
-            set_size(widget=self.label, size=labelsize)
+            if orientation == HORIZONTAL:
+                set_size(widget=self.label, size=labelsize)
             layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)
 
@@ -117,7 +118,8 @@ class IntInput(QWidget):
         if label:
             self.label = QLabel(parent=self)
             self.label.setText(label)
-            set_size(widget=self.label, size=labelsize)
+            if orientation == HORIZONTAL:
+                set_size(widget=self.label, size=labelsize)
             layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)
 

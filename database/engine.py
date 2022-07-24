@@ -33,9 +33,10 @@ class SQLiteEngine:
     def _db_init(self):
         if self.init_queries is not None:
             for query_name, query in self.init_queries.items():
-                if query_name.startswith('init'):
-                    self.script(query)
-                if query_name.startswith('new'):
+                # if query_name.startswith('init'):
+                #     if not Path(self.db).exists():
+                #         self.script(query)
+                # if query_name.startswith('new'):
                     self.script(query)
                     sql_name = f"{query_name}.sql"
                     sql_folder = self.paths.get_init_sql(True)

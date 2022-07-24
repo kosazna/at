@@ -7,7 +7,7 @@ from at.gui.components.console import Console
 from at.gui.components.filename import FileNameInput
 from at.gui.components.icons import *
 from at.gui.components.input import IntInput, StrInput
-from at.gui.components.io import FileInput, FileOutput, FolderInput
+from at.gui.components.io import FileInput, FileOutput, FolderInput, IOWidget
 from at.gui.components.label import Label
 from at.gui.components.line import HLine
 from at.gui.components.checklist import ListWidget
