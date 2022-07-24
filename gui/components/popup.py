@@ -128,11 +128,22 @@ class Popup:
                 return button_action
         return None
 
-    def error(self, primary: str = '') -> Union[str, None]:
+    def error(self,
+              primary: str = '',
+              secondary: str = '',
+              details: str = '',) -> Union[str, None]:
         msg = QMessageBox()
         msg.setWindowTitle(f"{self.appname}")
         msg.setIcon(pstatus['error'])
         msg.setText(primary)
+
+        if primary:
+            msg.setText(primary)
+        if secondary:
+            msg.setInformativeText(secondary)
+        if details:
+            msg.setDetailedText(details)
+
         msg.addButton(pbutton['close'])
 
         user_action = msg.exec_()
