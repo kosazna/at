@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
 from dataclasses import dataclass
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Callable
+from at.result import Result
 
 from PyQt5.QtWidgets import QApplication, QWidget
 
@@ -9,6 +10,20 @@ HORIZONTAL = 'H'
 VERTICAL = 'V'
 PATH_PLACEHOLDER = "Paste path here or browse..."
 
+def validateParams(function: Callable):
+    def wrapper(*args, **kwargs):
+        widget = args[0] ## type:AtWidget
+        validated, param = widget.validateParams()
+
+        if validated:
+            result = function(*args, **kwargs)
+        else:
+            needed = [f"-{p}" for p in param if p not in widget.no_validate]
+            info_txt = '\n'.join(needed)
+            result = Result.error("Συμπλήρωσε τα απαραίτητα πεδία",
+                                  details={'secondary': info_txt})
+        return result
+    return wrapper
 
 def get_dpi():
     app = QApplication(sys.argv)

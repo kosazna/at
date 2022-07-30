@@ -15,6 +15,8 @@ from PyQt5.QtCore import Qt, QThreadPool
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
 
+from at.gui.components.atwidget import validateParams
+
 # When setting fixed width to QLineEdit ->
 # -> add alignment=Qt.AlignLeft when adding widget to layout
 
@@ -23,10 +25,10 @@ cssGuide = Path("D:/.temp/.dev/.aztool/at/gui/css/_style.css").read_text()
 log.set_mode("GUI")
 APPNAME = 'ktima'
 paths = PathEngine(APPNAME)
-authenticator = Authorize(APPNAME, paths.get_authfolder())
+# authenticator = Authorize(APPNAME, paths.get_authfolder())
 
 
-class Dummy(QWidget):
+class Dummy(AtWidget):
     def __init__(self,
                  size: Tuple[Union[int, None]] = (None, None),
                  parent=None,
@@ -38,7 +40,6 @@ class Dummy(QWidget):
         self.button1.clicked.connect(self.button1action)
         self.button2.clicked.connect(self.button2action)
         self.button3.clicked.connect(self.button3action)
-        self.threadpool = QThreadPool(parent=self)
 
     def setupUi(self, size):
         self.setObjectName("MainWidget")
@@ -56,8 +57,6 @@ class Dummy(QWidget):
         self.layoutGeneral = QVBoxLayout()
         self.layoutButtons = QVBoxLayout()
         self.layoutComboCheck = QHBoxLayout()
-
-        self.pop = Popup("ktima")
 
         self.folderInput = FolderInput(label="Folder",
                                        placeholder=PATH_PLACEHOLDER,
@@ -179,29 +178,13 @@ class Dummy(QWidget):
 
         self.setLayout(self.total_layout)
 
-    def updateProgress(self, metadata: dict):
-        if metadata:
-            progress_now = metadata.get('pbar', None)
-            progress_max = metadata.get('pbar_max', None)
-            status = metadata.get('status', None)
+    def getParams(self):
+        _params = {
+            'inputStr': self.input.getText(),
+            'inputInt': self.inputInt.getText()
+        }
 
-            if progress_now is not None:
-                self.progress.setValue(progress_now)
-            if progress_max is not None:
-                self.progress.setMaximum(progress_max)
-            if status is not None:
-                self.status.disable(str(status))
-
-    def updateResult(self, status: Any):
-        if status is not None:
-            if isinstance(status, AuthStatus):
-                if not status.authorised:
-                    self.pop.error(status.msg)
-            elif isinstance(status, str):
-                self.status.enable(status)
-
-    def updateFinish(self):
-        pass
+        return _params
 
     def button1action(self):
         if self.i < self.progress.maximum():
@@ -228,18 +211,18 @@ class Dummy(QWidget):
                    on_result=self.updateResult,
                    on_finish=self.updateFinish)
 
-    @licensed(appname=APPNAME, domain=None)
+    @validateParams
     def execute(self, _progress):
         log.info("Starting Process")
         log.warning("Warning")
         log.error("Error")
-        _progress.emit({'pbar': 20, 'status': 'something'})
+        _progress.emit({'progress': (20,100), 'statusSmall': ('azna', 'statusError')})
         sleep(1)
         log.info("Processing...\n")
-        _progress.emit({'pbar': 60, 'status': 'Still processing...'})
+        _progress.emit({'progress': (60,100), 'statusSmall': ('azna', 'statusWarning')})
         sleep(2)
         log.success("Finished")
-        _progress.emit({'pbar': 100})
+        _progress.emit({'progress': (100,100), 'statusSmall': ('azna', 'statusOk')})
 
         return 'Everything OK'
 

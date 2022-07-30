@@ -105,7 +105,7 @@ class StatusLabel(QWidget):
 
         self.setLayout(layout)
 
-    def changeStatus(self, status: str, object_name: str):
+    def changeStatus(self, status: str, object_name: str = 'statusNeutral'):
         self.setText(status)
         self.setStyle(object_name)
 

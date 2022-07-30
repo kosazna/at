@@ -16,3 +16,4 @@ from at.gui.components.progress import ProgressBar
 from at.gui.components.selector import (FilterFileSelector, PathSelector,
                                         StrSelector)
 from at.gui.components.status import StatusButton, StatusLabel
+from at.gui.components.atwidget import AtWidget
