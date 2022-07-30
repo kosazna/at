@@ -59,8 +59,11 @@ def show_popup(appname: str = 'Dialog',
 
 
 class Popup:
-    def __init__(self, appname: str = 'Dialog') -> None:
-        self.appname = appname
+    appname: str = 'Dialog'
+
+    @classmethod
+    def set_appname(cls, appname: str):
+        cls.appname = appname
 
     def info(self,
              primary: str = '',
