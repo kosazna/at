@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from typing import Optional, Any
+from typing import Callable, Iterable, Optional, Any
 
 from at.gui.components import *
+from at.gui.worker import run_thread
 from at.result import Result
 from at.auth import AuthStatus
 from PyQt5.QtWidgets import QWidget
@@ -65,10 +66,29 @@ class AtWidget(QWidget):
     def updateFinish(self):
         pass
 
+    def runThread(self, function: Callable):
+        run_thread(threadpool=self.threadpool,
+                   function=function,
+                   on_update=self.updateProgress,
+                   on_result=self.updateResult,
+                   on_finish=self.updateFinish)
+
+    # def threaded(self):
+    #     def decorator(function):
+    #         def wrapper(*args, **kwargs):
+    #             result = run_thread(threadpool=self.threadpool,
+    #                                 function=function,
+    #                                 on_update=self.updateProgress,
+    #                                 on_result=self.updateResult,
+    #                                 on_finish=self.updateFinish)
+    #             return result
+    #         return wrapper
+    #     return decorator
+
     def getParams(self):
         return dict()
 
-    def validateParams(self):
+    def validateParams(self, needed: Optional[Iterable] = None):
         params = self.getParams()
 
         if params:
@@ -78,10 +98,18 @@ class AtWidget(QWidget):
             for key, value in params.items():
                 if key in self.no_validate:
                     continue
-                if value:
-                    bools.append(True)
+
+                if needed is not None:
+                    if key in needed:
+                        if value:
+                            bools.append(True)
+                        else:
+                            bools.append(False)
                 else:
-                    bools.append(False)
+                    if value:
+                        bools.append(True)
+                    else:
+                        bools.append(False)
 
             validated = all(bools)
 

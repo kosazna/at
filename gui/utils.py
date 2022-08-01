@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 from dataclasses import dataclass
-from typing import Optional, Tuple, Callable
+from typing import Optional, Tuple, Callable, Iterable
 from at.result import Result
 
 from PyQt5.QtWidgets import QApplication, QWidget
@@ -24,6 +24,23 @@ def validateParams(function: Callable):
                                   details={'secondary': info_txt})
         return result
     return wrapper
+
+def needs(params:Iterable):
+    def decorator(function: Callable):
+        def wrapper(*args, **kwargs):
+            widget = args[0] ## type:AtWidget
+            validated, param = widget.validateParams(params)
+
+            if validated:
+                result = function(*args, **kwargs)
+            else:
+                needed = [f"-{p}" for p in param if p in params]
+                info_txt = '\n'.join(needed)
+                result = Result.error(f"Συμπλήρωσε τα απαραίτητα πεδία",
+                                    details={'secondary': info_txt})
+            return result
+        return wrapper
+    return decorator
 
 def get_dpi():
     app = QApplication(sys.argv)
