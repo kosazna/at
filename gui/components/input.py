@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Iterable, Optional, Tuple, Union
+from typing import Callable, Iterable, Optional, Tuple, Union
 
 from at.gui.utils import HORIZONTAL, VERTICAL, set_size
 from PyQt5.QtCore import Qt
@@ -60,6 +60,9 @@ class StrInput(QWidget):
     def setStyle(self, object_name: str):
         self.lineEdit.setObjectName(object_name)
         self.lineEdit.setStyleSheet(self.styleSheet())
+
+    def textChanged(self, function: Callable):
+        self.lineEdit.textChanged.connect(function)
 
     def setText(self, text: str):
         self.lineEdit.setText(text)
@@ -132,6 +135,9 @@ class IntInput(QWidget):
     def enable(self):
         self.lineEdit.setEnabled(True)
         self.setStyle("")
+
+    def textChanged(self, function: Callable):
+        self.lineEdit.textChanged.connect(function)
 
     def setStyle(self, object_name: str):
         self.lineEdit.setObjectName(object_name)
