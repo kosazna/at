@@ -73,18 +73,6 @@ class AtWidget(QWidget):
                    on_result=self.updateResult,
                    on_finish=self.updateFinish)
 
-    # def threaded(self):
-    #     def decorator(function):
-    #         def wrapper(*args, **kwargs):
-    #             result = run_thread(threadpool=self.threadpool,
-    #                                 function=function,
-    #                                 on_update=self.updateProgress,
-    #                                 on_result=self.updateResult,
-    #                                 on_finish=self.updateFinish)
-    #             return result
-    #         return wrapper
-    #     return decorator
-
     def getParams(self):
         return dict()
 
