@@ -19,6 +19,7 @@ class Element:
     loc: Optional[int] = None
     default: Optional[Any] = None
     children: Optional[Union[Element, Iterable[Element]]] = None
+    parent: Optional[Element] = None
 
     def __repr__(self):
         _attrs_set = asdict(self)
