@@ -2,6 +2,9 @@
 from __future__ import annotations
 from dataclasses import asdict, dataclass
 from typing import Optional, Union, Iterable, Any
+from pathlib import Path
+from at.io.utils import write_json
+from at.utils import purge_dict
 
 
 @dataclass
@@ -40,6 +43,22 @@ class Element:
                     description += ", "
                 description += f"{_attr}='{_attrs_set[_attr]}'"
         return f"Element({description})"
+
+    def to_dict(self) -> dict:
+        _attrs_set = asdict(self)
+        props = {}
+        for _attr, _value in _attrs_set.items():
+            if _attr == 'children' and _value is not None:
+                if isinstance(_value, (list, tuple)):
+                    children = [purge_dict(child_data) for child_data in _value]
+                else:
+                    children = purge_dict(_value)
+                props[_attr] = children
+            else:
+                if _value is not None:
+                    props[_attr] = _value
+
+        return props
 
     @classmethod
     def from_text(cls, text: str) -> Element:
@@ -137,3 +156,27 @@ class ElementStore:
             _filters = Element.from_dict(filter_elems)
 
         return cls(_cookies, _paginator, _data, _filters)
+
+    def to_json_config(self, filepath: Union[str, Path]):
+        config = {
+            'elements': {
+                'interaction': {},
+                'filters': None,
+                'data': None
+            }
+        }
+
+        if self.cookies is not None:
+            config['elements']['interaction']['cookies'] = self.cookies.to_dict()
+        if self.paginator is not None:
+            config['elements']['interaction']['paginator'] = self.paginator.to_dict()
+        if self.data is not None:
+            config['elements']['data'] = self.data.to_dict()
+        if self.filters is not None:
+            config['elements']['filters'] = self.filters.to_dict()
+
+        # for key, value in config['elements'].items():
+        #     if not value:
+        #         config['elements'].pop(key)
+
+        write_json(filepath=filepath, data=config)

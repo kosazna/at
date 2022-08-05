@@ -15,6 +15,15 @@ def user() -> str:
     return os.environ.get('USERNAME')
 
 
+def purge_dict(data: dict) -> dict:
+    new_dict = {}
+    for key, value in data.items():
+        if bool(value):
+            new_dict[key] = value
+
+    return new_dict
+
+
 def make_shortcut(src: Union[str, Path],
                   dst: Union[str, Path],
                   shortcut_name: Optional[str] = None):
