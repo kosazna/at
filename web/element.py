@@ -141,6 +141,12 @@ class ElementStore:
 
     @classmethod
     def from_json_config(cls, json_config_elements: dict) -> ElementStore:
+        _cookies = None
+        _paginator = None
+        _data = None
+        _filters = None
+        _follow = None
+
         if 'interaction' in json_config_elements:
             interaction = json_config_elements.pop('interaction')
             if 'cookies' in interaction:
