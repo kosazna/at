@@ -63,7 +63,6 @@ class Authorize(metaclass=Singleton):
         if not self.debug:
             try:
                 self.r = requests.get(self.__url, headers=Authorize.HEADERS)
-                print(self.r.content)
                 self.auth = json.loads(self.r.text)
 
                 if self.auth_loc is not None:
