@@ -22,7 +22,7 @@ class Element:
     loc: Optional[int] = None
     default: Optional[Any] = None
     children: Optional[Union[Element, Iterable[Element]]] = None
-    parent: Optional[Element] = None
+    parent: Optional[str] = None
 
     def __repr__(self):
         _attrs_set = asdict(self)
@@ -43,22 +43,6 @@ class Element:
                     description += ", "
                 description += f"{_attr}='{_attrs_set[_attr]}'"
         return f"Element({description})"
-
-    def to_dict(self) -> dict:
-        _attrs_set = asdict(self)
-        props = {}
-        for _attr, _value in _attrs_set.items():
-            if _attr == 'children' and _value is not None:
-                if isinstance(_value, (list, tuple)):
-                    children = [purge_dict(child_data) for child_data in _value]
-                else:
-                    children = purge_dict(_value)
-                props[_attr] = children
-            else:
-                if _value is not None:
-                    props[_attr] = _value
-
-        return props
 
     @classmethod
     def from_text(cls, text: str) -> Element:
@@ -84,6 +68,22 @@ class Element:
                 return cls(**data, children=_iterable)
             else:
                 return cls(**data, children=cls.from_dict(children))
+
+    def to_dict(self) -> dict:
+        _attrs_set = asdict(self)
+        props = {}
+        for _attr, _value in _attrs_set.items():
+            if _attr == 'children' and _value is not None:
+                if isinstance(_value, (list, tuple)):
+                    children = [purge_dict(child_data) for child_data in _value]
+                else:
+                    children = purge_dict(_value)
+                props[_attr] = children
+            else:
+                if _value is not None:
+                    props[_attr] = _value
+
+        return props
 
     def has_children(self) -> bool:
         return False if self.children is None else True
@@ -137,9 +137,16 @@ class ElementStore:
     paginator: Optional[Element] = None
     data: Optional[Element] = None
     filters: Optional[Element] = None
+    follow: Optional[Element] = None
 
     @classmethod
     def from_json_config(cls, json_config_elements: dict) -> ElementStore:
+        _cookies = None
+        _paginator = None
+        _data = None
+        _filters = None
+        _follow = None
+
         if 'interaction' in json_config_elements:
             interaction = json_config_elements.pop('interaction')
             if 'cookies' in interaction:
@@ -154,15 +161,19 @@ class ElementStore:
         if 'filters' in json_config_elements:
             filter_elems = json_config_elements.pop('filters')
             _filters = Element.from_dict(filter_elems)
+        if 'follow' in json_config_elements:
+            follow_elems = json_config_elements.pop('follow')
+            _follow = Element.from_dict(follow_elems)
 
-        return cls(_cookies, _paginator, _data, _filters)
+        return cls(_cookies, _paginator, _data, _filters, _follow)
 
     def to_json_config(self, filepath: Union[str, Path]):
         config = {
             'elements': {
                 'interaction': {},
                 'filters': None,
-                'data': None
+                'data': None,
+                'follow': None
             }
         }
 
@@ -174,9 +185,7 @@ class ElementStore:
             config['elements']['data'] = self.data.to_dict()
         if self.filters is not None:
             config['elements']['filters'] = self.filters.to_dict()
-
-        # for key, value in config['elements'].items():
-        #     if not value:
-        #         config['elements'].pop(key)
+        if self.follow is not None:
+            config['elements']['follow'] = self.follow.to_dict()
 
         write_json(filepath=filepath, data=config)
