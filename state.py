@@ -1,10 +1,85 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any, Optional, Union
 
+from at.io.utils import load_json
 from at.logger import log
 from at.singleton import Singleton
+
+
+class AppState(metaclass=Singleton):
+    def __init__(self,
+                 appname: Optional[str] = None,
+                 version: Optional[str] = None,
+                 debug: bool = False,
+                 temp: Optional[Any] = None,
+                 db: Optional[Any] = None,
+                 json: Optional[str | Path] = None) -> None:
+        self.appname = appname
+        self.version = version
+        self.debug = debug
+        self.temp = temp
+        self.db = DBState(db)
+        self.json = JSONState(json)
+
+
+class DBState(metaclass=Singleton):
+    def __init__(self, db) -> None:
+        self.db = db
+        self.state, self.changes = self.load()
+
+    def load(self):
+        if self.db is not None:
+            db_state = self.db.load_state() or dict()
+            changes = {k: False for k in db_state}
+
+            return db_state, changes
+        return dict(), dict()
+
+    def save(self):
+        changes = self.changes.values()
+        if any(changes) and self.db is not None:
+            self.db.save_state(self)
+
+    def __getitem__(self, key: str) -> Any:
+        return self.state.get(key, None)
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        try:
+            self.state[key] = value
+            self.changes[key] = True
+        except KeyError:
+            log.warning(f"State <{key}> is not in app db state")
+
+
+class JSONState(metaclass=Singleton):
+    def __init__(self, jsonfile: str | Path) -> None:
+        self.jsonfile = jsonfile
+        self.state, self.changes = self.load()
+
+    def load(self):
+        if self.jsonfile is not None:
+            json_data = load_json(self.jsonfile)
+            config = json_data.get('config')
+            json_state = config or dict()
+            changes = {k: False for k in json_state}
+            return json_state, changes
+        return dict(), dict()
+
+    def save(self):
+        pass
+
+    def __getitem__(self, key: str) -> Any:
+        return self.state.get(key, None)
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        try:
+            self.state[key] = value
+            self.changes[key] = True
+        except KeyError:
+            log.warning(f"State <{key}> is not in app json state")
 
 
 class State(metaclass=Singleton):
