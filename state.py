@@ -28,15 +28,14 @@ class AppState(metaclass=Singleton):
 class DBState(metaclass=Singleton):
     def __init__(self, db) -> None:
         self.db = db
-        self.state, self.changes = self.load()
+        self.state: dict = dict()
+        self.changes: dict = dict()
+        self.load(db)
 
-    def load(self):
-        if self.db is not None:
-            db_state = self.db.load_state() or dict()
-            changes = {k: False for k in db_state}
-
-            return db_state, changes
-        return dict(), dict()
+    def load(self, db):
+        if db is not None:
+            self.state = self.db.load_state() or dict()
+            self.changes = {k: False for k in self.state}
 
     def save(self):
         changes = self.changes.values()
@@ -57,16 +56,17 @@ class DBState(metaclass=Singleton):
 class JSONState(metaclass=Singleton):
     def __init__(self, jsonfile: str | Path) -> None:
         self.jsonfile = jsonfile
-        self.state, self.changes, self.data = self.load()
+        self.state: dict = dict()
+        self.changes: dict = dict()
+        self.data: dict = dict()
+        self.load(jsonfile)
 
-    def load(self):
-        if self.jsonfile is not None:
+    def load(self, jsonfile):
+        if jsonfile is not None:
             json_data = load_json(self.jsonfile)
             config = json_data.get('config')
-            json_state = config or dict()
-            changes = {k: False for k in json_state}
-            return json_state, changes, json_data
-        return dict(), dict()
+            self.state = config or dict()
+            self.changes = {k: False for k in self.state}
 
     def save(self):
         changes = self.changes.values()
