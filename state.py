@@ -4,7 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Optional, Union
 
-from at.io.utils import load_json
+from at.io.utils import load_json, write_json
 from at.logger import log
 from at.singleton import Singleton
 
@@ -57,7 +57,7 @@ class DBState(metaclass=Singleton):
 class JSONState(metaclass=Singleton):
     def __init__(self, jsonfile: str | Path) -> None:
         self.jsonfile = jsonfile
-        self.state, self.changes = self.load()
+        self.state, self.changes, self.data = self.load()
 
     def load(self):
         if self.jsonfile is not None:
@@ -65,11 +65,14 @@ class JSONState(metaclass=Singleton):
             config = json_data.get('config')
             json_state = config or dict()
             changes = {k: False for k in json_state}
-            return json_state, changes
+            return json_state, changes, json_data
         return dict(), dict()
 
     def save(self):
-        pass
+        changes = self.changes.values()
+        if any(changes) and self.state:
+            self.data['config'] = self.state
+            write_json(self.jsonfile, self.data)
 
     def __getitem__(self, key: str) -> Any:
         return self.state.get(key, None)
