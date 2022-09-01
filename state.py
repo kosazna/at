@@ -24,6 +24,12 @@ class AppState(metaclass=Singleton):
         self.db = DBState(db)
         self.json = JSONState(json)
 
+    def save(self):
+        for _object_name in self.__dict__:
+            _object = self.__dict__[_object_name]
+            if hasattr(_object, 'save') and _object:
+                _object.save()
+
 
 class DBState(metaclass=Singleton):
     def __init__(self, db) -> None:
@@ -31,6 +37,9 @@ class DBState(metaclass=Singleton):
         self.state: dict = dict()
         self.changes: dict = dict()
         self.load(db)
+
+    def __bool__(self):
+        return bool(self.state)
 
     def load(self, db):
         if db is not None:
@@ -53,25 +62,33 @@ class DBState(metaclass=Singleton):
             log.warning(f"State <{key}> is not in app db state")
 
 
-class JSONState(metaclass=Singleton):
-    def __init__(self, jsonfile: str | Path) -> None:
+class JSONState:
+    def __init__(self, jsonfile: str | Path, key: Optional[str] = None) -> None:
         self.jsonfile = jsonfile
         self.state: dict = dict()
         self.changes: dict = dict()
         self.data: dict = dict()
-        self.load(jsonfile)
+        self.key = key
+        self.load(jsonfile, key)
 
-    def load(self, jsonfile):
+    def __bool__(self):
+        return bool(self.state)
+
+    def load(self, jsonfile: str | Path, key: Optional[str] = None):
+        self.key = key
         if jsonfile is not None:
-            json_data = load_json(self.jsonfile)
-            config = json_data.get('config')
+            self.data = load_json(self.jsonfile)
+            config = self.data.get(key) if key is not None else self.data
             self.state = config or dict()
             self.changes = {k: False for k in self.state}
 
     def save(self):
         changes = self.changes.values()
         if any(changes) and self.state:
-            self.data['config'] = self.state
+            if self.key is not None:
+                self.data[self.key] = self.state
+            else:
+                self.data = self.state
             write_json(self.jsonfile, self.data)
 
     def __getitem__(self, key: str) -> Any:
