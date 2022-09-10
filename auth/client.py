@@ -33,13 +33,11 @@ class Authorize(metaclass=Singleton):
     OWNER = 'kosazna'
     REPO = 'atauth'
 
-    HEADERS = {'accept': 'application/vnd.github.v3.raw',
-               'authorization': f"token {TOKEN}"}
-
     def __init__(self,
                  appname: str,
                  auth_loc: Union[str, None] = None,
-                 debug: bool = False):
+                 debug: bool = False,
+                 token: Optional[str] = None):
         self.__url = f"https://raw.githubusercontent.com/{self.OWNER}/{self.REPO}/main/{appname}.json"
         self.appname = appname
         self.auth_loc = Path(auth_loc) if auth_loc is not None else auth_loc
@@ -47,6 +45,9 @@ class Authorize(metaclass=Singleton):
         self.user = user()
         self.actions = 0
         self.auth = None
+        self.token = self.TOKEN if token is None else token
+        self.headers = {'accept': 'application/vnd.github.v3.raw',
+                        'authorization': f"token {self.token}"}
         self._reload()
 
     def set_alias(self, alias: str):
@@ -62,7 +63,7 @@ class Authorize(metaclass=Singleton):
     def _reload(self) -> None:
         if not self.debug:
             try:
-                self.r = requests.get(self.__url, headers=Authorize.HEADERS)
+                self.r = requests.get(self.__url, headers=self.headers)
                 self.auth = json.loads(self.r.text)
 
                 if self.auth_loc is not None:
