@@ -23,6 +23,7 @@ class SQLiteEngine:
                  db: Union[str, Path],
                  app_paths: Optional[PathEngine] = None) -> None:
         self.db = str(db)
+        self.db_exists = Path(db).exists()
         self.open_connection()
 
         if app_paths is not None:
@@ -33,11 +34,15 @@ class SQLiteEngine:
     def _db_init(self):
         if self.init_queries is not None:
             for query_name, query in self.init_queries.items():
-                self.script(query)
-                sql_name = f"{query_name}.sql"
-                sql_folder = self.paths.get_init_sql(True)
-                sql_file = sql_folder.joinpath(sql_name)
-                sql_file.unlink(missing_ok=True)
+                if query_name.startswith('init'):
+                    if not self.db_exists:
+                        self.script(query)
+                else:
+                    self.script(query)
+                    sql_name = f"{query_name}.sql"
+                    sql_folder = self.paths.get_init_sql(True)
+                    sql_file = sql_folder.joinpath(sql_name)
+                    sql_file.unlink(missing_ok=True)
 
     def open_db(self, executable: Union[str, Path]):
         if Path(executable).exists():
