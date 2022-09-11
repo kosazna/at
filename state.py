@@ -14,13 +14,12 @@ class AppState(metaclass=Singleton):
                  appname: Optional[str] = None,
                  version: Optional[str] = None,
                  debug: bool = False,
-                 temp: Optional[Any] = None,
                  db: Optional[Any] = None,
                  json: Optional[str | Path] = None) -> None:
         self.appname = appname
         self.version = version
         self.debug = debug
-        self.temp = temp
+        self.store : dict = dict()
         self.db = DBState(db)
         self.json = JSONState(json)
 
@@ -30,21 +29,30 @@ class AppState(metaclass=Singleton):
             if hasattr(_object, 'save') and _object:
                 _object.save()
 
+    def __getitem__(self, key: str) -> Any:
+        return self.store.get(key, None)
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        try:
+            self.store[key] = value
+        except KeyError:
+            log.warning(f"State <{key}> is not in app state")
+
 
 class DBState(metaclass=Singleton):
     def __init__(self, db) -> None:
         self.db = db
-        self.state: dict = dict()
+        self.store: dict = dict()
         self.changes: dict = dict()
         self.load(db)
 
     def __bool__(self):
-        return bool(self.state)
+        return bool(self.store)
 
     def load(self, db):
         if db is not None:
-            self.state = self.db.load_state() or dict()
-            self.changes = {k: False for k in self.state}
+            self.store = self.db.load_state() or dict()
+            self.changes = {k: False for k in self.store}
 
     def save(self):
         changes = self.changes.values()
@@ -52,11 +60,11 @@ class DBState(metaclass=Singleton):
             self.db.save_state(self)
 
     def __getitem__(self, key: str) -> Any:
-        return self.state.get(key, None)
+        return self.store.get(key, None)
 
     def __setitem__(self, key: str, value: Any) -> None:
         try:
-            self.state[key] = value
+            self.store[key] = value
             self.changes[key] = True
         except KeyError:
             log.warning(f"State <{key}> is not in app db state")
@@ -65,38 +73,38 @@ class DBState(metaclass=Singleton):
 class JSONState:
     def __init__(self, jsonfile: str | Path, key: Optional[str] = None) -> None:
         self.jsonfile = jsonfile
-        self.state: dict = dict()
+        self.store: dict = dict()
         self.changes: dict = dict()
         self.data: dict = dict()
         self.key = key
         self.load(jsonfile, key)
 
     def __bool__(self):
-        return bool(self.state)
+        return bool(self.store)
 
     def load(self, jsonfile: str | Path, key: Optional[str] = None):
         self.key = key
         if jsonfile is not None:
             self.data = load_json(self.jsonfile)
             config = self.data.get(key) if key is not None else self.data
-            self.state = config or dict()
-            self.changes = {k: False for k in self.state}
+            self.store = config or dict()
+            self.changes = {k: False for k in self.store}
 
     def save(self):
         changes = self.changes.values()
-        if any(changes) and self.state:
+        if any(changes) and self.store:
             if self.key is not None:
-                self.data[self.key] = self.state
+                self.data[self.key] = self.store
             else:
-                self.data = self.state
+                self.data = self.store
             write_json(self.jsonfile, self.data)
 
     def __getitem__(self, key: str) -> Any:
-        return self.state.get(key, None)
+        return self.store.get(key, None)
 
     def __setitem__(self, key: str, value: Any) -> None:
         try:
-            self.state[key] = value
+            self.store[key] = value
             self.changes[key] = True
         except KeyError:
             log.warning(f"State <{key}> is not in app json state")

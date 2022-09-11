@@ -91,6 +91,9 @@ class Authorize(metaclass=Singleton):
                     self.auth = {}
 
     def change_user_auth(self, status: bool):
+        if self.debug:
+            return
+            
         if self.user in self.auth:
             for domain in self.auth[self.user]['action']:
                 self.auth[self.user]['action'][domain] = status
