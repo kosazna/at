@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
+
 from dataclasses import asdict, dataclass
-from typing import Optional, Union, Iterable, Any
 from pathlib import Path
-from at.io.utils import write_json
+from typing import Any, Iterable, Optional, Union
+
+from at.io.utils import load_json, write_json
+from at.logger import log
 from at.utils import purge_dict
 
 
@@ -18,11 +21,12 @@ class Element:
     partial_link_text: Optional[str] = None
     link_text: Optional[str] = None
     attribute: Optional[str] = None
-    many: bool = False
+    multi_element: bool = False
+    multi_value: bool = False
     loc: Optional[int] = None
     default: Optional[Any] = None
     children: Optional[Union[Element, Iterable[Element]]] = None
-    parent: Optional[str] = None
+    many: bool = False
 
     def __repr__(self):
         _attrs_set = asdict(self)
@@ -138,14 +142,34 @@ class ElementStore:
     data: Optional[Element] = None
     filters: Optional[Element] = None
     follow: Optional[Element] = None
+    gather: Optional[Element] = None
+
+    @staticmethod
+    def _load_data(data: Union[str, Path, dict]) -> dict:
+        if isinstance(data, dict):
+            return data
+        elif isinstance(data, (str, Path)):
+            return load_json(data)
+        else:
+            log.error(f'Unrecognised type for the element store: {type(data)}')
 
     @classmethod
-    def from_json_config(cls, json_config_elements: dict) -> ElementStore:
+    def from_json_config(cls,
+                         json_config: Union[str, Path, dict],
+                         key: str = 'elements') -> ElementStore:
+
+        json_config_dict = cls._load_data(json_config)
+        json_config_elements = json_config_dict.get(key)
+
         _cookies = None
         _paginator = None
         _data = None
         _filters = None
         _follow = None
+        _gather = None
+
+        if json_config_elements is None:
+            return cls(_cookies, _paginator, _data, _filters, _follow, _gather)
 
         if 'interaction' in json_config_elements:
             interaction = json_config_elements.pop('interaction')
@@ -164,8 +188,11 @@ class ElementStore:
         if 'follow' in json_config_elements:
             follow_elems = json_config_elements.pop('follow')
             _follow = Element.from_dict(follow_elems)
+        if 'gather' in json_config_elements:
+            gather_elems = json_config_elements.pop('gather')
+            _gather = Element.from_dict(gather_elems)
 
-        return cls(_cookies, _paginator, _data, _filters, _follow)
+        return cls(_cookies, _paginator, _data, _filters, _follow, _gather)
 
     def to_json_config(self, filepath: Union[str, Path]):
         config = {
@@ -173,7 +200,8 @@ class ElementStore:
                 'interaction': {},
                 'filters': None,
                 'data': None,
-                'follow': None
+                'follow': None,
+                'gather': None
             }
         }
 
@@ -187,5 +215,7 @@ class ElementStore:
             config['elements']['filters'] = self.filters.to_dict()
         if self.follow is not None:
             config['elements']['follow'] = self.follow.to_dict()
+        if self.follow is not None:
+            config['elements']['gather'] = self.gather.to_dict()
 
         write_json(filepath=filepath, data=config)

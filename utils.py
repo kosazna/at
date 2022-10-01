@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 from pathlib import Path
-from typing import List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 import sys
 
 from at.io.utils import load_json, write_json
@@ -22,6 +22,12 @@ def purge_dict(data: dict) -> dict:
             new_dict[key] = value
 
     return new_dict
+
+
+def dicts2list(dict_list: List[dict]) -> Dict[Any, list]:
+    return {
+        k: [d.get(k) for d in dict_list if k in d] for k in set().union(*dict_list)
+    }
 
 
 def make_shortcut(src: Union[str, Path],
