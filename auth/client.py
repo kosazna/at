@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+from json.decoder import JSONDecodeError
 from pathlib import Path
 from typing import Callable, Optional, Tuple, Union
 from dataclasses import dataclass
@@ -74,6 +75,23 @@ class Authorize(metaclass=Singleton):
                                        folder=self.auth_loc)
                     except KeyError:
                         log.info("Can't create temporary authentication")
+            except JSONDecodeError:
+                log.warning("Can't find GITHUB access token.")
+                log.info("Reverting to temporary authentication...")
+                if self.auth_loc is not None:
+                    date_str = timestamp(time=False)
+                    temp_auth = create_hex_string(f"{self.appname}-{date_str}")
+                    licfile = self.auth_loc.joinpath(f"{temp_auth}.lic")
+
+                    if licfile.exists():
+                        log.warning("Temporary authentication in use")
+                        content = load_pickle(licfile)
+                        self.auth = content
+                    else:
+                        log.error("No temporary authentication found")
+                        self.auth = {}
+                else:
+                    self.auth = {}
             except ConnectionError:
                 if self.auth_loc is not None:
                     date_str = timestamp(time=False)

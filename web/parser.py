@@ -22,7 +22,7 @@ def extract(element: Element,
     else:
         if element.attribute is not None:
             if element.attribute == 'text':
-                _text = content.text
+                _text = content.text.strip()
                 if _text:
                     return {element.name: _text}
                 return {element.name: element.default}
