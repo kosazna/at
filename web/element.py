@@ -13,6 +13,7 @@ from at.utils import purge_dict
 @dataclass
 class Element:
     name: Optional[str] = None
+    alias: bool = False
     tag_name: Optional[str] = None
     class_name: Optional[str] = None
     id: Optional[str] = None

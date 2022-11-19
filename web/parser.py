@@ -27,10 +27,17 @@ def extract(element: Element,
                     return {element.name: _text}
                 return {element.name: element.default}
             else:
-                _attr = content.get(element.attribute)
-                if _attr:
-                    return {element.name: _attr}
-                return {element.name: element.default}
+                if element.alias:
+                    _text = content.text.strip()
+                    _attr = content.get(element.attribute)
+                    if _attr:
+                        return {_text: _attr}
+                    return {_text: element.default}
+                else:
+                    _attr = content.get(element.attribute)
+                    if _attr:
+                        return {element.name: _attr}
+                    return {element.name: element.default}
         else:
             return content
 
