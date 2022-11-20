@@ -8,6 +8,7 @@ from pathlib import Path
 
 SQLITE_PARAM_REGEX = r':\w+'
 MYSQL_PARAM_REGEX = r'\%\((\w*)\)s'
+UNIVERSAL_TABLE_NAME = r'<%table_name%>'
 
 
 @dataclass
@@ -61,6 +62,13 @@ class Query:
         return self
 
     def set(self, **kwargs: Any) -> Query:
+        if re.search(UNIVERSAL_TABLE_NAME, self.sql):
+            table_name = kwargs.get("table_name", None)
+            if table_name is not None:
+                self.sql = re.sub(UNIVERSAL_TABLE_NAME, table_name, self.sql)
+            else:
+                raise ValueError(f"<table_name> parameter was not provided")
+                
         if 'datastream' in kwargs:
             self.data = kwargs['datastream']
         else:
