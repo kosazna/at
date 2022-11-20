@@ -19,7 +19,7 @@ class AppState(metaclass=Singleton):
         self.appname = appname
         self.version = version
         self.debug = debug
-        self.store : dict = dict()
+        self.store: dict = dict()
         self.db = DBState(db)
         self.json = JSONState(json)
 
@@ -98,6 +98,9 @@ class JSONState:
             else:
                 self.data = self.store
             write_json(self.jsonfile, self.data)
+
+    def get(self, key: str, default: Any = None) -> Any:
+        return self.store.get(key, default)
 
     def __getitem__(self, key: str) -> Any:
         return self.store.get(key, None)

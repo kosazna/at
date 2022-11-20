@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
+
 import json
 import pickle
-import sys
 import subprocess
+import sys
+import zipfile
 from pathlib import Path
 from shutil import unpack_archive
 from typing import Any, List, Tuple, Union
 from zipfile import ZipFile
-import zipfile
+
+from at.logger import log
 
 
 def open_excel(filepath: Union[str, Path]) -> None:
@@ -21,9 +24,13 @@ def open_excel(filepath: Union[str, Path]) -> None:
 
 
 def load_json(filepath: Union[str, Path]) -> dict:
-    with open(filepath, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    return data
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data
+    except FileNotFoundError:
+        log.error(f"File not found: [{str(filepath)}]")
+        return dict()
 
 
 def write_json(filepath: Union[str, Path],
