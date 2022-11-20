@@ -88,12 +88,20 @@ class Logger(metaclass=Singleton):
     def __init__(self, mode='CLI'):
         self.mode = mode
         self.content = []
+        self.flushed = True
 
     def set_mode(self, mode: str):
         self.mode = mode
+        if self.mode == "GUI":
+            self.flushed = False
 
     def get_mode(self) -> str:
         return self.mode
+
+    def flush(self):
+        self.flushed = True
+        for con in self.content:
+            eval(con)
 
     def info(self, content: str):
         if self.mode == 'GUI':
@@ -101,11 +109,17 @@ class Logger(metaclass=Singleton):
         else:
             print(content)
 
+        if not self.flushed:
+            self.content.append(f"self.info('{content}')")
+
     def highlight(self, content: str):
         if self.mode == 'GUI':
             print(guihighlight(content))
         else:
             print(strfhighlight(content))
+
+        if not self.flushed:
+            self.content.append(f"self.highlight('{content}')")
 
     def warning(self, content: str):
         if self.mode == 'GUI':
@@ -113,17 +127,26 @@ class Logger(metaclass=Singleton):
         else:
             print(strfwarning(content))
 
+        if not self.flushed:
+            self.content.append(f"self.warning('{content}')")
+
     def error(self, content: str):
         if self.mode == 'GUI':
             print(guierror(content))
         else:
             print(strferror(content))
 
+        if not self.flushed:
+            self.content.append(f"self.error('{content}')")
+
     def success(self, content: str):
         if self.mode == 'GUI':
             print(guisuccess(content))
         else:
             print(strfsuccess(content))
+
+        if not self.flushed:
+            self.content.append(f"self.success('{content}')")
 
 
 log = Logger(mode='CLI')

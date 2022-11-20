@@ -29,7 +29,7 @@ def load_json(filepath: Union[str, Path]) -> dict:
             data = json.load(f)
         return data
     except FileNotFoundError:
-        log.error(f"File not found: [{str(filepath)}]")
+        log.error(f"File not found: {str(filepath)}")
         return dict()
 
 
