@@ -37,6 +37,8 @@ class SQLiteEngine:
                 if query_name.startswith('init'):
                     if not self.db_exists:
                         self.script(query)
+                elif query_name.startswith('table'):
+                    self.script(query)
                 else:
                     self.script(query)
                     sql_name = f"{query_name}.sql"
