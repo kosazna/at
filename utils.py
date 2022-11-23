@@ -12,7 +12,7 @@ if sys.platform == "win32":
 
 
 def user() -> str:
-    return os.environ.get('USERNAME')
+    return os.environ.get('USERNAME') or os.getlogin()
 
 
 def purge_dict(data: dict) -> dict:
