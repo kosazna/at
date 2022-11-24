@@ -24,6 +24,7 @@ class SQLiteEngine:
                  app_paths: Optional[PathEngine] = None) -> None:
         self.db = str(db)
         self.db_exists = Path(db).exists()
+        self.connection: Optional[Connection] = None
         self.open_connection()
 
         if app_paths is not None:
@@ -62,6 +63,9 @@ class SQLiteEngine:
     def close_connection(self):
         self.connection.close()
         log.highlight("Connection to database closed.")
+
+    def get_connection(self):
+        return self.connection
 
     def update(self, query: Query):
         db_update(connection=self.connection, query=query)
