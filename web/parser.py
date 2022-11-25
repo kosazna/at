@@ -21,15 +21,23 @@ def extract(element: Element,
         return content
     else:
         if element.attribute is not None:
-            if element.attribute == 'text':
+            if element.attribute == 'text' and element.alias is None:
                 _text = content.text.strip()
                 if _text:
                     return {element.name: _text}
                 return {element.name: element.default}
             else:
-                if element.alias:
-                    _text = content.text.strip()
-                    _attr = content.get(element.attribute)
+                if element.alias is not None:
+                    if element.alias == "text":
+                        _text = content.text.strip()
+                    else:
+                        _text = content.get(element.alias)
+
+                    if element.attribute == "text":
+                        _attr = content.text.strip()
+                    else:
+                        _attr = content.get(element.alias)
+
                     if _attr:
                         return {_text: _attr}
                     return {_text: element.default}
