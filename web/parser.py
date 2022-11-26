@@ -36,7 +36,7 @@ def extract(element: Element,
                     if element.attribute == "text":
                         _attr = content.text.strip()
                     else:
-                        _attr = content.get(element.alias)
+                        _attr = content.get(element.attribute)
 
                     if _attr:
                         return {_text: _attr}
