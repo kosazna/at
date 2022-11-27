@@ -35,8 +35,7 @@ class Worker(QRunnable):
             exctype, value, msg = sys.exc_info()
             self.signals.error.emit((exctype, value, traceback.format_exc()))
             if log.logger is not None:
-                log.logger.error("--> Threaded function exception <--",
-                                exc_info=(exctype, value, msg))
+                log.logger.exception("--> Threaded function exception <--")
         else:
             self.signals.result.emit(result)
         finally:
