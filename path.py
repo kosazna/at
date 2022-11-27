@@ -12,6 +12,7 @@ class PathEngine:
         self._auth = Path(os.environ.get('APPDATA')).joinpath(f".{appname}")
         self._static = self._app.joinpath("static")
         self._source = self._app.joinpath("source")
+        self._logger = self._app.joinpath(f"{appname}.log")
         self._env = self._source.joinpath(f"{appname}/.env")
         self._sql = self._static.joinpath("sql")
         self._css = self._static.joinpath("css")
@@ -56,6 +57,11 @@ class PathEngine:
         if obj:
             return self._source
         return self._source.as_posix()
+
+    def get_logger(self, obj: bool = False) -> Union[str, Path]:
+        if obj:
+            return self._logger
+        return self._logger.as_posix()
 
     def get_env(self, obj: bool = False) -> Union[str, Path]:
         if obj:

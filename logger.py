@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import logging
+import sys
 from typing import Optional, Tuple
 
 from colorama import Fore, init
@@ -147,6 +149,26 @@ class Logger(metaclass=Singleton):
 
         if not self.flushed:
             self.content.append(f"self.success('{content}')")
+
+
+def set_exception_handling(logger_filepath: str, logger_name: str):
+    logging.basicConfig(filename=logger_filepath,
+                        filemode='a',
+                        format='\n%(asctime)s %(name)s %(levelname)s %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S',
+                        level=logging.WARNING)
+
+    logger = logging.getLogger(logger_name)
+
+    def handle_exception(exc_type, exc_value, exc_traceback):
+        if issubclass(exc_type, KeyboardInterrupt):
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+            return
+
+        logger.error("--> Uncaught exception <--",
+                     exc_info=(exc_type, exc_value, exc_traceback))
+
+    sys.excepthook = handle_exception
 
 
 log = Logger(mode='CLI')
