@@ -3,6 +3,7 @@
 import sys
 import traceback
 from typing import Callable, Optional
+from at.logger import log
 
 from PyQt5.QtCore import QObject, QRunnable, QThreadPool, pyqtSignal, pyqtSlot
 
@@ -31,8 +32,11 @@ class Worker(QRunnable):
             result = self.fn(*self.args, **self.kwargs)
         except:
             traceback.print_exc()
-            exctype, value = sys.exc_info()[:2]
+            exctype, value, msg = sys.exc_info()
             self.signals.error.emit((exctype, value, traceback.format_exc()))
+            if log.logger is not None:
+                log.logger.error("--> Threaded function exception <--",
+                                exc_info=(exctype, value, msg))
         else:
             self.signals.result.emit(result)
         finally:

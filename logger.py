@@ -87,10 +87,10 @@ def guisuccess(string: str) -> str:
 
 
 class Logger(metaclass=Singleton):
-    def __init__(self, mode='CLI'):
+    def __init__(self, mode: str = 'CLI'):
         self.mode = mode
-        self.content = []
-        self.flushed = True
+        self.content: list = []
+        self.flushed: bool = True
         self.logger: Optional[logging.Logger] = None
 
     def set_mode(self, mode: str):
@@ -130,6 +130,9 @@ class Logger(metaclass=Singleton):
         else:
             print(strfwarning(content))
 
+        if self.logger is not None:
+            self.logger.warning(content)
+
         if not self.flushed:
             self.content.append(f"self.warning('{content}')")
 
@@ -138,6 +141,9 @@ class Logger(metaclass=Singleton):
             print(guierror(content))
         else:
             print(strferror(content))
+
+        if self.logger is not None:
+            self.logger.error(content)
 
         if not self.flushed:
             self.content.append(f"self.error('{content}')")
@@ -154,7 +160,7 @@ class Logger(metaclass=Singleton):
     def set_exception_handling(self, logger_filepath: str, logger_name: str):
         logging.basicConfig(filename=logger_filepath,
                             filemode='a',
-                            format='\n%(asctime)s %(name)s %(levelname)s %(message)s',
+                            format='\n%(asctime)s | %(name)s - %(levelname)s | %(message)s',
                             datefmt='%Y-%m-%d %H:%M:%S',
                             level=logging.INFO)
 
@@ -167,7 +173,7 @@ class Logger(metaclass=Singleton):
                 return
 
             logger.error("--> Uncaught exception <--",
-                        exc_info=(exc_type, exc_value, exc_traceback))
+                         exc_info=(exc_type, exc_value, exc_traceback))
 
         sys.excepthook = handle_exception
 
