@@ -91,6 +91,7 @@ class Logger(metaclass=Singleton):
         self.mode = mode
         self.content = []
         self.flushed = True
+        self.logger: Optional[logging.Logger] = None
 
     def set_mode(self, mode: str):
         self.mode = mode
@@ -150,25 +151,25 @@ class Logger(metaclass=Singleton):
         if not self.flushed:
             self.content.append(f"self.success('{content}')")
 
+    def set_exception_handling(self, logger_filepath: str, logger_name: str):
+        logging.basicConfig(filename=logger_filepath,
+                            filemode='a',
+                            format='\n%(asctime)s %(name)s %(levelname)s %(message)s',
+                            datefmt='%Y-%m-%d %H:%M:%S',
+                            level=logging.INFO)
 
-def set_exception_handling(logger_filepath: str, logger_name: str):
-    logging.basicConfig(filename=logger_filepath,
-                        filemode='a',
-                        format='\n%(asctime)s %(name)s %(levelname)s %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S',
-                        level=logging.WARNING)
+        logger = logging.getLogger(logger_name)
+        self.logger = logger
 
-    logger = logging.getLogger(logger_name)
+        def handle_exception(exc_type, exc_value, exc_traceback):
+            if issubclass(exc_type, KeyboardInterrupt):
+                sys.__excepthook__(exc_type, exc_value, exc_traceback)
+                return
 
-    def handle_exception(exc_type, exc_value, exc_traceback):
-        if issubclass(exc_type, KeyboardInterrupt):
-            sys.__excepthook__(exc_type, exc_value, exc_traceback)
-            return
+            logger.error("--> Uncaught exception <--",
+                        exc_info=(exc_type, exc_value, exc_traceback))
 
-        logger.error("--> Uncaught exception <--",
-                     exc_info=(exc_type, exc_value, exc_traceback))
-
-    sys.excepthook = handle_exception
+        sys.excepthook = handle_exception
 
 
 log = Logger(mode='CLI')
