@@ -59,6 +59,9 @@ class DBState(metaclass=Singleton):
         if any(changes) and self.db is not None:
             self.db.save_state(self)
 
+    def get(self, key: str, default: Any = None) -> Any:
+        return self.store.get(key, default)
+
     def __getitem__(self, key: str) -> Any:
         return self.store.get(key, None)
 
