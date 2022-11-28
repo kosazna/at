@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
+import os
 from pathlib import Path
-from subprocess import Popen
-from typing import Union, Optional
 from sqlite3 import Connection, Row
 from sqlite3 import connect as sqlite_connect
-import os
+from subprocess import Popen
+from typing import Optional, Union
+
 from dotenv import load_dotenv
 
-from at.logger import log
-from at.path import PathEngine
 from at.database.action import db_insert, db_script, db_select, db_update
 from at.database.utils import Query, load_app_queries
+from at.logger import log
+from at.path import PathEngine
 from at.state import State
-
 
 load_dotenv()
 
@@ -62,7 +62,7 @@ class SQLiteEngine:
 
     def close_connection(self):
         self.connection.close()
-        log.highlight("Connection to database closed.")
+        log.highlight("Connection to SQLite database closed.")
 
     def get_connection(self):
         return self.connection

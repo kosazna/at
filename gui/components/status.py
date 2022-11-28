@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from typing import Callable, Optional, Tuple
 
-from at.gui.utils import set_size
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QCursor, QPixmap
 from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QPushButton, QSizePolicy,
                              QWidget)
+
+from at.gui.utils import set_size
 
 
 class StatusButton(QWidget):

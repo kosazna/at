@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 from typing import Callable, Iterable, Optional, Tuple, Union
 
-from at.gui.components.button import Button
-from at.gui.components.check import CheckInput
-from at.gui.components.popup import Popup
-from at.gui.utils import set_size
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QAbstractItemView, QAbstractScrollArea,
                              QHBoxLayout, QLabel, QListView, QListWidget,
                              QListWidgetItem, QVBoxLayout, QWidget)
+
+from at.gui.components.button import Button
+from at.gui.components.check import CheckInput
+from at.gui.components.popup import Popup
+from at.gui.utils import set_size
 
 
 class ListWidget(QWidget):

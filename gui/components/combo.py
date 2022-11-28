@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from typing import Iterable, Optional, Union
 
-from at.gui.utils import set_size
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QComboBox, QHBoxLayout, QLabel, QWidget
+
+from at.gui.utils import set_size
 
 
 class ComboInput(QWidget):

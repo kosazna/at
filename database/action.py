@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from contextlib import closing
-from typing import Union, Optional
+from typing import Optional, Union
 
-from at.logger import log
 from at.database.query import Query
+from at.logger import log
 
 
 def select(cursor, query: Query):

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import re
-from typing import Union, Type
-from at.logger import log
 from decimal import Decimal
+from typing import Type, Union
+
+from at.logger import log
 
 
 def text2num(text: str) -> list:

@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Any, List, Union
 from pathlib import Path
+from typing import Any, List, Union
 
 SQLITE_PARAM_REGEX = r':\w+'
 MYSQL_PARAM_REGEX = r'\%\((\w*)\)s'

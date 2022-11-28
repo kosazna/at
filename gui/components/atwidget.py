@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from typing import Callable, Iterable, Optional, Any
+from typing import Any, Callable, Iterable, Optional
 
+from PyQt5.QtCore import Qt, QThreadPool, pyqtSignal
+from PyQt5.QtWidgets import QWidget
+
+from at.auth import AuthStatus
 from at.gui.components import *
 from at.gui.worker import run_thread
 from at.result import Result
-from at.auth import AuthStatus
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtCore import Qt, QThreadPool, pyqtSignal
 
 
 class AtWidget(QWidget):

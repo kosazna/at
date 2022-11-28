@@ -2,11 +2,12 @@
 import os
 from typing import Callable, Optional, Tuple
 
-from at.gui.utils import HORIZONTAL, PATH_PLACEHOLDER, VERTICAL, set_size
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QCursor, QIcon
 from PyQt5.QtWidgets import (QFileDialog, QHBoxLayout, QLabel, QLineEdit,
                              QToolButton, QVBoxLayout, QWidget)
+
+from at.gui.utils import HORIZONTAL, PATH_PLACEHOLDER, VERTICAL, set_size
 
 
 class IOWidget(QWidget):

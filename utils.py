@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
-import sys
 
 from at.io.utils import load_json, write_json
 from at.logger import log

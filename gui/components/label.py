@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from typing import Optional, Tuple
 
-from at.gui.utils import set_size
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QFont
+from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
+
+from at.gui.utils import set_size
 
 
 class Label(QWidget):

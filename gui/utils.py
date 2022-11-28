@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 import sys
 from dataclasses import dataclass
-from typing import Optional, Tuple, Callable, Iterable
-from at.result import Result
+from typing import Callable, Iterable, Optional, Tuple
 
 from PyQt5.QtWidgets import QApplication, QWidget
+
+from at.result import Result
 
 HORIZONTAL = 'H'
 VERTICAL = 'V'

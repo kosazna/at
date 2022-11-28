@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
+
 import operator
 from typing import Iterable, List, Union
 
@@ -35,16 +36,12 @@ class ItemCollection:
 
     def clear(self) -> None:
         self.items = []
-        self.types = None
         self.nitems = 0
 
     def get_data(self, rtype: str = 'dict') -> List[dict]:
         if rtype == 'tuple':
             return [it.astuple() for it in self.items]
         return [it.asdict() for it in self.items]
-
-    def get_types(self) -> Union[dict, None]:
-        return self.types
 
     def is_empty(self):
         return False if self.nitems else True

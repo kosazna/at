@@ -1,25 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from dataclasses import asdict, astuple, dataclass, make_dataclass, field
-from typing import Union, Optional
-
-
-def _get_types_from_template(dc_template) -> Union[dict, None]:
-    cast_map = {'str': 'string',
-                'int': 'int64',
-                'float': 'float64'}
-
-    if dc_template is not None:
-        dctypes = dc_template.__annotations__
-        dtypes = {}
-        for key, value in dctypes.items():
-            value_name = value.__name__
-            try:
-                dtypes[key] = cast_map[value_name]
-            except KeyError:
-                dtypes[key] = value_name
-        return dtypes
-    return None
 
 
 @dataclass

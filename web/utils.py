@@ -7,8 +7,9 @@ from shutil import copyfileobj
 from typing import Union
 
 import requests
-from at.logger import log
 from fake_useragent import UserAgent
+
+from at.logger import log
 
 ua = UserAgent()
 

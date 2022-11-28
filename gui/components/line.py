@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import Optional
-from PyQt5.QtWidgets import QWidget, QFrame
+
+from PyQt5.QtWidgets import QFrame, QWidget
 
 
 class HLine(QFrame):

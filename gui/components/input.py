@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from typing import Callable, Iterable, Optional, Tuple, Union
 
-from at.gui.utils import HORIZONTAL, VERTICAL, set_size
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import (QCompleter, QHBoxLayout, QLabel, QLineEdit,
                              QVBoxLayout, QWidget)
+
+from at.gui.utils import HORIZONTAL, VERTICAL, set_size
 
 
 class StrInput(QWidget):

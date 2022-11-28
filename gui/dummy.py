@@ -4,18 +4,18 @@ from pathlib import Path
 from time import sleep
 from typing import Any, Tuple, Union
 
+from PyQt5.QtCore import Qt, QThreadPool
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
+
 from at.auth.client import Authorize, AuthStatus, licensed
 from at.gui.components import *
+from at.gui.components.atwidget import validateParams
 from at.gui.utils import *
 from at.gui.worker import run_thread
 from at.io.copyfuncs import batch_copy_file, copy_file
 from at.logger import log
 from at.path import PathEngine
-from PyQt5.QtCore import Qt, QThreadPool
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
-
-from at.gui.components.atwidget import validateParams
 
 # When setting fixed width to QLineEdit ->
 # -> add alignment=Qt.AlignLeft when adding widget to layout

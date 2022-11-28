@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import annotations
+
 from typing import Optional
-from at.logger import log, ERROR, WARNING, SUCCESS, INFO
+
+from at.logger import ERROR, INFO, SUCCESS, WARNING, log
 
 
 class Result:

@@ -3,6 +3,7 @@ from typing import Optional, Tuple
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QProgressBar, QWidget
+
 from at.gui.utils import set_size
 
 

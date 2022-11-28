@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from typing import Optional
 
-from at.gui.utils import set_size
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QCursor, QIcon
 from PyQt5.QtWidgets import QPushButton, QWidget
+
+from at.gui.utils import set_size
 
 
 class Button(QPushButton):

@@ -3,10 +3,11 @@
 from collections import ChainMap
 from typing import Iterable, List, Union
 
-from at.utils import dicts2list
-from at.web.element import Element
 from bs4 import BeautifulSoup
 from bs4.element import Tag
+
+from at.utils import dicts2list
+from at.web.element import Element
 
 
 def extract(element: Element,
