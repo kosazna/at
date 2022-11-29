@@ -26,11 +26,8 @@ class AtWidget(QWidget):
         for update_item, update_value in metadata.items():
             if update_item.startswith('progress'):
                 gui_object = getattr(self, update_item, None)
-                signal_object = getattr(self, 'progressSignal', None)
                 if gui_object is not None:
                     gui_object.setValueMaximum(*update_value)
-                elif signal_object is not None:
-                    signal_object.emit(update_value)
             elif update_item.startswith('status'):
                 if isinstance(update_value, str):
                     status_text = update_value
@@ -42,11 +39,12 @@ class AtWidget(QWidget):
                     status_text = ''
                     status_name = 'statusNeutral'
                 gui_object = getattr(self, update_item, None)
-                signal_object = getattr(self, 'statusSignal', None)
                 if gui_object is not None:
                     gui_object.changeStatus(status_text, status_name)
-                elif signal_object is not None:
-                    signal_object.emit((status_text, status_name))
+            elif update_item.startswith('signal'):
+                signal_object = getattr(self, update_item, None)
+                if signal_object is not None:
+                    signal_object.emit(update_value)
             else:
                 gui_object = getattr(self, update_item, None)
                 if gui_object is not None and hasattr(gui_object, 'setText'):
@@ -64,6 +62,9 @@ class AtWidget(QWidget):
                     self.popup.warning(status.msg, **status.details)
                 else:
                     self.popup.info(status.msg, **status.details)
+
+                if status.metadata is not None:
+                    self.updateProgress(status.metadata)
             else:
                 self.popup.info(status)
 

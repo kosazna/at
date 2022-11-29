@@ -115,9 +115,12 @@ class Logger(metaclass=Singleton):
         if not self.flushed:
             self.content.append(f"self.info('{content}')")
 
-    def highlight(self, content: str):
+    def highlight(self, content: str, _progress = None):
         if self.mode == 'GUI':
-            print(guihighlight(content))
+            if _progress is None:
+                print(guihighlight(content))
+            else:
+                _progress.emit({'signalStatus': (content, 'statusNeutral')})
         else:
             print(strfhighlight(content))
 
