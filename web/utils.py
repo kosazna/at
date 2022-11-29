@@ -51,7 +51,7 @@ def download_image(url: str,
                    save_name: Union[str, None] = None) -> None:
     if not url.startswith('https:'):
         url = f'https:{url}'
-        
+
     r = requests.get(url, stream=True)
     url_file = url.split("/")[-1]
     ext = splitext(url_file)[1]
