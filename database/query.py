@@ -21,11 +21,11 @@ class Query:
     data: Union[List[tuple], None] = None
 
     @classmethod
-    def from_file(cls, filepath: Union[str, Path]):
+    def from_file(cls, filepath: Union[str, Path]) -> Query:
         _path = Path(filepath)
         _query = _path.read_text(encoding='utf-8')
 
-        return cls(_query)
+        return cls(sql=_query)
 
     def __post_init__(self):
         result_params = re.search(r'{.*}', self.sql)
@@ -75,9 +75,10 @@ class Query:
             if self.params is not None:
                 for param in self.params:
                     value = kwargs.get(param, None)
-                    if value is None:
-                        raise ValueError(f"'{param}' was not given a value.")
-                    else:
-                        self.params[param] = value
+                    self.params[param] = value
+                    # if value is None:
+                    #     raise ValueError(f"'{param}' was not given a value.")
+                    # else:
+                    #     self.params[param] = value
 
         return self
