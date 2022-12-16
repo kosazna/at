@@ -53,3 +53,23 @@ def make_raw_dataframe(data: Union[List[dict], List[tuple], pd.DataFrame],
                     'When dataset is a list of tuples, columns must be provided')
                 return None
             return pd.DataFrame(data, columns=columns, dtype='string')
+
+
+def df_str2date(df: pd.DataFrame,
+                columns: Iterable[str],
+                date_format: Optional[str]):
+    _df = df.copy()
+
+    for date_col in columns:
+        _df[date_col] = pd.to_datetime(_df[date_col], format=date_format)
+
+    return _df
+
+
+def df_date2str(df: pd.DataFrame, columns: Iterable[str], date_format: str):
+    _df = df.copy()
+
+    for date_col in columns:
+        _df[date_col] = _df[date_col].dt.strftime(date_format=date_format)
+
+    return _df
