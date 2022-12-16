@@ -12,6 +12,11 @@ from zipfile import ZipFile
 
 from at.logger import log
 
+try:
+    import orjson
+except ModuleNotFoundError:
+    pass
+
 
 def open_excel(filepath: Union[str, Path]) -> None:
 
@@ -36,7 +41,23 @@ def load_json(filepath: Union[str, Path]) -> dict:
 def write_json(filepath: Union[str, Path],
                data: dict) -> None:
     with open(filepath, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+
+def load_json_pro(filepath: Union[str, Path]) -> dict:
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            data = orjson.loads(f.read())
+        return data
+    except FileNotFoundError:
+        log.error(f"File not found: {str(filepath)}")
+        return dict()
+
+
+def write_json_pro(filepath: Union[str, Path],
+                   data: dict) -> None:
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(orjson.dumps(data).decode('utf-8'))
 
 
 def load_pickle(filepath: Union[str, Path]) -> Any:

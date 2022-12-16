@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
 
 from at.auth.client import Authorize, AuthStatus, licensed
 from at.gui.components import *
-from at.gui.components.atwidget import validateParams
+from at.gui.utils import validateParams
 from at.gui.utils import *
 from at.gui.worker import run_thread
 from at.io.copyfuncs import batch_copy_file, copy_file

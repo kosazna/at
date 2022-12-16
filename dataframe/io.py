@@ -1,12 +1,22 @@
 # -*- coding: utf-8 -*-
 
 from pathlib import Path
-from typing import Iterable, List, Optional, Union
+from typing import Dict, List, Union
 
 import pandas as pd
 
-from at.logger import log
 
+def dataframes2excel(filepath: Union[str, Path],
+                     data: Union[List[pd.DataFrame], Dict[str, pd.DataFrame]],
+                     mode: str = 'w'):
+
+    with pd.ExcelWriter(filepath, mode=mode, engine='openpyxl') as writer:
+        if isinstance(data, (list, tuple)):
+            for idx, df in enumerate(data, 1):
+                df.to_excel(writer, index=False, sheet_name=f"Sheet{idx}")
+        elif isinstance(data, dict):
+            for sheet_name, df in data.items():
+                df.to_excel(writer, index=False, sheet_name=sheet_name)
 
 def export_dataframe(filepath: Union[str, Path], data: pd.DataFrame, **kwargs):
     suffix = Path(filepath).suffix
@@ -32,24 +42,3 @@ def export_dataframe(filepath: Union[str, Path], data: pd.DataFrame, **kwargs):
         return True
     else:
         return False
-
-
-def make_raw_dataframe(data: Union[List[dict], List[tuple], pd.DataFrame],
-                       columns: Optional[Iterable] = None):
-    if isinstance(data, pd.DataFrame):
-        return data
-    elif isinstance(data, list):
-        try:
-            first_element = data[0]
-        except KeyError:
-            log.error('Empty dataset')
-            return None
-
-        if isinstance(first_element, dict):
-            return pd.DataFrame(data, dtype='string')
-        elif isinstance(first_element, tuple):
-            if columns is None:
-                log.error(
-                    'When dataset is a list of tuples, columns must be provided')
-                return None
-            return pd.DataFrame(data, columns=columns, dtype='string')
