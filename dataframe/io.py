@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Dict, Iterable, List, Optional, Union
 
 import pandas as pd
 
@@ -21,19 +21,35 @@ def dataframes2excel(filepath: Union[str, Path],
 
 def excel2dataframes(filepath: Union[str, Path],
                      dtype: Optional[Union[str, dict]] = None,
-                     sheet_args: Optional[Dict[str, dict]] = None) -> Dict[str, pd.DataFrame]:
+                     sheets: Optional[Union[str, Iterable]] = None,
+                     sheetargs: Optional[Dict[str, dict]] = None) -> Dict[str, pd.DataFrame]:
     data_map = {}
 
     with pd.ExcelFile(filepath, engine='openpyxl') as ef:
-        for sheet_name in ef.sheet_names:
-            if sheet_args is not None:
-                if sheet_name in sheet_args:
-                    _args = sheet_args[sheet_name]
-                else:
-                    _args = dict()
-                data_map[sheet_name] = ef.parse(sheet_name, dtype, **_args)
+        if sheets is not None:
+            if sheets == 'fromargs':
+                for sheet_name, _args in sheetargs.items():
+                    data_map[sheet_name] = ef.parse(sheet_name, dtype=dtype,
+                                                    **_args)
             else:
-                data_map[sheet_name] = ef.parse(sheet_name, dtype)
+                for sheet_name in sheets:
+                    if sheet_name in sheetargs:
+                        _args = sheetargs[sheet_name]
+                    else:
+                        _args = dict()
+                    data_map[sheet_name] = ef.parse(sheet_name, dtype=dtype,
+                                                    **_args)
+        else:
+            for sheet_name in ef.sheet_names:
+                if sheetargs is not None:
+                    if sheet_name in sheetargs:
+                        _args = sheetargs[sheet_name]
+                    else:
+                        _args = dict()
+                    data_map[sheet_name] = ef.parse(sheet_name, dtype=dtype,
+                                                    **_args)
+                else:
+                    data_map[sheet_name] = ef.parse(sheet_name, dtype=dtype)
 
     return data_map
 
