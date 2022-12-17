@@ -57,7 +57,7 @@ def make_raw_dataframe(data: Union[List[dict], List[tuple], pd.DataFrame],
 
 def df_str2date(df: pd.DataFrame,
                 columns: Iterable[str],
-                date_format: Optional[str]):
+                date_format: Optional[str] = None):
     _df = df.copy()
 
     for date_col in columns:
