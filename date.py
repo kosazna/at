@@ -2,6 +2,11 @@
 from datetime import datetime, timedelta
 from typing import Union
 
+ISODATE = "%Y-%m-%d"
+ISOTIME = "%H:%M:%S"
+ISOTIME_COMP = "%H-%M-%S"
+GRDATE = "%d/%m/%Y"
+USDATE = "%m/%d/%Y"
 
 def timestamp(date: bool = True,
               time: bool = True,
@@ -15,23 +20,23 @@ def timestamp(date: bool = True,
             return dt
         else:
             if filename_compatible:
-                return dt.strftime("%Y-%m-%d--%H-%M-%S")
+                return dt.strftime(f"{ISODATE}--{ISOTIME_COMP}")
             else:
-                return dt.strftime("%Y-%m-%d %H:%M:%S")
+                return dt.strftime(f"{ISODATE} {ISOTIME}")
 
     elif date and not time:
         if return_object:
-            return dt.date()
+            return dt.replace(hour=0, minute=0, second=0)
         else:
-            return dt.strftime("%Y-%m-%d")
+            return dt.strftime(f"{ISODATE}")
     else:
         if return_object:
             return dt.time()
         else:
             if filename_compatible:
-                return dt.strftime("%H-%M-%S")
+                return dt.strftime(f"{ISOTIME_COMP}")
             else:
-                return dt.strftime("%H:%M:%S")
+                return dt.strftime(f"{ISOTIME}")
 
 
 def daterange(periods: int,
