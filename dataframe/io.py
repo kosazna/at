@@ -18,6 +18,17 @@ def dataframes2excel(filepath: Union[str, Path],
             for sheet_name, df in data.items():
                 df.to_excel(writer, index=False, sheet_name=sheet_name)
 
+
+def excel2dataframes(filepath: Union[str, Path]) -> Dict[str, pd.DataFrame]:
+    data_map = {}
+
+    with pd.ExcelFile(filepath, engine='openpyxl') as excelfile:
+        for sheet_name in excelfile.sheet_names:
+            data_map[sheet_name] = excelfile.parse(sheet_name)
+
+    return data_map
+
+
 def export_dataframe(filepath: Union[str, Path], data: pd.DataFrame, **kwargs):
     suffix = Path(filepath).suffix
     str_filepath = str(filepath)
