@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pathlib import Path
-from typing import Dict, List, Union
+from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
@@ -19,12 +19,21 @@ def dataframes2excel(filepath: Union[str, Path],
                 df.to_excel(writer, index=False, sheet_name=sheet_name)
 
 
-def excel2dataframes(filepath: Union[str, Path]) -> Dict[str, pd.DataFrame]:
+def excel2dataframes(filepath: Union[str, Path],
+                     dtype: Optional[Union[str, dict]] = None,
+                     sheet_args: Optional[Dict[str, dict]] = None) -> Dict[str, pd.DataFrame]:
     data_map = {}
 
-    with pd.ExcelFile(filepath, engine='openpyxl') as excelfile:
-        for sheet_name in excelfile.sheet_names:
-            data_map[sheet_name] = excelfile.parse(sheet_name)
+    with pd.ExcelFile(filepath, engine='openpyxl') as ef:
+        for sheet_name in ef.sheet_names:
+            if sheet_args is not None:
+                if sheet_name in sheet_args:
+                    _args = sheet_args[sheet_name]
+                else:
+                    _args = dict()
+                data_map[sheet_name] = ef.parse(sheet_name, dtype, **_args)
+            else:
+                data_map[sheet_name] = ef.parse(sheet_name, dtype)
 
     return data_map
 
