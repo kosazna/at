@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pathlib import Path
-from typing import Iterable, List, Optional, Union
+from typing import Any, Iterable, List, Optional, Tuple, Union
 
 import pandas as pd
 
@@ -57,7 +57,7 @@ def make_raw_dataframe(data: Union[List[dict], List[tuple], pd.DataFrame],
 
 def df_str2date(df: pd.DataFrame,
                 columns: Iterable[str],
-                date_format: Optional[str] = None):
+                date_format: Optional[str] = None) -> pd.DataFrame:
     _df = df.copy()
 
     for date_col in columns:
@@ -66,10 +66,45 @@ def df_str2date(df: pd.DataFrame,
     return _df
 
 
-def df_date2str(df: pd.DataFrame, columns: Iterable[str], date_format: str):
+def df_date2str(df: pd.DataFrame,
+                columns: Iterable[str],
+                date_format: str) -> pd.DataFrame:
     _df = df.copy()
 
     for date_col in columns:
         _df[date_col] = _df[date_col].dt.strftime(date_format=date_format)
 
     return _df
+
+
+def iterrows(df: pd.DataFrame,
+             cols: Optional[Union[str, Iterable[str]]] = None) -> Tuple[pd.Index, Any]:
+    if isinstance(cols, str):
+        if cols not in df.columns:
+            raise KeyError(f"[{cols}] not in dataframe columns")
+    else:
+        if cols is not None:
+            missing_cols = []
+            for col in cols:
+                if col not in df.columns:
+                    missing_cols.append(col)
+            if missing_cols:
+                msg = '-'.join(missing_cols)
+                raise KeyError(f"[{msg}] not in dataframe columns")
+
+    single_col = False
+
+    if cols is not None:
+        if isinstance(cols, str):
+            single_col = True
+        else:
+            _cols = [df[col] for col in cols]
+    else:
+        _cols = [df[col] for col in df.columns]
+
+    if single_col:
+        for idx, val in zip(df.index, df[cols]):
+            yield idx, val
+    else:
+        for idx, *vals in zip(df.index, *_cols):
+            yield idx, vals
