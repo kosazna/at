@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import Optional, Tuple
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QProgressBar, QWidget
-
+from at.gui.components.atpyqt import QProgressBar, Qt, QWidget
 from at.gui.utils import set_size
 
 
@@ -21,7 +19,7 @@ class ProgressBar(QProgressBar):
         self.setMaximum(100)
         self.setValue(0)
         set_size(widget=self, size=size)
-        self.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+        self.setAlignment(Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignVCenter)
 
     def setStyle(self, object_name: str):
         self.setObjectName(object_name)

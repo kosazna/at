@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import Optional
 
-from PyQt5.QtWidgets import QFrame, QWidget
-
+from at.gui.components.atpyqt import QFrame, QWidget
 
 class HLine(QFrame):
     def __init__(self,
@@ -15,5 +14,5 @@ class HLine(QFrame):
     def setupUi(self):
         self.setObjectName("HLine")
         self.setLineWidth(2)
-        self.setFrameShape(QFrame.HLine)
-        self.setFrameShadow(QFrame.Sunken)
+        self.setFrameShape(QFrame.Shape.HLine)
+        self.setFrameShadow(QFrame.Shadow.Sunken)

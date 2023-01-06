@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from typing import Optional, Tuple
 
-from PyQt5.QtCore import QRegExp, Qt
-from PyQt5.QtGui import QRegExpValidator
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QLineEdit, QWidget
-
+from at.gui.components.atpyqt import (QHBoxLayout, QLabel, QLineEdit,
+                                      QRegularExpression,
+                                      QRegularExpressionValidator, Qt, QWidget)
 from at.gui.utils import set_size
 
 
@@ -24,9 +23,9 @@ class FileNameInput(QWidget):
         self.lineEdit = QLineEdit(parent=self)
         set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setClearButtonEnabled(True)
-        self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
-        regexp = QRegExp('[^\.\<\>:\"/\\\|\?\*]*')
-        validator = QRegExpValidator(regexp, self.lineEdit)
+        self.lineEdit.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        regexp = QRegularExpression('[^\.\<\>:\"/\\\|\?\*]*')
+        validator = QRegularExpressionValidator(regexp, self.lineEdit)
         self.lineEdit.setValidator(validator)
         self.setPlaceholder(placeholder)
 

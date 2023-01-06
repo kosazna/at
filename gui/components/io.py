@@ -2,11 +2,9 @@
 import os
 from typing import Callable, Optional, Tuple
 
-from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtGui import QCursor, QIcon
-from PyQt5.QtWidgets import (QFileDialog, QHBoxLayout, QLabel, QLineEdit,
-                             QToolButton, QVBoxLayout, QWidget)
-
+from at.gui.components.atpyqt import (QCursor, QFileDialog, QHBoxLayout, QIcon,
+                                      QLabel, QLineEdit, QSize, Qt,
+                                      QToolButton, QVBoxLayout, QWidget)
 from at.gui.utils import HORIZONTAL, PATH_PLACEHOLDER, VERTICAL, set_size
 
 
@@ -35,15 +33,15 @@ class IOWidget(QWidget):
         self.lineEdit = QLineEdit(parent=self)
         set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setClearButtonEnabled(True)
-        self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.lineEdit.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         self.setPlaceholder(placeholder)
 
         self.button = QToolButton(parent=self)
         qicon = QIcon()
         qicon.addFile(f":/bootstrap/icons/folder-symlink.svg", QSize(16, 16),
-                      QIcon.Normal, QIcon.Off)
+                      QIcon.Mode.Normal, QIcon.State.Off)
         self.button.setIcon(qicon)
-        self.button.setCursor(QCursor(Qt.PointingHandCursor))
+        self.button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.button.setFixedSize(editsize[1], editsize[1] - 2)
 
         if orientation == HORIZONTAL:

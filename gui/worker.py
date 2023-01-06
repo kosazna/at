@@ -4,8 +4,8 @@ import sys
 import traceback
 from typing import Callable, Optional
 
-from PyQt5.QtCore import QObject, QRunnable, QThreadPool, pyqtSignal, pyqtSlot
-
+from at.gui.components.atpyqt import (QObject, QRunnable, QThreadPool,
+                                      pyqtSignal, pyqtSlot)
 from at.logger import log
 
 

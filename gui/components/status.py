@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 from typing import Callable, Optional, Tuple
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QCursor, QPixmap
-from PyQt5.QtWidgets import (QHBoxLayout, QLabel, QPushButton, QSizePolicy,
-                             QWidget)
-
+from at.gui.components.atpyqt import (QCursor, QHBoxLayout, QLabel, QPixmap,
+                                      QPushButton, QSizePolicy, Qt, QWidget)
 from at.gui.utils import set_size
 
 
@@ -24,7 +21,7 @@ class StatusButton(QWidget):
         self.button = QPushButton(parent=self)
         self.button.setText(status)
         self.button.setEnabled(False)
-        self.button.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         if status:
             self.enable()
         else:
@@ -42,7 +39,7 @@ class StatusButton(QWidget):
         self.setText(text)
         self.button.setEnabled(False)
         self.setStyle("statusOff")
-        self.setCursor(QCursor(Qt.ForbiddenCursor))
+        self.setCursor(QCursor(Qt.CursorShape.ForbiddenCursor))
 
     def enable(self, text: str):
         if text:
@@ -84,7 +81,7 @@ class StatusLabel(QWidget):
         self.status.setText(status)
         set_size(widget=self.status, size=statussize)
         self.status.setObjectName('statusNeutral')
-        self.status.setAlignment(Qt.AlignCenter)
+        self.status.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         layout = QHBoxLayout()
         if label:
@@ -98,9 +95,9 @@ class StatusLabel(QWidget):
                 self.iconLabel.setFixedSize(24, 24)
                 self.iconLabel.setPixmap(
                     QPixmap(f":/bootstrap/icons/{icon}.svg"))
-                self.iconLabel.setAlignment(Qt.AlignCenter)
+                self.iconLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
                 layout.addWidget(self.iconLabel)
-        layout.addWidget(self.status, 1, alignment=Qt.AlignLeft)
+        layout.addWidget(self.status, 1, alignment=Qt.AlignmentFlag.AlignLeft)
         layout.setContentsMargins(0, 2, 0, 2)
         layout.setSpacing(4)
 

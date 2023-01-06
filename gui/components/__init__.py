@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from at.gui.components.atpyqt import *
 from at.gui.components.button import Button
 from at.gui.components.check import CheckInput
 from at.gui.components.combo import ComboInput
@@ -16,4 +17,3 @@ from at.gui.components.progress import ProgressBar
 from at.gui.components.selector import (FilterFileSelector, PathSelector,
                                         StrSelector)
 from at.gui.components.status import StatusButton, StatusLabel
-from at.gui.components.atwidget import AtWidget

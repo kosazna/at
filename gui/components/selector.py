@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from typing import Optional, Tuple
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
-
+from at.gui.components.atpyqt import (QHBoxLayout, QLabel, Qt, QVBoxLayout,
+                                      QWidget)
 from at.gui.components.check import CheckInput
 from at.gui.components.combo import ComboInput
 from at.gui.components.input import StrInput
@@ -163,7 +162,7 @@ class StrSelector(QWidget):
                 set_size(widget=self.label, size=labelsize)
                 layout.addWidget(self.label)
             layout.addWidget(self.combo)
-            layout.addWidget(self.input, stretch=1, alignment=Qt.AlignLeft)
+            layout.addWidget(self.input, stretch=1, alignment=Qt.AlignmentFlag.AlignLeft)
         else:
             layout = QVBoxLayout()
             layout.setSpacing(0)
@@ -176,7 +175,7 @@ class StrSelector(QWidget):
                 set_size(widget=self.label, size=labelsize)
                 layout.addWidget(self.label)
             inner.addWidget(self.combo)
-            inner.addWidget(self.input, stretch=1, alignment=Qt.AlignLeft)
+            inner.addWidget(self.input, stretch=1, alignment=Qt.AlignmentFlag.AlignLeft)
             layout.addLayout(inner)
 
         layout.setContentsMargins(0, 0, 0, 0)

@@ -3,7 +3,7 @@ import sys
 from dataclasses import dataclass
 from typing import Callable, Iterable, Optional, Tuple
 
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt6.QtWidgets import QApplication, QWidget
 
 from at.result import Result
 
@@ -43,11 +43,9 @@ def needs(params:Iterable):
         return wrapper
     return decorator
 
-def get_dpi():
-    app = QApplication(sys.argv)
+def get_dpi(app: QApplication):
     screen = app.screens()[0]
     dpi = screen.physicalDotsPerInch()
-    app.quit()
 
     return int(dpi)
 

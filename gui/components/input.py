@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 from typing import Callable, Iterable, Optional, Tuple, Union
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIntValidator
-from PyQt5.QtWidgets import (QCompleter, QHBoxLayout, QLabel, QLineEdit,
-                             QVBoxLayout, QWidget)
-
+from at.gui.components.atpyqt import (QCompleter, QHBoxLayout, QIntValidator,
+                                      QLabel, QLineEdit, Qt, QVBoxLayout,
+                                      QWidget)
 from at.gui.utils import HORIZONTAL, VERTICAL, set_size
 
 
@@ -28,7 +26,7 @@ class StrInput(QWidget):
         self.lineEdit = QLineEdit(parent=self)
         set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setClearButtonEnabled(True)
-        self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.lineEdit.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         if hidden:
             self.lineEdit.setEchoMode(QLineEdit.EchoMode.Password)
 
@@ -80,10 +78,10 @@ class StrInput(QWidget):
     def setCompleter(self, items: Iterable[str]):
         if items is not None:
             _completer = QCompleter(items)
-            _completer.setCompletionMode(QCompleter.PopupCompletion)
-            _completer.setCaseSensitivity(Qt.CaseInsensitive)
-            _completer.setModelSorting(QCompleter.CaseInsensitivelySortedModel)
-            _completer.setFilterMode(Qt.MatchContains)
+            _completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
+            _completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+            _completer.setModelSorting(QCompleter.ModelSorting.CaseInsensitivelySortedModel)
+            _completer.setFilterMode(Qt.MatchFlag.MatchContains)
             self.lineEdit.setCompleter(_completer)
 
 
@@ -109,7 +107,7 @@ class IntInput(QWidget):
         set_size(widget=self.lineEdit, size=editsize)
         self.lineEdit.setValidator(self.validator)
         self.lineEdit.setClearButtonEnabled(True)
-        self.lineEdit.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.lineEdit.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
 
         if orientation == VERTICAL:
             layout = QVBoxLayout()

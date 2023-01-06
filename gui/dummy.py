@@ -1,26 +1,23 @@
 # -*- coding: utf-8 -*-
+import atexit
 import sys
 from pathlib import Path
 from time import sleep
 from typing import Any, Tuple, Union
 
-from PyQt5.QtCore import Qt, QThreadPool
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QApplication, QHBoxLayout, QVBoxLayout, QWidget
-
 from at.auth.client import Authorize, AuthStatus, licensed
+from at.gui.atwidget import AtWidget
 from at.gui.components import *
-from at.gui.utils import validateParams
 from at.gui.utils import *
+from at.gui.utils import validateParams
 from at.gui.worker import run_thread
 from at.io.copyfuncs import batch_copy_file, copy_file
+from at.io.utils import write_json
 from at.logger import log
 from at.path import PathEngine
-import atexit
-from at.io.utils import write_json
 
 # When setting fixed width to QLineEdit ->
-# -> add alignment=Qt.AlignLeft when adding widget to layout
+# -> add alignment=Qt.AlignmentFlag.AlignLeft when adding widget to layout
 
 cssGuide = Path("D:/.temp/.dev/.aztool/at/gui/css/_style.css").read_text()
 
@@ -245,19 +242,19 @@ if __name__ == '__main__':
     # def terminate():
     #     print("finished")
 
-    def appExec():
-        SEGOE = QFont("Segoe UI", 9)
 
-        app = QApplication(sys.argv)
-        app.setFont(SEGOE)
-        app.setStyle('Fusion')
+    SEGOE = QFont("Segoe UI", 9)
 
-        ui = Dummy(size=(1000, None))
-        ui.show()
-        app.exec_()
-        # log.set_mode("CLI")
-        # write_json("D:/test.json", {"name": "kostas"})
+    app = QApplication(sys.argv)
+    app.setFont(SEGOE)
+    app.setStyle('Fusion')
+
+    ui = Dummy(size=(1000, None))
+    ui.show()
+    # app.exec()
+    # log.set_mode("CLI")
+    # write_json("D:/test.json", {"name": "kostas"})
 
         
 
-    sys.exit(appExec())
+    sys.exit(app.exec())

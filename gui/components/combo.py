@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from typing import Iterable, Optional, Union
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QComboBox, QHBoxLayout, QLabel, QWidget
-
+from at.gui.components.atpyqt import (QComboBox, QHBoxLayout, QLabel, Qt,
+                                      QWidget)
 from at.gui.utils import set_size
 
 
@@ -34,7 +33,7 @@ class ComboInput(QWidget):
             self.label.setText(label)
             set_size(widget=self.label, size=labelsize)
             layout.addWidget(self.label)
-        layout.addWidget(self.comboEdit, 1, alignment=Qt.AlignLeft)
+        layout.addWidget(self.comboEdit, 1, alignment=Qt.AlignmentFlag.AlignLeft)
         self.setLayout(layout)
 
         if items is not None:

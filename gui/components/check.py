@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import Optional
 
-from PyQt5.QtWidgets import QCheckBox, QWidget
-
+from at.gui.components import QCheckBox, QWidget
 from at.gui.utils import set_size
 
 

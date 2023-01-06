@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from typing import Callable, Iterable, Optional, Tuple, Union
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (QAbstractItemView, QAbstractScrollArea,
-                             QHBoxLayout, QLabel, QListView, QListWidget,
-                             QListWidgetItem, QVBoxLayout, QWidget)
-
+from at.gui.components.atpyqt import (QAbstractItemView, QAbstractScrollArea,
+                                      QHBoxLayout, QLabel, QListView,
+                                      QListWidget, QListWidgetItem, Qt,
+                                      QVBoxLayout, QWidget)
 from at.gui.components.button import Button
 from at.gui.components.check import CheckInput
 from at.gui.components.popup import Popup
@@ -35,16 +34,16 @@ class ListWidget(QWidget):
         self.label = QLabel(parent=self)
         self.label.setText(label)
         set_size(widget=self.label, size=labelsize)
-        self.label.setAlignment(Qt.AlignCenter)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.listWidget = QListWidget(parent=self)
         self.listWidget.setSortingEnabled(True)
         self.listWidget.setAlternatingRowColors(True)
         self.listWidget.setSpacing(1)
-        self.listWidget.setSelectionMode(QAbstractItemView.NoSelection)
+        self.listWidget.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
         self.listWidget.setSizeAdjustPolicy(
-            QAbstractScrollArea.AdjustToContents)
-        self.listWidget.setResizeMode(QListView.Adjust)
+            QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents)
+        self.listWidget.setResizeMode(QListView.ResizeMode.Adjust)
         if items is not None:
             for item in items:
                 qlistwidgetitem = QListWidgetItem(self.listWidget)
@@ -64,7 +63,7 @@ class ListWidget(QWidget):
         self.layoutTop.setSpacing(1)
         self.layoutBottom = QHBoxLayout()
         self.layoutTop.setSpacing(1)
-        self.layoutTop.addWidget(self.label, alignment=Qt.AlignHCenter)
+        self.layoutTop.addWidget(self.label, alignment=Qt.AlignmentFlag.AlignHCenter)
         self.layoutBottom.addWidget(self.checkBox)
         self.layoutBottom.addWidget(self.buttonLoad)
         self.layoutBottom.addWidget(self.buttonClear)

@@ -1,25 +1,25 @@
 # -*- coding: utf-8 -*-
 from typing import Union
 
-from PyQt5.QtWidgets import QMessageBox
+from at.gui.components.atpyqt import QMessageBox
 
 pbutton = {
-    'ok': QMessageBox.Ok,
-    'open': QMessageBox.Open,
-    'save': QMessageBox.Save,
-    'cancel': QMessageBox.Cancel,
-    'close': QMessageBox.Close,
-    'yes': QMessageBox.Yes,
-    'no': QMessageBox.No,
-    'abort': QMessageBox.Abort,
-    'retry': QMessageBox.Retry,
-    'ignore': QMessageBox.Ignore}
+    'ok': QMessageBox.StandardButton.Ok,
+    'open': QMessageBox.StandardButton.Open,
+    'save': QMessageBox.StandardButton.Save,
+    'cancel': QMessageBox.StandardButton.Cancel,
+    'close': QMessageBox.StandardButton.Close,
+    'yes': QMessageBox.StandardButton.Yes,
+    'no': QMessageBox.StandardButton.No,
+    'abort': QMessageBox.StandardButton.Abort,
+    'retry': QMessageBox.StandardButton.Retry,
+    'ignore': QMessageBox.StandardButton.Ignore}
 
 pstatus = {
-    'info': QMessageBox.Information,
-    'question': QMessageBox.Question,
-    'warning': QMessageBox.Warning,
-    'error': QMessageBox.Critical}
+    'info': QMessageBox.Icon.Information,
+    'question': QMessageBox.Icon.Question,
+    'warning': QMessageBox.Icon.Warning,
+    'error': QMessageBox.Icon.Critical}
 
 
 def show_popup(appname: str = 'Dialog',

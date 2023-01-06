@@ -2,10 +2,8 @@
 import sys
 from typing import Optional, Tuple
 
-from PyQt5.QtCore import QObject, pyqtSignal
-from PyQt5.QtGui import QTextCursor
-from PyQt5.QtWidgets import QTextBrowser, QWidget
-
+from at.gui.components.atpyqt import (QObject, QTextBrowser, QTextCursor,
+                                      QWidget, pyqtSignal)
 from at.gui.utils import set_size
 from at.logger import GUI_EMPTY
 

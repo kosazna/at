@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 from typing import Optional, Tuple
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont, QPixmap
-from PyQt5.QtWidgets import QHBoxLayout, QLabel, QWidget
-
+from at.gui.components.atpyqt import (QFont, QHBoxLayout, QLabel, QPixmap, Qt,
+                                      QWidget)
 from at.gui.utils import set_size
 
 
@@ -33,13 +31,13 @@ class Label(QWidget):
         self.iconLabel = QLabel(parent=self)
         self.iconLabel.setFixedSize(*iconsize)
         self.iconLabel.setPixmap(QPixmap(f":/bootstrap/icons/{icon}.svg"))
-        self.iconLabel.setAlignment(Qt.AlignCenter)
+        self.iconLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.statusLabel = QLabel(parent=self)
         self.statusLabel.setObjectName('infoLabel')
         self.statusLabel.setFont(SEGOE)
         self.statusLabel.setText(label)
-        self.statusLabel.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.statusLabel.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         set_size(widget=self.statusLabel, size=labelsize)
 
         layout.addWidget(self.iconLabel)

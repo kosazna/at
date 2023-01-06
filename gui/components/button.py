@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 from typing import Optional
 
-from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtGui import QCursor, QIcon
-from PyQt5.QtWidgets import QPushButton, QWidget
-
+from at.gui.components.atpyqt import (QCursor, QIcon, QPushButton, QSize, Qt,
+                                      QWidget)
 from at.gui.utils import set_size
 
 
@@ -21,11 +19,11 @@ class Button(QPushButton):
         self.setupUi(label, color, icon, size)
 
     def setupUi(self, label, color, icon, size):
-        self.setCursor(QCursor(Qt.PointingHandCursor))
+        self.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         if icon is not None:
             qicon = QIcon()
             qicon.addFile(f":/bootstrap/icons/{icon}.svg", QSize(12, 12),
-                          QIcon.Normal, QIcon.Off)
+                          QIcon.Mode.Normal, QIcon.State.Off)
             self.setIcon(qicon)
         self.setText(label)
         self.setStyle(color, size)
