@@ -1,36 +1,18 @@
-import os
+import time
+import tqdm
+import pandas as pd
+import atexit
 
-def countlines(start, lines=0, header=True, begin_start=None):
-    try:
-        if header:
-            print('{:>10} |{:>10} | {:<20}'.format('ADDED', 'TOTAL', 'FILE'))
-            print('{:->11}|{:->11}|{:->20}'.format('', '', ''))
+@atexit.register
+def terminate():
+    print('Finished')
 
-        for thing in os.listdir(start):
-            thing = os.path.join(start, thing)
-            if os.path.isfile(thing):
-                if thing.endswith('.py'):
-                    with open(thing, 'r') as f:
-                        newlines = f.readlines()
-                        newlines = len(newlines)
-                        lines += newlines
+# for x in tqdm.tqdm(range(0,20), "COPYING FILES", ncols=50, colour='blue', leave=True, bar_format="{l_bar}{bar}|"):  
+#     b = "[" + "#" * x + ' ' * (100-x) + "]"
+#     # print (b, end="/r")
+#     time.sleep(0.1)
+#     a = 10/0
 
-                        if begin_start is not None:
-                            reldir_of_thing = '.' + thing.replace(begin_start, '')
-                        else:
-                            reldir_of_thing = '.' + thing.replace(start, '')
-
-                        print('{:>10} |{:>10} | {:<20}'.format(
-                                newlines, lines, reldir_of_thing))
-
-
-        for thing in os.listdir(start):
-            thing = os.path.join(start, thing)
-            if os.path.isdir(thing):
-                lines = countlines(thing, lines, header=False, begin_start=start)
-
-        return lines
-    except UnicodeDecodeError:
-        return 0
-
-countlines("D:/.temp/.dev/.aztool")
+df = pd.read_excel("D:/Terpos/LESJÖFORS-9999 - image.xlsx", dtype='string')
+# df.to_json("D:/test.json", indent=2, orient="records", force_ascii=False)
+df.to_pickle("D:/test.tar")

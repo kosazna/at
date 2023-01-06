@@ -139,7 +139,8 @@ def copy_pattern(src: Union[str, Path],
     else:
         if copyobjs:
             for copy_obj in copyobjs:
-                log.info(f"{str(copy_obj.src)} -> {str(copy_obj.dst)}")
+                log.info(f"-- {str(copy_obj.src)}")
+                log.highlight(f"-- {str(copy_obj.dst)}\n")
         else:
             log.warning("Nothing matched")
 
@@ -150,12 +151,10 @@ def copy_pattern_from_files(files: Iterable[Path],
                             save_pattern: Union[str, None] = None,
                             save_name: Union[str, None] = None,
                             verbose: bool = False,
-                            ignore: Optional[Iterable[str]] = None,
                             mode: str = 'execute'):
     dst_path = Path(dst)
     pattern = FilePattern(read_pattern)
     copyobjs: List[CopyObject] = []
-    parsed_otas = set()
 
     for p in files:
         if pattern.kind == 'FolderPattern':
@@ -165,8 +164,6 @@ def copy_pattern_from_files(files: Iterable[Path],
 
         parts['%name%'] = p.stem
         parts['%parent%'] = p.parts[-2]
-
-        parsed_otas.add(parts.get('ota', ''))
 
         if save_name is None:
             name = save_name
@@ -183,17 +180,6 @@ def copy_pattern_from_files(files: Iterable[Path],
             copyobjs.append(create_copy_obj(p, d, name))
         else:
             copyobjs.append(create_copy_obj(p, d, name, False))
-
-    if ignore is not None:
-        ignored_otas = set(ignore)
-        cant_process = ignored_otas.intersection(parsed_otas)
-        violation_exists = bool(cant_process)
-
-        if violation_exists:
-            ignored_otas = '\n'.join(sorted(cant_process))
-            return Result.warning("License violation. Process terminated",
-                                  details={'secondary': 'Unauthorised for:',
-                                           'details': ignored_otas})
 
     if mode == 'execute':
         if copyobjs:

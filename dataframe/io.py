@@ -57,7 +57,7 @@ def excel2dataframes(filepath: Union[str, Path],
 def export_dataframe(filepath: Union[str, Path], data: pd.DataFrame, **kwargs):
     suffix = Path(filepath).suffix
     str_filepath = str(filepath)
-    allowed = ('.xlsx', '.csv', '.xml', '.json')
+    allowed = ('.xlsx', '.csv', '.xml', '.json', '.pkl')
     allowed_str = ', '.join(allowed)
 
     if suffix not in allowed:
@@ -72,8 +72,13 @@ def export_dataframe(filepath: Union[str, Path], data: pd.DataFrame, **kwargs):
     elif suffix == '.xml':
         data.to_xml(str_filepath, index=False, **kwargs)
         return True
+    elif suffix == '.pkl':
+        data.to_pickle(str_filepath, **kwargs)
+        return True
     elif suffix == '.json':
-        data.to_json(str_filepath, orient='records', force_ascii=False,
+        data.to_json(str_filepath,
+                     orient='records',
+                     force_ascii=False,
                      indent=2, **kwargs)
         return True
     else:
