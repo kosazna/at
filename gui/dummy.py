@@ -242,19 +242,19 @@ if __name__ == '__main__':
     # def terminate():
     #     print("finished")
 
+    def appExec():
+        SEGOE = QFont("Segoe UI", 9)
 
-    SEGOE = QFont("Segoe UI", 9)
+        app = QApplication(sys.argv)
+        app.setFont(SEGOE)
+        app.setStyle('Fusion')
 
-    app = QApplication(sys.argv)
-    app.setFont(SEGOE)
-    app.setStyle('Fusion')
-
-    ui = Dummy(size=(1000, None))
-    ui.show()
-    # app.exec()
-    # log.set_mode("CLI")
-    # write_json("D:/test.json", {"name": "kostas"})
+        ui = Dummy(size=(1000, None))
+        ui.show()
+        app.exec()
+        # log.set_mode("CLI")
+        # write_json("D:/test.json", {"name": "kostas"})
 
         
 
-    sys.exit(app.exec())
+    sys.exit(appExec())
