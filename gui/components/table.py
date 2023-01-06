@@ -1,47 +1,61 @@
 import sys
+from typing import Optional
+
 import pandas as pd
-from PyQt5.QtWidgets import QApplication, QWidget, QTableWidget, QTableWidgetItem, QHeaderView, QLineEdit, \
-                            QPushButton, QItemDelegate, QVBoxLayout
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QDoubleValidator
+
+from at.gui.components.atpyqt import (QApplication, QDoubleValidator,
+                                      QHeaderView, QItemDelegate, QLineEdit,
+                                      QPushButton, Qt, QTableWidget,
+                                      QTableWidgetItem, QVBoxLayout, QWidget,
+                                      QFont)
 
 
-class FloatDelegate(QItemDelegate):
-    def __init__(self, parent=None):
-        super().__init__()
+def drawDataFrame(widget: QTableWidget, df: pd.DataFrame):
+    nRows, nColumns = df.shape
+    columns = ['_index_'] + list(map(str, df.columns))
+    index = list(map(str, df.index))
+    widget.setColumnCount(nColumns + 1)
+    widget.setRowCount(nRows)
+    widget.setHorizontalHeaderLabels(columns)
+    widget.setVerticalHeaderLabels(list(map(str, index)))
 
-    def createEditor(self, parent, option, index):
-        editor = QLineEdit(parent)
-        editor.setValidator(QDoubleValidator())
-        return editor
+    for i in range(nRows):
+        for j in range(nColumns + 1):
+            if j == 0:
+                widget.setItem(i, j, QTableWidgetItem(str(df.index[i])))
+            else:
+                widget.setItem(i, j, QTableWidgetItem(str(df.iloc[i, j-1])))
+
 
 class TableWidget(QTableWidget):
-    def __init__(self, df):
-        super().__init__()
+    def __init__(self,
+                 df: pd.DataFrame,
+                 parent: Optional[QWidget] = None,
+                 *args,
+                 **kwargs):
+        super().__init__(parent=parent, *args, **kwargs)
         self.df = df
-        self.setStyleSheet('font-size: 35px;')
+        self.setupUi()
 
-        # set table dimension
-        nRows, nColumns = self.df.shape
-        self.setColumnCount(nColumns)
-        self.setRowCount(nRows)
+    def setupUi(self):
+        self.setSortingEnabled(True)
+        self.setAlternatingRowColors(True)
 
-        self.setHorizontalHeaderLabels(('Col X', 'Col Y'))
-        self.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.verticalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
+        self.horizontalHeader().setStretchLastSection(True)
+        self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Interactive)
+        self.horizontalHeader().setSortIndicatorClearable(True)
+        self.horizontalHeader().setSortIndicatorShown(True)
 
-        self.setItemDelegateForColumn(1, FloatDelegate())
+        drawDataFrame(self, self.df)
 
-        # data insertion
-        for i in range(self.rowCount()):
-            for j in range(self.columnCount()):
-                self.setItem(i, j, QTableWidgetItem(str(self.df.iloc[i, j])))
+        self.cellChanged[int, int].connect(self.updateDataFrame)
 
-        self.cellChanged[int, int].connect(self.updateDF)   
-
-    def updateDF(self, row, column):
+    def updateDataFrame(self, row, column):
+        idx = int(self.item(row, 0).text())
         text = self.item(row, column).text()
-        self.df.iloc[row, column] = text
+        self.df.iloc[idx, column - 1] = text
+
 
 class DFEditor(QWidget):
     data = {
@@ -49,6 +63,7 @@ class DFEditor(QWidget):
         'col Y': [10, 20, 30, 40]
     }
 
+    # df = pd.read_excel("D:/Terpos/RA_FINAL.xlsx")
     df = pd.DataFrame(data)
 
     def __init__(self):
@@ -61,17 +76,17 @@ class DFEditor(QWidget):
         mainLayout.addWidget(self.table)
 
         button_print = QPushButton('Display DF')
-        button_print.setStyleSheet('font-size: 30px')
+        # button_print.setStyleSheet('font-size: 30px')
         button_print.clicked.connect(self.print_DF_Values)
         mainLayout.addWidget(button_print)
 
         button_export = QPushButton('Export to CSV file')
-        button_export.setStyleSheet('font-size: 30px')
+        # button_export.setStyleSheet('font-size: 30px')
         button_export.clicked.connect(self.export_to_csv)
-        mainLayout.addWidget(button_export)     
+        mainLayout.addWidget(button_export)
 
         self.setLayout(mainLayout)
-        
+
     def print_DF_Values(self):
         print(self.table.df)
 
@@ -79,10 +94,15 @@ class DFEditor(QWidget):
         self.table.df.to_csv('Data export.csv', index=False)
         print('CSV file exported.')
 
+
 if __name__ == '__main__':
+    SEGOE = QFont("Segoe UI", 9)
+
     app = QApplication(sys.argv)
+    app.setFont(SEGOE)
+    app.setStyle('Fusion')
 
     demo = DFEditor()
     demo.show()
-    
-    sys.exit(app.exec_())
+
+    sys.exit(app.exec())
