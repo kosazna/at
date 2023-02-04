@@ -5,9 +5,14 @@ from typing import Union
 
 ISODATE = "%Y-%m-%d"
 ISOTIME = "%H:%M:%S"
-ISOTIME_COMP = "%H-%M-%S"
+ISOTIME_COMP = "%H%M%S"
 GRDATE = "%d/%m/%Y"
 USDATE = "%m/%d/%Y"
+
+DATE_MAPPER = {
+    "DD/MM/YYYY": GRDATE,
+    "MM/DD/YYYY": USDATE
+}
 
 def timestamp(date: bool = True,
               time: bool = True,
@@ -21,7 +26,7 @@ def timestamp(date: bool = True,
             return dt
         else:
             if filename_compatible:
-                return dt.strftime(f"{ISODATE}--{ISOTIME_COMP}")
+                return dt.strftime(f"{ISODATE}_{ISOTIME_COMP}")
             else:
                 return dt.strftime(f"{ISODATE} {ISOTIME}")
 
@@ -51,4 +56,4 @@ def daterange(periods: int,
     date_list = [_start_date + timedelta(days=d) for d in range(periods)]
     if return_object:
         return date_list
-    return [dt.strftime("%Y-%m-%d") for dt in date_list]
+    return [dt.strftime(ISODATE) for dt in date_list]
