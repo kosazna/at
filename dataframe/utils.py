@@ -61,7 +61,8 @@ def df_str2date(df: pd.DataFrame,
     _df = df.copy()
 
     for date_col in columns:
-        _df[date_col] = pd.to_datetime(_df[date_col], format=date_format)
+        if date_col in _df.columns:
+            _df[date_col] = pd.to_datetime(_df[date_col], format=date_format)
 
     return _df
 
@@ -72,7 +73,8 @@ def df_date2str(df: pd.DataFrame,
     _df = df.copy()
 
     for date_col in columns:
-        _df[date_col] = _df[date_col].dt.strftime(date_format=date_format)
+        if date_col in _df.columns:
+            _df[date_col] = _df[date_col].dt.strftime(date_format=date_format)
 
     return _df
 

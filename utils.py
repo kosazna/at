@@ -59,6 +59,16 @@ def parse_xlsx_filepath(text: str) -> Tuple[str, Union[str, int]]:
         return _text, 0
 
 
+def parse_sheet_name(sheet_name: str) -> Union[int, str]:
+    if sheet_name:
+        try:
+            return int(sheet_name)
+        except ValueError:
+            return sheet_name
+    else:
+        return 0
+
+
 def load_user_settings(settings_file: Union[str, Path],
                        default_settings: dict) -> dict:
     try:

@@ -33,12 +33,15 @@ def excel2dataframes(filepath: Union[str, Path],
                                                     **_args)
             else:
                 for sheet_name in sheets:
-                    if sheet_name in sheetargs:
-                        _args = sheetargs[sheet_name]
+                    if sheetargs is not None:
+                        if sheet_name in sheetargs:
+                            _args = sheetargs[sheet_name]
+                        else:
+                            _args = dict()
+                        data_map[sheet_name] = ef.parse(sheet_name, dtype=dtype,
+                                                        **_args)
                     else:
-                        _args = dict()
-                    data_map[sheet_name] = ef.parse(sheet_name, dtype=dtype,
-                                                    **_args)
+                        data_map[sheet_name] = ef.parse(sheet_name, dtype=dtype)
         else:
             for sheet_name in ef.sheet_names:
                 if sheetargs is not None:
@@ -83,3 +86,29 @@ def export_dataframe(filepath: Union[str, Path], data: pd.DataFrame, **kwargs):
         return True
     else:
         return False
+
+
+def import_dataframe(filepath: Union[str, Path], **kwargs):
+    suffix = Path(filepath).suffix
+    str_filepath = str(filepath)
+    allowed = ('.xls', '.xlsx', '.csv', '.xml', '.json', '.pkl')
+    allowed_str = ', '.join(allowed)
+
+    if suffix not in allowed:
+        raise ValueError(f"{suffix} not supported. Try one of {allowed_str}.")
+
+    if suffix in ('.xlsx', '.xls'):
+        return pd.read_excel(str_filepath, dtype='string', **kwargs)
+    elif suffix == '.csv':
+        return pd.read_csv(str_filepath, dtype='string', **kwargs)
+    elif suffix == '.xml':
+        return pd.read_xml(str_filepath, dtype='string', **kwargs)
+    elif suffix == '.pkl':
+        return pd.read_pickle(str_filepath, **kwargs)
+    elif suffix == '.json':
+        return pd.read_json(str_filepath,
+                            dtype='string',
+                            orient='records',
+                            **kwargs)
+    else:
+        return None
