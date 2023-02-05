@@ -11,7 +11,9 @@ USDATE = "%m/%d/%Y"
 
 DATE_MAPPER = {
     "DD/MM/YYYY": GRDATE,
-    "MM/DD/YYYY": USDATE
+    "dd/mm/yyyy": GRDATE,
+    "MM/DD/YYYY": USDATE,
+    "mm/dd/yyyy": USDATE
 }
 
 def timestamp(date: bool = True,
