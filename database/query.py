@@ -76,9 +76,4 @@ class Query:
                 for param in self.params:
                     value = kwargs.get(param, None)
                     self.params[param] = value
-                    # if value is None:
-                    #     raise ValueError(f"'{param}' was not given a value.")
-                    # else:
-                    #     self.params[param] = value
-
         return self

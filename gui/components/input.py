@@ -149,7 +149,10 @@ class IntInput(QWidget):
         self.label.setText(text)
 
     def getText(self):
-        return self.lineEdit.text()
+        try:
+            return int(self.lineEdit.text())
+        except ValueError:
+            return 0
 
     def getInt(self):
         return int(self.lineEdit.text())
