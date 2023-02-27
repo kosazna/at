@@ -1,52 +1,25 @@
-import time
-import tqdm
-import pandas as pd
-import atexit
-import dtale
+from datetime import datetime
+from typing import Optional
+from pydantic import BaseModel, Field, constr
 
-@atexit.register
-def terminate():
-    print('Finished')
+class Host(BaseModel):
+    url: str
+    dc: int
 
-# for x in tqdm.tqdm(range(0,20), "COPYING FILES", ncols=50, colour='blue', leave=True, bar_format="{l_bar}{bar}|"):  
-#     b = "[" + "#" * x + ' ' * (100-x) + "]"
-#     # print (b, end="/r")
-#     time.sleep(0.1)
-#     a = 10/0
+class User(BaseModel):
+    id: int
+    name = 'John Doe'
+    signup_ts: Optional[datetime] = None
+    friends: list[int] = []
+    instance: Optional[Host] = None
 
-class DFEditor(QWidget):
-    data = {
-        'Col X': list('ABCD'),
-        'col Y': [10, 20, 30, 40]
-    }
 
-    # df = pd.read_excel("D:/Terpos/RA_FINAL.xlsx")
-    df = pd.DataFrame(data)
+external_data = {
+    'id': '123',
+    'signup_ts': '2019-06-01 12:22',
+    'friends': [1, 2, '3'],
+    'instance': Host(url='https://www.azna.gr', dc=5)
+}
+user = User(**external_data)
 
-    def __init__(self):
-        super().__init__()
-        self.resize(1200, 800)
-
-        mainLayout = QVBoxLayout()
-
-        self.table = TableWidget(DFEditor.df)
-        mainLayout.addWidget(self.table)
-
-        button_print = QPushButton('Display DF')
-        # button_print.setStyleSheet('font-size: 30px')
-        button_print.clicked.connect(self.print_DF_Values)
-        mainLayout.addWidget(button_print)
-
-        button_export = QPushButton('Export to CSV file')
-        # button_export.setStyleSheet('font-size: 30px')
-        button_export.clicked.connect(self.export_to_csv)
-        mainLayout.addWidget(button_export)
-
-        self.setLayout(mainLayout)
-
-    def print_DF_Values(self):
-        print(self.table.df)
-
-    def export_to_csv(self):
-        self.table.df.to_csv('Data export.csv', index=False)
-        print('CSV file exported.')
+print(user.dict())

@@ -19,7 +19,7 @@ from at.path import PathEngine
 # When setting fixed width to QLineEdit ->
 # -> add alignment=Qt.AlignmentFlag.AlignLeft when adding widget to layout
 
-cssGuide = Path("D:/.temp/.dev/.aztool/at/gui/css/_style.css").read_text()
+cssGuide = Path().cwd().joinpath("gui/css/_style.css").read_text()
 
 log.set_mode("GUI")
 APPNAME = 'ktima'
