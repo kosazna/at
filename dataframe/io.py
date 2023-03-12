@@ -2,6 +2,7 @@
 
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Union
+import csv
 
 import pandas as pd
 
@@ -57,7 +58,10 @@ def excel2dataframes(filepath: Union[str, Path],
     return data_map
 
 
-def export_dataframe(filepath: Union[str, Path], data: pd.DataFrame, **kwargs):
+def export_dataframe(filepath: Union[str, Path],
+                     data: pd.DataFrame,
+                     csv_quotes=False,
+                     **kwargs):
     suffix = Path(filepath).suffix
     str_filepath = str(filepath)
     allowed = ('.xlsx', '.csv', '.xml', '.json', '.pkl')
@@ -70,7 +74,11 @@ def export_dataframe(filepath: Union[str, Path], data: pd.DataFrame, **kwargs):
         data.to_excel(str_filepath, index=False, **kwargs)
         return True
     elif suffix == '.csv':
-        data.to_csv(str_filepath, index=False, **kwargs)
+        if csv_quotes:
+            data.to_csv(str_filepath, index=False,
+                        quoting=csv.QUOTE_ALL ** kwargs)
+        else:
+            data.to_csv(str_filepath, index=False, **kwargs)
         return True
     elif suffix == '.xml':
         data.to_xml(str_filepath, index=False, **kwargs)
