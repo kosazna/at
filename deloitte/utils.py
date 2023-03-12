@@ -12,9 +12,9 @@ def read_SFFile(filepath: Union[str, Path],
 
     if description_row:
         desc = _df.loc[[0]].copy()
-        emp_time = _df.drop(0, axis=0).copy()
+        data = _df.drop(0, axis=0).copy()
     else:
         desc = None
-        emp_time = _df
+        data = _df
 
-    return emp_time, desc
+    return data, desc
