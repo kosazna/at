@@ -10,10 +10,11 @@ from at.logger import log
 if sys.platform == "win32":
     from win32com.client import Dispatch
 
-
 def user() -> str:
-    return os.environ.get('USERNAME') or os.getlogin()
-
+    if sys.platform == "win32":
+        return os.environ.get('USERNAME')
+    else:
+        return os.environ.get('USER')
 
 def purge_dict(data: dict) -> dict:
     new_dict = {}

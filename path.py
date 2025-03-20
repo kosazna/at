@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 from pathlib import Path
 from typing import Union
 
@@ -9,7 +10,7 @@ class PathEngine:
         self._home = Path.home()
         self._cwd = Path.cwd()
         self._app = self._home.joinpath(f".{appname}")
-        self._auth = Path(os.environ.get('APPDATA')).joinpath(f".{appname}")
+        self._auth = Path(os.environ.get('APPDATA')).joinpath(f".{appname}") if sys.platform == "win32" else self._home.joinpath(f".atlibauth/{appname}")
         self._static = self._app.joinpath("static")
         self._source = self._app.joinpath("source")
         self._logger = self._app.joinpath(f"{appname}.log")
