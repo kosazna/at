@@ -6,7 +6,7 @@ from typing import Union
 
 
 class PathEngine:
-    def __init__(self, appname: str):
+    def __init__(self, appname: str, dbname: str = None):
         self._home = Path.home()
         self._cwd = Path.cwd()
         self._app = self._home.joinpath(f".{appname}")
@@ -17,7 +17,7 @@ class PathEngine:
         self._env = self._source.joinpath(f"{appname}/.env")
         self._sql = self._static.joinpath("sql")
         self._css = self._static.joinpath("css")
-        self._db = self._app.joinpath(f"{appname}.db")
+        self._db = self._app.joinpath(f"{appname}.db") if dbname is None else self._app.joinpath(f"{dbname}.db")
         self._settings = self._app.joinpath("settings.json")
         self._init_paths()
 
