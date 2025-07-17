@@ -57,7 +57,7 @@ def load_json_pro(filepath: Union[str, Path]) -> dict:
 def write_json_pro(filepath: Union[str, Path],
                    data: dict) -> None:
     with open(filepath, "w", encoding="utf-8") as f:
-        f.write(orjson.dumps(data).decode('utf-8'))
+        f.write(orjson.dumps(data, option=orjson.OPT_INDENT_2 | orjson.OPT_SERIALIZE_NUMPY).decode('utf-8'))
 
 
 def load_pickle(filepath: Union[str, Path]) -> Any:
